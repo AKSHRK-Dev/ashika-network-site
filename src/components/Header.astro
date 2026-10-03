@@ -1,0 +1,379 @@
+---
+/**
+ * 全ページ共通のヘッダー。
+ * 常に上に貼り付き、下端の1本の罫線で本文と分ける（影は使わない）。
+ * 現在地のナビには下線を引いて示す。狭い画面では右のボタンから引き出しメニューを開く。
+ */
+import Icon from './Icon.astro';
+import { brand, nav, notice, links, site, ui } from '../data/site';
+
+const { pathname } = Astro.url;
+const isCurrent = (href: string) => (href === '/' ? pathname === '/' : !href.startsWith('http') && pathname.startsWith(href));
+---
+
+{
+  notice.show && (
+    <div class="notice">
+      <div class="container">
+        <span class="notice-mark">お知らせ</span>
+        {notice.text}
+        <a href={notice.linkHref} target="_blank" rel="noopener">
+          {notice.linkLabel}
+        </a>
+        {notice.after}
+      </div>
+    </div>
+  )
+}
+
+<header class="header" id="header">
+  <div class="container header-in">
+    <a class="brand" href="/" aria-label={ui.header.brandAria}>
+      <img src={brand.header.src} alt={site.name} width={brand.header.width} height={brand.header.height} />
+    </a>
+
+    <nav class="gnav" aria-label={ui.header.navAria}>
+      <ul>
+        {
+          nav.map((n) => (
+            <li>
+              <a
+                href={n.href}
+                aria-current={isCurrent(n.href) ? 'page' : undefined}
+                target={n.external ? '_blank' : undefined}
+                rel={n.external ? 'noopener' : undefined}
+              >
+                {n.label}
+                {n.external && <Icon name="external" size={11} />}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <a class="login" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
+      <a class="btn btn-primary btn-sm" href={links.register} target="_blank" rel="noopener">{ui.header.register}</a>
+    </div>
+
+    <button
+      class="menu-btn"
+      id="menuBtn"
+      type="button"
+      aria-label={ui.header.menuOpen}
+      data-label-open={ui.header.menuOpen}
+      data-label-close={ui.header.menuClose}
+      aria-expanded="false"
+      aria-controls="drawer"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label={ui.header.menuAria} aria-hidden="true">
+  <div class="drawer-head">
+    <img src={brand.header.src} alt={site.name} width={brand.header.width} height={brand.header.height} />
+    <button class="drawer-close" id="drawerClose" type="button" aria-label={ui.header.menuClose}><Icon name="close" size={20} /></button>
+  </div>
+  <nav class="drawer-nav" aria-label={ui.header.menuAria}>
+    {
+      nav.map((n) => (
+        <a href={n.href} target={n.external ? '_blank' : undefined} rel={n.external ? 'noopener' : undefined}>
+          {n.label}
+          {n.external && <Icon name="external" size={14} />}
+        </a>
+      ))
+    }
+  </nav>
+  <div class="drawer-foot">
+    <a class="btn btn-outline" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
+    <a class="btn btn-primary" href={links.register} target="_blank" rel="noopener">{ui.header.register}<Icon name="arrow" /></a>
+  </div>
+</div>
+
+<style>
+  /* ---------- お知らせバー ---------- */
+  .notice {
+    background: var(--b-deep);
+    color: #fff;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    padding: 7px 0;
+    text-align: center;
+  }
+
+  .notice-mark {
+    display: inline-block;
+    margin-right: 0.6em;
+    padding: 0 0.5em;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--r);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .notice a {
+    margin-inline: 0.3em;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* ---------- ヘッダー本体 ---------- */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-in {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 36px);
+  }
+
+  .brand img {
+    width: 128px;
+  }
+
+  /* ---------- ナビ ---------- */
+  .gnav {
+    margin-right: auto;
+  }
+
+  .gnav ul {
+    display: flex;
+    list-style: none;
+    gap: clamp(4px, 1.4vw, 14px);
+  }
+
+  .gnav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    height: calc(var(--header-h) - 1px);
+    padding-inline: 0.55rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .gnav a:hover {
+    color: var(--b);
+  }
+
+  /* 現在地は濃紺の下線で示す */
+  .gnav a[aria-current="page"] {
+    color: var(--b);
+    font-weight: 700;
+    border-bottom-color: var(--b);
+  }
+
+  .gnav svg {
+    color: var(--ink-3);
+  }
+
+  /* ---------- 右側のボタン ---------- */
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .login {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink);
+    padding-bottom: 1px;
+    border-bottom: 1px solid var(--line-2);
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .login:hover {
+    color: var(--b);
+    border-bottom-color: var(--b);
+  }
+
+  /* ---------- 開閉ボタン（狭い画面） ---------- */
+  .menu-btn {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .menu-btn span {
+    display: block;
+    width: 16px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.2s var(--ease), opacity 0.2s;
+  }
+
+  /* ---------- 引き出しメニュー ---------- */
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(16, 23, 32, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 70;
+    width: min(320px, 86vw);
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    border-left: 1px solid var(--line);
+    transform: translateX(100%);
+    transition: transform 0.25s var(--ease);
+    visibility: hidden;
+  }
+
+  .drawer-head {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .drawer-head img {
+    width: 118px;
+  }
+
+  .drawer-close {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin-right: -6px;
+    color: var(--ink-2);
+  }
+
+  .drawer-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding-block: 4px;
+  }
+
+  .drawer-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 13px var(--gutter);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    border-left: 3px solid transparent;
+  }
+
+  .drawer-nav a:hover {
+    border-left-color: var(--b);
+    background: var(--b-tint);
+    color: var(--b);
+  }
+
+  .drawer-nav svg {
+    color: var(--ink-3);
+  }
+
+  .drawer-foot {
+    padding: 16px var(--gutter);
+    display: grid;
+    gap: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* 開いているとき */
+  :global(body.nav-open) .drawer-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  :global(body.nav-open) .drawer {
+    transform: none;
+    visibility: visible;
+  }
+
+  :global(body.nav-open) .menu-btn span:nth-child(1) {
+    transform: translateY(5.5px) rotate(45deg);
+  }
+
+  :global(body.nav-open) .menu-btn span:nth-child(2) {
+    opacity: 0;
+  }
+
+  :global(body.nav-open) .menu-btn span:nth-child(3) {
+    transform: translateY(-5.5px) rotate(-45deg);
+  }
+
+  @media (max-width: 900px) {
+    .gnav,
+    .actions {
+      display: none;
+    }
+
+    .brand {
+      margin-right: auto;
+    }
+
+    .menu-btn {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const header = document.getElementById('header');
+  const btn = document.getElementById('menuBtn');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawerOverlay');
+  const closeBtn = document.getElementById('drawerClose');
+  // 開閉ボタンの読み上げラベルは data 属性で渡している（文言は src/data/site.ts の ui.header）
+  const labelOpen = btn?.dataset.labelOpen ?? '';
+  const labelClose = btn?.dataset.labelClose ?? '';
+
+  // スクロールしたら境界を濃くする
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 4);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  const setOpen = (open: boolean) => {
+    document.body.classList.toggle('nav-open', open);
+    btn?.setAttribute('aria-expanded', String(open));
+    btn?.setAttribute('aria-label', open ? labelClose : labelOpen);
+    drawer?.setAttribute('aria-hidden', String(!open));
+    if (open) closeBtn?.focus();
+    else btn?.focus();
+  };
+
+  btn?.addEventListener('click', () => setOpen(!document.body.classList.contains('nav-open')));
+  closeBtn?.addEventListener('click', () => setOpen(false));
+  overlay?.addEventListener('click', () => setOpen(false));
+  drawer?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.body.classList.contains('nav-open')) setOpen(false);
+  });
+</script>

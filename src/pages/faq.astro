@@ -1,0 +1,171 @@
+---
+/**
+ * よくある質問のページ。
+ * トップページの FAQ より細かいところまで拾って、検索から直接ここに来た人が
+ * 読み切れるようにしている。中身は src/data/faq-full.ts。
+ */
+import '../styles/guide.css';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { faqGroups, faqPage } from '../data/faq-full';
+import { breadcrumbSchema, fullFaqSchema } from '../data/schema';
+import { links, site } from '../data/site';
+
+const url = `${site.url}/faq`;
+---
+
+<Base
+  title={faqPage.title}
+  description={faqPage.description}
+  path="/faq"
+  keywords={faqPage.keywords}
+  updated={faqPage.updated}
+  schema={[breadcrumbSchema([{ name: faqPage.title, path: '/faq' }]), fullFaqSchema(url)]}
+>
+  <section class="g-hero">
+    <div class="container">
+      <p class="g-crumb"><a href="/">ホーム</a> <span aria-hidden="true">›</span> {faqPage.title}</p>
+      <h1>{faqPage.heading}</h1>
+      <p class="g-lead">{faqPage.lead}</p>
+      <p class="g-date">最終更新 {faqPage.updatedLabel}</p>
+    </div>
+  </section>
+
+  <div class="container g-wrap">
+    <nav class="g-toc" aria-label="このページの目次">
+      <details open>
+        <summary>目次</summary>
+        <ol>
+          {faqGroups.map((g) => (
+            <li><a href={`#${g.id}`}>{g.title}</a></li>
+          ))}
+        </ol>
+      </details>
+    </nav>
+
+    <div>
+      {
+        faqGroups.map((group) => (
+          <section class="fq-group">
+            <h2 id={group.id}>{group.title}</h2>
+            <div class="fq-list">
+              {group.items.map((item) => (
+                <details class="fq-item">
+                  <summary>
+                    <span class="fq-q">{item.q}</span>
+                  </summary>
+                  <p class="fq-a">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+
+      <aside class="g-cta">
+        <h2>ここに無いことは、聞いてください</h2>
+        <p>Discord でお受けしています。同じ環境を使っている方も多いので、その場で解決することもあります。</p>
+        <div class="g-acts">
+          <a class="btn btn-primary btn-lg" href={links.discord} target="_blank" rel="noopener">
+            Discordで聞く
+            <Icon name="arrow" />
+          </a>
+          <a class="btn btn-ghost" href="/#plans">料金を見る</a>
+        </div>
+      </aside>
+
+      <nav class="g-related" aria-label="関連するページ">
+        <h2>こちらもどうぞ</h2>
+        <ul>
+          <li>
+            <a href="/discord-bot">
+              <span class="t">Discord Bot を24時間動かす</span>
+              <span class="d">必要なメモリの目安から、動かすまでの手順まで。</span>
+            </a>
+          </li>
+          <li>
+            <a href="/python">
+              <span class="t">Python を24時間動かす</span>
+              <span class="d">定期実行・常駐処理を、家のパソコンから離して動かす。</span>
+            </a>
+          </li>
+          <li>
+            <a href="/vps">
+              <span class="t">VPS（専有IPv4・ルート権限）</span>
+              <span class="d">2026年10月13日から受け付けます。</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .fq-group + .fq-group {
+    margin-top: clamp(2.4rem, 4.5vw, 3.4rem);
+  }
+
+  .fq-group h2 {
+    padding-left: 0.75rem;
+    border-left: 4px solid var(--b);
+    font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+    font-weight: 900;
+    line-height: 1.5;
+    scroll-margin-top: calc(var(--header-h) + 16px);
+  }
+
+  .fq-list {
+    margin-top: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .fq-item + .fq-item {
+    border-top: 1px solid var(--line);
+  }
+
+  .fq-item summary {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.85rem 1.05rem;
+    cursor: pointer;
+    list-style: none;
+    background: var(--bg);
+  }
+
+  .fq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .fq-item summary::after {
+    content: "＋";
+    margin-left: auto;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  .fq-item[open] summary::after {
+    content: "−";
+  }
+
+  .fq-item summary:hover {
+    background: var(--b-tint);
+  }
+
+  .fq-q {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  .fq-a {
+    padding: 0 1.05rem 1rem;
+    font-size: 0.89rem;
+    line-height: 1.95;
+    color: var(--ink-2);
+  }
+</style>

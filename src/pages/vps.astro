@@ -1,0 +1,7 @@
+---
+import Guide from '../layouts/Guide.astro';
+import body from '../content/guides/vps.html?raw';
+import { guideByHref } from '../data/guides';
+---
+
+<Guide guide={guideByHref('/vps')} body={body} />

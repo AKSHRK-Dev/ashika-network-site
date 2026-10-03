@@ -1,0 +1,262 @@
+---
+/**
+ * 全ページ共通のフッター。
+ * 濃紺の面にリンクを並べ、最下段だけ一段暗くして事業者表記を置く。
+ * 狭い画面では開閉させず、そのまま積んで表示する（探す手間を増やさないため）。
+ */
+import Icon from './Icon.astro';
+import { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } from '../data/site';
+---
+
+<footer class="footer">
+  <div class="container ft-main">
+    <div class="ft-brand">
+      <a class="ft-logo" href="/" aria-label={ui.footer.brandAria}>
+        <img src={brand.footer.src} alt={site.name} width={brand.footer.width} height={brand.footer.height} />
+      </a>
+      <p class="ft-about">
+        {
+          footerText.about.split('\n').map((line, i) => (
+            <>
+              {i > 0 && <br class="pc" />}
+              {line}
+            </>
+          ))
+        }
+      </p>
+      <ul class="ft-sns" aria-label={ui.footer.snsAria}>
+        {
+          snsItems.map((s) => (
+            <li>
+              <a href={s.href} target="_blank" rel="noopener" aria-label={s.label}>
+                <Icon name={s.name} size={s.size} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <nav class="ft-cols" aria-label={ui.footer.columnsAria}>
+      {
+        footerColumns.map((col) => (
+          <div class="ft-col">
+            <h2>{col.title}</h2>
+            <ul>
+              {col.items.map((it) => (
+                <li>
+                  <a href={it.href} target={it.external ? '_blank' : undefined} rel={it.external ? 'noopener' : undefined}>
+                    {it.label}
+                    {it.external && <Icon name="external" size={11} />}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+
+  <div class="ft-legal">
+    <div class="container ft-legal-in">
+      <ul aria-label={ui.footer.legalAria}>
+        {
+          footerLegal.map((it) => (
+            <li>
+              <a href={it.href}>{it.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="ft-top" href="#top">
+        {footerText.toTop}
+        <Icon name="arrow" size={13} />
+      </a>
+    </div>
+  </div>
+
+  <div class="ft-bottom">
+    <div class="container ft-bottom-in">
+      <span class="num">{footerText.copyright}</span>
+      <span class="ft-region">{footerText.region}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--b-deep);
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.84rem;
+  }
+
+  .footer a {
+    transition: color 0.15s;
+  }
+
+  .footer a:hover {
+    color: #fff;
+  }
+
+  /* ---------- 上段 ---------- */
+  .ft-main {
+    display: grid;
+    gap: clamp(28px, 5vw, 72px);
+    padding-block: clamp(36px, 5vw, 56px);
+  }
+
+  .ft-logo img {
+    width: 150px;
+    /* ロゴは濃紺の1色。同じ濃紺の面に置くと沈むので、白抜きにして読めるようにする */
+    filter: brightness(0) invert(1);
+  }
+
+  .ft-about {
+    margin-top: 1rem;
+    max-width: 46ch;
+    line-height: 1.9;
+    font-size: 0.82rem;
+  }
+
+  .ft-sns {
+    margin-top: 1.2rem;
+    display: flex;
+    gap: 8px;
+    list-style: none;
+  }
+
+  .ft-sns a {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--r);
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .ft-sns a:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* ---------- リンク列 ---------- */
+  .ft-cols {
+    display: grid;
+    gap: clamp(24px, 4vw, 40px);
+  }
+
+  .ft-col h2 {
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .ft-col ul {
+    margin-top: 0.7rem;
+    list-style: none;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .ft-col a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: 0.82rem;
+  }
+
+  .ft-col svg {
+    opacity: 0.6;
+  }
+
+  /* ---------- 規約リンクの行 ---------- */
+  .ft-legal {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .ft-legal-in {
+    padding-block: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem 1.4rem;
+  }
+
+  .ft-legal ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    gap: 0.4rem 1.1rem;
+  }
+
+  .ft-legal a {
+    font-size: 0.78rem;
+  }
+
+  .ft-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .ft-top svg {
+    transform: rotate(-90deg);
+  }
+
+  /* ---------- 最下段 ---------- */
+  .ft-bottom {
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .ft-bottom-in {
+    padding-block: 0.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.3rem 1.2rem;
+    font-size: 0.74rem;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .ft-region {
+    text-align: right;
+  }
+
+  /* 文と文の改行はPCだけ。狭い画面では自然に折り返す */
+  .pc {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .ft-cols {
+      /* 列が増えても収まるよう、入るだけ並べて折り返す */
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .pc {
+      display: inline;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .ft-main {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .ft-region {
+      text-align: left;
+    }
+  }
+</style>

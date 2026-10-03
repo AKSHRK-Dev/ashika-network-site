@@ -1,0 +1,540 @@
+---
+import Icon from '../Icon.astro';
+import { plans, specLabels } from '../../data/home';
+
+const perMonth = (quarterly: number) => Math.round((quarterly / 3) * 10) / 10;
+
+/**
+ * 3ヶ月契約にしたときの最大の割引率（%）。料金データから計算する。
+ * 「要問い合わせ」のプラン（monthly が null）は金額がないので計算から外す。
+ */
+const priced = plans.kinds.flatMap((k) => plans.list[k.key]).filter((p) => p.monthly !== null && p.quarterly !== null);
+const maxDiscount = priced.length
+  ? Math.max(...priced.map((p) => Math.round((1 - p.quarterly! / (p.monthly! * 3)) * 100)))
+  : 0;
+const badge = maxDiscount > 0 ? plans.badge(maxDiscount) : plans.badgeNone;
+const L = plans.labels;
+---
+
+<section id="plans" class="section plans" aria-labelledby="plans-title">
+  <div class="container">
+    <div class="sec-head" data-reveal>
+      <h2 id="plans-title">
+        {
+          plans.title.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </h2>
+      <p class="lead">
+        {
+          plans.lead.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </p>
+    </div>
+
+    <div class="plans-ctl" data-reveal style="--d:.1s">
+      <div class="seg" role="tablist" aria-label={L.kindsAria}>
+        {
+          plans.kinds.map((k, i) => (
+            <button type="button" role="tab" data-kind={k.key} aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`plans-${k.key}`}>
+              {k.label}
+            </button>
+          ))
+        }
+      </div>
+      <div class="term">
+        <span class="term-l is-on" data-term-label="monthly">{plans.terms.monthly}</span>
+        <button type="button" class="switch" id="termSwitch" role="switch" aria-checked="false" aria-label={L.switchAria}>
+          <span></span>
+        </button>
+        <span class="term-l" data-term-label="quarterly">{plans.terms.quarterly}</span>
+        <span class="tag">{badge}</span>
+      </div>
+    </div>
+
+    <p class="plans-desc" data-reveal style="--d:.15s">
+      {
+        plans.kinds.map((k, i) => (
+          <span data-kind-desc={k.key} hidden={i !== 0}>
+            {k.desc}
+          </span>
+        ))
+      }
+    </p>
+
+    <p class="scroll-hint">
+      <Icon name="swipe" size={16} />
+      {L.scrollHint}
+    </p>
+
+    {
+      plans.kinds.map((k, ki) => (
+        <div class="table-wrap" id={`plans-${k.key}`} role="tabpanel" data-kind-table={k.key} hidden={ki !== 0} data-reveal style="--d:.2s">
+          <div class="table-scroll">
+          <table class="plan-table">
+            <thead>
+              <tr>
+                <th scope="col" class="rh">
+                  <span class="sr-only">{L.itemAria}</span>
+                </th>
+                {plans.list[k.key].map((p) => (
+                  <th scope="col" class:list={[p.hot && 'hot']}>
+                    <span class="pname">{p.name}</span>
+                    {p.hot && <span class="hotpill">{L.hot}</span>}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="price-row">
+                <th scope="row">{L.price}</th>
+                {plans.list[k.key].map((p) =>
+                  p.monthly === null || p.quarterly === null ? (
+                    <td class:list={[p.hot && 'hot']}>
+                      <div class="ask">{L.ask.price}</div>
+                      <div class="pnote">{L.ask.note}</div>
+                      {p.note && <div class="pstart">{p.note}</div>}
+                    </td>
+                  ) : (
+                    <td class:list={[p.hot && 'hot']}>
+                      <div class="price" data-term="monthly">
+                        <span class="yen">¥</span>
+                        <span class="amt">{p.monthly}</span>
+                        <span class="unit">{L.unit.monthly}</span>
+                      </div>
+                      <div class="price" data-term="quarterly">
+                        <span class="yen">¥</span>
+                        <span class="amt">{p.quarterly}</span>
+                        <span class="unit">{L.unit.quarterly}</span>
+                      </div>
+                      <div class="pnote" data-term="monthly">
+                        {L.note.monthly.before}<b>¥{perMonth(p.quarterly)}</b>{L.note.monthly.after}
+                      </div>
+                      <div class="pnote" data-term="quarterly">
+                        {L.note.quarterly.before}<b>¥{perMonth(p.quarterly)}</b>{L.note.quarterly.after}
+                      </div>
+                    </td>
+                  ),
+                )}
+              </tr>
+              {specLabels.map((label, si) => (
+                <tr>
+                  <th scope="row">{label}</th>
+                  {plans.list[k.key].map((p) => (
+                    <td class:list={[p.hot && 'hot']}>
+                      <span class="val">{p.specs[si]}</span>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+              <tr class="fit-row">
+                <th scope="row">{plans.fitLabel}</th>
+                {plans.list[k.key].map((p) => (
+                  <td class:list={[p.hot && 'hot']}>
+                    <span class="fit">{p.fit}</span>
+                  </td>
+                ))}
+              </tr>
+              <tr class="cta-row">
+                <th scope="row">
+                  <span class="sr-only">{L.ctaAria}</span>
+                </th>
+                {plans.list[k.key].map((p) => (
+                  <td class:list={[p.hot && 'hot']}>
+                    <a class:list={['btn', p.hot ? 'btn-primary' : 'btn-outline']} href={p.href} target="_blank" rel="noopener">
+                      {p.monthly === null ? L.ask.button : plans.button}
+                      <Icon name={p.monthly === null ? 'discord' : 'arrow'} />
+                    </a>
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      ))
+    }
+
+    <p class="plans-note" data-reveal>
+      {
+        plans.note.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))
+      }
+    </p>
+  </div>
+</section>
+
+<style>
+  /*
+   * 料金表。列＝プラン、行＝項目の素の表。
+   * 罫線だけで組み、人気プランの列にだけ濃紺の縁を回して目立たせる。
+   * 月額と3ヶ月契約は data-term で切り替える（片方だけ表示）。
+   */
+  .plans-ctl {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem 1.6rem;
+    margin-top: clamp(22px, 3.5vw, 34px);
+  }
+
+  /* プラン種別の切り替え。四角いボタンを隙間なく並べる */
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .seg button {
+    padding: 0.55rem 1rem;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--ink-2);
+    background: var(--bg);
+    border-right: 1px solid var(--line-2);
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .seg button:last-child {
+    border-right: 0;
+  }
+
+  .seg button:hover {
+    background: var(--b-tint);
+    color: var(--b);
+  }
+
+  .seg button[aria-selected="true"] {
+    background: var(--b);
+    color: #fff;
+  }
+
+  /* 契約期間の切り替え */
+  .term {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.82rem;
+  }
+
+  .term-l {
+    color: var(--ink-3);
+    font-weight: 600;
+    transition: color 0.15s;
+  }
+
+  .term-l.is-on {
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  .switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    background: var(--surface-2);
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .switch span {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--line-2);
+    transition: transform 0.18s var(--ease);
+  }
+
+  .switch[aria-checked="true"] {
+    background: var(--b);
+    border-color: var(--b);
+  }
+
+  .switch[aria-checked="true"] span {
+    transform: translateX(18px);
+    border-color: var(--b);
+  }
+
+  .term .tag {
+    margin-left: 0.2rem;
+  }
+
+  .plans-desc {
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+
+  /* ---------- 横スクロールの案内 ---------- */
+  .scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: 1rem;
+    font-size: 0.76rem;
+    color: var(--ink-3);
+  }
+
+  .scroll-hint svg {
+    color: var(--b-mid);
+  }
+
+  @media (min-width: 900px) {
+    .scroll-hint {
+      display: none;
+    }
+  }
+
+  /* ---------- 表 ---------- */
+  .table-wrap {
+    margin-top: 0.7rem;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    border-radius: var(--r-lg);
+  }
+
+  .plan-table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg);
+  }
+
+  .plan-table th,
+  .plan-table td {
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+    vertical-align: middle;
+    font-size: 0.85rem;
+  }
+
+  /* 左端の項目名 */
+  .plan-table .rh,
+  .plan-table tbody th {
+    text-align: left;
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--ink-2);
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    width: 8.5em;
+  }
+
+  .plan-table thead th {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
+    background: var(--surface);
+  }
+
+  .plan-table thead th:first-child {
+    border-left: 1px solid var(--line);
+  }
+
+  .plan-table thead th:last-child,
+  .plan-table tbody td:last-child {
+    border-right: 1px solid var(--line);
+  }
+
+  .pname {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .hotpill {
+    display: inline-block;
+    margin-top: 0.3rem;
+    padding: 0 0.5em;
+    border-radius: var(--r);
+    background: var(--b);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  /* 人気の列。左右の縁と見出しの地を濃紺にする */
+  .plan-table th.hot,
+  .plan-table td.hot {
+    background: var(--b-tint);
+    border-left: 1px solid var(--b);
+    border-right: 1px solid var(--b);
+  }
+
+  .plan-table thead th.hot {
+    border-top: 2px solid var(--b);
+  }
+
+  .plan-table tbody tr:last-child td.hot {
+    border-bottom: 1px solid var(--b);
+  }
+
+  /* ---------- 価格 ---------- */
+  .price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.05em;
+    line-height: 1.1;
+  }
+
+  .price .yen {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--b);
+  }
+
+  .price .amt {
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    font-weight: 900;
+    color: var(--b);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .price .unit {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink-3);
+  }
+
+  /* 受付開始日など、その構成だけの但し書き */
+  .pstart {
+    margin-top: 0.35rem;
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--b-line);
+    border-radius: var(--r);
+    background: var(--b-tint);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--b-deep);
+    white-space: nowrap;
+  }
+
+  /* 金額の代わりに出す「要問い合わせ」。数字と同じ重さで並ぶよう、大きさを揃える */
+  .ask {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--b);
+    line-height: 1.6;
+  }
+
+  .pnote {
+    margin-top: 0.2rem;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .pnote b {
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 契約期間ごとの出し分け。既定は月額 */
+  .price[data-term="quarterly"],
+  .pnote[data-term="quarterly"] {
+    display: none;
+  }
+
+  /* 切り替えのクラスは表ごと（[data-kind-table]）に付く。script 側の実装に合わせる */
+  .table-wrap.is-quarterly .price[data-term="monthly"],
+  .table-wrap.is-quarterly .pnote[data-term="monthly"] {
+    display: none;
+  }
+
+  .table-wrap.is-quarterly .price[data-term="quarterly"] {
+    display: flex;
+  }
+
+  .table-wrap.is-quarterly .pnote[data-term="quarterly"] {
+    display: block;
+  }
+
+  .val {
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fit-row td {
+    font-size: 0.78rem;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+
+  .cta-row td {
+    padding-block: 0.9rem;
+  }
+
+  .cta-row .btn {
+    width: 100%;
+  }
+
+  .plans-note {
+    margin-top: 1.2rem;
+    font-size: 0.76rem;
+    line-height: 1.9;
+    color: var(--ink-3);
+  }
+</style>
+
+<script>
+  const root = document.getElementById('plans');
+  if (root) {
+    const kindTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.seg [role="tab"]'));
+    const tables = Array.from(root.querySelectorAll<HTMLElement>('[data-kind-table]'));
+    const descs = Array.from(root.querySelectorAll<HTMLElement>('[data-kind-desc]'));
+    const termSwitch = root.querySelector<HTMLButtonElement>('#termSwitch');
+    const termLabels = Array.from(root.querySelectorAll<HTMLElement>('[data-term-label]'));
+
+    const selectKind = (kind: string | undefined) => {
+      kindTabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.kind === kind)));
+      tables.forEach((t) => {
+        t.hidden = t.dataset.kindTable !== kind;
+        t.classList.add('is-in'); // 表示切替時に隠れたままにならないように
+      });
+      descs.forEach((d) => (d.hidden = d.dataset.kindDesc !== kind));
+    };
+
+    kindTabs.forEach((tab) => tab.addEventListener('click', () => selectKind(tab.dataset.kind)));
+
+    termSwitch?.addEventListener('click', () => {
+      const quarterly = termSwitch.getAttribute('aria-checked') !== 'true';
+      termSwitch.setAttribute('aria-checked', String(quarterly));
+      tables.forEach((t) => {
+        t.classList.toggle('is-quarterly', quarterly);
+        // 金額のアニメーションを再生し直す
+        t.querySelectorAll<HTMLElement>('.price').forEach((p) => {
+          p.style.animation = 'none';
+          void p.offsetWidth;
+          p.style.animation = '';
+        });
+      });
+      termLabels.forEach((l) => l.classList.toggle('is-on', (l.dataset.termLabel === 'quarterly') === quarterly));
+    });
+  }
+</script>

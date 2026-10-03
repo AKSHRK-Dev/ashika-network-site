@@ -1,0 +1,186 @@
+---
+/**
+ * 残高チャージの案内。
+ * 「申し込みから公開まで」の直後に置き、1手目の「残高を入れる」から
+ * そのまま購入ページへ進めるようにする。
+ */
+import Icon from '../Icon.astro';
+import { charge } from '../../data/home';
+---
+
+<section id="charge" class="section charge" aria-labelledby="charge-title">
+  <div class="container">
+    <div class="sec-head" data-reveal>
+      <h2 id="charge-title">{charge.title}</h2>
+      <p class="lead">{charge.lead}</p>
+    </div>
+
+    <div class="charge-grid" data-reveal>
+      <dl class="facts">
+        {
+          charge.facts.map((f) => (
+            <div class="fact">
+              <dt>{f.label}</dt>
+              <dd>
+                <span class="v">{f.value}</span>
+                <span class="n">{f.note}</span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="how">
+        <ol class="chsteps">
+          {
+            charge.steps.map((s, i) => (
+              <li>
+                <span class="n" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <h3>{s.title}</h3>
+                  <p>{s.desc}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="acts">
+          <a class="btn btn-primary btn-lg" href={charge.primary.href} target="_blank" rel="noopener">
+            {charge.primary.label}
+            <Icon name="arrow" />
+          </a>
+          <a class="btn btn-ghost" href={charge.secondary.href}>{charge.secondary.label}</a>
+        </div>
+
+        <p class="note">{charge.note}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 左に「何を売っているか」、右に「買い方」。罫線で区切って並べる */
+  .charge-grid {
+    margin-top: clamp(24px, 4vw, 40px);
+    display: grid;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  @media (min-width: 900px) {
+    .charge-grid {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    }
+  }
+
+  .facts {
+    background: var(--b-tint);
+    padding: clamp(18px, 2.6vw, 26px);
+    display: grid;
+    gap: clamp(14px, 2vw, 18px);
+    align-content: start;
+  }
+
+  .fact dt {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--b);
+    letter-spacing: 0.04em;
+  }
+
+  .fact dd {
+    margin-top: 0.25rem;
+  }
+
+  .fact .v {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .fact .n {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: var(--ink-2);
+  }
+
+  .how {
+    padding: clamp(18px, 2.6vw, 26px);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 900px) {
+    .how {
+      border-top: 0;
+      border-left: 1px solid var(--line);
+    }
+  }
+
+  .chsteps {
+    list-style: none;
+    display: grid;
+    gap: clamp(12px, 1.8vw, 16px);
+  }
+
+  .chsteps li {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+
+  .chsteps .n {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    background: var(--b);
+    color: #fff;
+    border-radius: var(--r);
+    font-size: 0.8rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chsteps h3 {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .chsteps p {
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    line-height: 1.85;
+    color: var(--ink-2);
+  }
+
+  .acts {
+    margin-top: clamp(18px, 2.6vw, 24px);
+    display: grid;
+    gap: 8px;
+  }
+
+  @media (min-width: 480px) {
+    .acts {
+      grid-auto-flow: column;
+      justify-content: start;
+      align-items: center;
+    }
+  }
+
+  .note {
+    margin-top: 0.9rem;
+    font-size: 0.74rem;
+    line-height: 1.8;
+    color: var(--ink-3);
+  }
+</style>

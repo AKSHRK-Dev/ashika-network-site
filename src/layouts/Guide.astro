@@ -1,0 +1,109 @@
+---
+/**
+ * 読みもののページ（使い方の案内など）用レイアウト。
+ *
+ * 規約ページ（Doc.astro）と作りは似ているが、条文ではなく読ませる文章なので、
+ * 見出しの重みと余白を変えてある。本文は src/content/guides/*.html で持つ。
+ *
+ * 検索から来た人がそのまま申し込めるよう、本文の下に必ず案内を置く。
+ */
+import '../styles/guide.css';
+import Base from './Base.astro';
+import Icon from '../components/Icon.astro';
+import { links, site } from '../data/site';
+import { breadcrumbSchema, faqSchema } from '../data/schema';
+import type { Guide } from '../data/guides';
+
+interface Props {
+  guide: Guide;
+  /** 本文のHTML */
+  body: string;
+  /** このページだけの構造化データ */
+  schema?: Record<string, unknown>[];
+}
+
+const { guide, body, schema = [] } = Astro.props;
+
+/*
+ * 本文の h2 に id を振りながら、目次を集める。
+ * id は日本語をURLに入れずに済むよう連番にする（s1, s2, …）。
+ */
+type Heading = { id: string; label: string };
+const headings: Heading[] = [];
+const bodyWithIds = body.replace(/<h2>([\s\S]*?)<\/h2>/g, (_match, inner: string) => {
+  const id = `s${headings.length + 1}`;
+  headings.push({ id, label: inner.replace(/<[^>]+>/g, '').trim() });
+  return `<h2 id="${id}">${inner}</h2>`;
+});
+
+const pageSchema = [
+  breadcrumbSchema([{ name: guide.title, path: guide.href }]),
+  ...(guide.withFaq ? [faqSchema()] : []),
+  ...schema,
+];
+---
+
+<Base
+  title={guide.title}
+  description={guide.description}
+  path={guide.href}
+  keywords={guide.keywords}
+  updated={guide.updated}
+  schema={pageSchema}
+>
+  <section class="g-hero">
+    <div class="container">
+      <p class="g-crumb"><a href="/">ホーム</a> <span aria-hidden="true">›</span> {guide.crumb ?? guide.title}</p>
+      <h1 set:html={guide.heading ?? guide.title} />
+      <p class="g-lead">{guide.lead}</p>
+      <p class="g-date">最終更新 {guide.updatedLabel}</p>
+    </div>
+  </section>
+
+  <div class="container g-wrap">
+    <nav class="g-toc" aria-label="このページの目次">
+      <details open>
+        <summary>目次</summary>
+        <ol>
+          {headings.map((h) => (
+            <li><a href={`#${h.id}`}>{h.label}</a></li>
+          ))}
+        </ol>
+      </details>
+    </nav>
+
+    <div>
+      <article class="guide" set:html={bodyWithIds} />
+
+      <aside class="g-cta">
+        <h2>{guide.ctaTitle ?? 'まずは1台、置いてみてください'}</h2>
+        <p>{guide.ctaLead ?? '月30円から借りられます。合わなければ1ヶ月でやめられます。'}</p>
+        <div class="g-acts">
+          <a class="btn btn-primary btn-lg" href={links.shop} target="_blank" rel="noopener">
+            プランを選ぶ
+            <Icon name="arrow" />
+          </a>
+          <a class="btn btn-ghost" href="/#plans">料金を見る</a>
+        </div>
+      </aside>
+
+      {
+        guide.related.length > 0 && (
+          <nav class="g-related" aria-label="関連するページ">
+            <h2>こちらもどうぞ</h2>
+            <ul>
+              {guide.related.map((r) => (
+                <li>
+                  <a href={r.href}>
+                    <span class="t">{r.title}</span>
+                    <span class="d">{r.desc}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+    </div>
+  </div>
+</Base>

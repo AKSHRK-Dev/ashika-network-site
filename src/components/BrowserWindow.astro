@@ -1,0 +1,116 @@
+---
+/**
+ * スクリーンショットを収める枠。
+ * 特定のブラウザの見た目を模倣せず、汎用的なウィンドウとして描く。
+ * 上端に細いバーとアドレス表示だけを置き、ボタン類は持たせない。
+ *
+ * <BrowserWindow src="/uploads/panel/dashboard.webp" alt="..." url="dash.ashikanw.com" />
+ * 任意の中身: <BrowserWindow url="..."><img .../></BrowserWindow>
+ */
+import { dashHost } from '../data/site';
+
+interface Props {
+  src?: string;
+  alt?: string;
+  /** バーに表示するURL */
+  url?: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const { src, alt = '', url = dashHost, width, height, loading = 'lazy', class: className } = Astro.props;
+---
+
+<figure class:list={['browser', className]}>
+  <div class="bar" aria-hidden="true">
+    <span class="marks"><i></i><i></i><i></i></span>
+    <span class="addr">
+      <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="5" y="10" width="14" height="10" rx="1" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      </svg>
+      <span class="url">{url}</span>
+    </span>
+  </div>
+
+  <div class="viewport">
+    <slot>
+      {src && <img src={src} alt={alt} width={width} height={height} loading={loading} decoding="async" />}
+    </slot>
+  </div>
+</figure>
+
+<style>
+  .browser {
+    container-type: inline-size;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* ---------- 上端のバー ---------- */
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: max(8px, 1.4cqw);
+    height: max(26px, 3.4cqw);
+    padding-inline: max(8px, 1.4cqw);
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* 3つの点。特定のOSを思わせる色は使わず、すべて同じ灰色にする */
+  .marks {
+    display: flex;
+    gap: max(4px, 0.55cqw);
+    flex-shrink: 0;
+  }
+
+  .marks i {
+    width: max(6px, 0.78cqw);
+    height: max(6px, 0.78cqw);
+    border-radius: 50%;
+    background: var(--line-2);
+  }
+
+  .addr {
+    display: flex;
+    align-items: center;
+    gap: max(4px, 0.5cqw);
+    min-width: 0;
+    height: max(16px, 2.2cqw);
+    padding-inline: max(8px, 1cqw);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--bg);
+    color: var(--ink-3);
+  }
+
+  .lock {
+    width: max(8px, 1.1cqw);
+    height: max(8px, 1.1cqw);
+    flex-shrink: 0;
+  }
+
+  .url {
+    font-size: max(9px, 1.05cqw);
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- 中身 ---------- */
+  .viewport {
+    background: var(--surface);
+  }
+
+  .viewport :global(img) {
+    width: 100%;
+    height: auto;
+  }
+</style>

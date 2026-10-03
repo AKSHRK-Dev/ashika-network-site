@@ -1,0 +1,373 @@
+---
+/**
+ * 「あれも、これも どんなことも。」
+ * 4つの用途をタブで切り替える。タブの下のブランド色の線が数秒かけて伸び、伸びきると次の用途へ自動で進む。
+ * マウスを乗せている間・キーボード操作中・画面外にあるときは止まる。クリックや矢印キーでも切り替えられる。
+ * 中身はカードに入れず、帯の上にそのまま置く。左に見出しと説明とボタン、右に「これまで／ASHIKA Networkなら」とポイント。
+ */
+import Icon from '../Icon.astro';
+import { uses } from '../../data/home';
+import { vsLabels } from '../../data/compare';
+
+/** 1つの用途を見せる時間（ミリ秒）。値は src/data/home.ts の uses.duration */
+const DURATION = uses.duration;
+---
+
+<section id="uses" class="section band uses" aria-labelledby="uses-title">
+  <div class="container">
+    <div class="uses-head" data-reveal>
+      <h2 id="uses-title" class="sec-h2">
+        {
+          uses.title.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </h2>
+      <p>{uses.lead}</p>
+    </div>
+
+    <div class="uses-body" data-reveal style="--d:.1s">
+      <div class="uses-tabs" role="tablist" aria-label={uses.tabsAria}>
+        {
+          uses.items.map((u, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`uc-tab-${i}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls={`uc-panel-${i}`}
+              tabindex={i === 0 ? 0 : -1}
+              style={`--dur:${DURATION}ms`}
+            >
+              <span class="t">{u.label}</span>
+              <span class="bar" aria-hidden="true" />
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="uses-panels">
+        {
+          uses.items.map((u, i) => (
+            <div
+              class:list={['uses-panel', i === 0 && 'is-active']}
+              role="tabpanel"
+              id={`uc-panel-${i}`}
+              aria-labelledby={`uc-tab-${i}`}
+              inert={i !== 0 ? true : undefined}
+            >
+              <div class="uses-main">
+                <span class="tag">{u.tag}</span>
+                <h3>
+                  {u.title.map((line) => (
+                    <span class="line">
+                      <span>{line}</span>
+                    </span>
+                  ))}
+                </h3>
+                <p>{u.desc.join('')}</p>
+                <a class="btn btn-primary" href={uses.button.href} target="_blank" rel="noopener">
+                  {uses.button.label}
+                  <Icon name="arrow" />
+                </a>
+                {u.guide && (
+                  <a class="uses-guide" href={u.guide.href}>
+                    {u.guide.label}
+                    <Icon name="arrow" size={13} />
+                  </a>
+                )}
+              </div>
+
+              <div class="uses-sub">
+                <dl class="vs">
+                  <div class="vs-before">
+                    <dt>{u.vs.who}</dt>
+                    <dd>{u.vs.before}</dd>
+                  </div>
+                  <div class="vs-after">
+                    <dt>{vsLabels.after}</dt>
+                    <dd>{u.vs.after}</dd>
+                  </div>
+                </dl>
+                <ul class="checks">
+                  {u.points.map((p, k) => (
+                    <li style={`--i:${k}`}>
+                      <Icon name="check" size={18} />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * 用途の切り替え。タブの下に伸びる濃紺の線が、次へ進むまでの残り時間を表す。
+   * 中身は「主文（左）」と「比較・要点（右）」の2段組み。枠線だけで仕切る。
+   */
+  .uses-head {
+    max-width: 760px;
+    border-left: 3px solid var(--b);
+    padding-left: clamp(12px, 2vw, 18px);
+  }
+
+  .uses-head p {
+    margin-top: 0.8rem;
+    font-size: clamp(0.88rem, 1.2vw, 0.97rem);
+  }
+
+  .uses-body {
+    margin-top: clamp(22px, 3.5vw, 34px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* ---------- タブ ---------- */
+  .uses-tabs {
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    scrollbar-width: none;
+  }
+
+  .uses-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .uses-tabs button {
+    position: relative;
+    flex: 1 0 auto;
+    padding: 0.8rem 1.1rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--ink-3);
+    border-right: 1px solid var(--line);
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .uses-tabs button:last-child {
+    border-right: 0;
+  }
+
+  .uses-tabs button:hover {
+    color: var(--b);
+  }
+
+  .uses-tabs button[aria-selected="true"] {
+    color: var(--b);
+    background: var(--bg);
+  }
+
+  /* 自動で次へ進むまでの残り時間。選択中のタブだけ左から右へ伸びる */
+  .uses-tabs .bar {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: 100%;
+    background: var(--b);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .uses-tabs button[aria-selected="true"] .bar {
+    animation: tab-fill var(--dur, 6000ms) linear forwards;
+  }
+
+  .uses-body.is-paused .uses-tabs .bar {
+    animation-play-state: paused;
+  }
+
+  @keyframes tab-fill {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ---------- 中身 ---------- */
+  .uses-panels {
+    position: relative;
+  }
+
+  .uses-panel {
+    display: none;
+    padding: clamp(18px, 3vw, 30px);
+    gap: clamp(20px, 3.5vw, 40px);
+  }
+
+  .uses-panel.is-active {
+    display: grid;
+  }
+
+  .uses-main h3 {
+    margin-top: 0.7rem;
+    font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+    font-weight: 900;
+    line-height: 1.45;
+  }
+
+  .uses-main h3 .line {
+    display: block;
+  }
+
+  .uses-main > p {
+    margin-top: 0.8rem;
+    font-size: 0.88rem;
+    line-height: 1.95;
+  }
+
+  /* 詳しい案内ページへの導線。ボタンより弱く、文章の続きに見えるようにする */
+  .uses-guide {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    margin-top: 0.9rem;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--b);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .uses-guide:hover {
+    color: var(--b-deep);
+  }
+
+  .uses-main .btn {
+    margin-top: 1.2rem;
+  }
+
+  /* 比較。上が「これまで」、下が当サービス。下だけ濃紺で受ける */
+  .vs > div {
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--line);
+    font-size: 0.83rem;
+  }
+
+  .vs dt {
+    font-weight: 700;
+    color: var(--ink-3);
+    font-size: 0.76rem;
+  }
+
+  .vs dd {
+    margin-top: 0.25rem;
+    line-height: 1.8;
+  }
+
+  .vs-before {
+    border-radius: var(--r) var(--r) 0 0;
+    background: var(--surface);
+  }
+
+  .vs-after {
+    margin-top: -1px;
+    border-radius: 0 0 var(--r) var(--r);
+    border-color: var(--b);
+    background: var(--b-tint);
+  }
+
+  .vs-after dt {
+    color: var(--b);
+  }
+
+  .vs-after dd {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .checks {
+    margin-top: 1rem;
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .checks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5em;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .checks svg {
+    flex-shrink: 0;
+    margin-top: 0.15em;
+    color: var(--b);
+  }
+
+  @media (min-width: 900px) {
+    .uses-panel.is-active {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .uses-tabs .bar {
+      animation: none !important;
+      transform: scaleX(1);
+    }
+  }
+</style>
+
+<script>
+  const root = document.getElementById('uses');
+  const body = root?.querySelector<HTMLElement>('.uses-body');
+  const tabs = Array.from(root?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? []);
+  const panels = Array.from(root?.querySelectorAll<HTMLElement>('[role="tabpanel"]') ?? []);
+
+  const show = (index: number, focus = false) => {
+    tabs.forEach((tab, i) => {
+      const on = i === index;
+      tab.setAttribute('aria-selected', String(on));
+      tab.tabIndex = on ? 0 : -1;
+      if (on && focus) tab.focus();
+    });
+    panels.forEach((panel, i) => {
+      const on = i === index;
+      panel.classList.toggle('is-active', on);
+      if (on) panel.removeAttribute('inert');
+      else panel.setAttribute('inert', '');
+    });
+  };
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => show(i));
+    tab.addEventListener('keydown', (e) => {
+      const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      show((i + step + tabs.length) % tabs.length, true);
+    });
+    // 線が伸びきったら次へ
+    tab.addEventListener('animationend', (e) => {
+      if (e.animationName.includes('tab-fill') && tab.getAttribute('aria-selected') === 'true') {
+        show((i + 1) % tabs.length);
+      }
+    });
+  });
+
+  // 画面外にあるときは進めない
+  if (body && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      ([entry]) => body.classList.toggle('is-paused', !entry?.isIntersecting),
+      { threshold: 0.2 },
+    );
+    io.observe(body);
+  }
+</script>

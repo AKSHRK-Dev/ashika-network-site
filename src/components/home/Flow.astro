@@ -1,0 +1,102 @@
+---
+import { flow } from '../../data/home';
+---
+
+<section id="flow" class="section flow" aria-labelledby="flow-title">
+  <div class="container">
+    <div class="sec-head" data-reveal>
+      <h2 id="flow-title">{flow.title}</h2>
+      <p class="lead">{flow.lead}</p>
+    </div>
+
+    <ol class="steps" data-reveal>
+      {
+        flow.steps.map((s, i) => (
+          <li class="step" style={`--i:${i}`}>
+            <span class="n" aria-hidden="true">{i + 1}</span>
+            <h3>{s.title}</h3>
+            <p>{s.desc}</p>
+            {'href' in s && s.href && (
+              <a class="step-link" href={s.href}>
+                {s.linkLabel}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* 3ステップ。番号を大きく打ち、縦罫で区切って横に並べる */
+  .steps {
+    margin-top: clamp(24px, 4vw, 40px);
+    list-style: none;
+    display: grid;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .step {
+    padding: clamp(18px, 2.6vw, 26px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .step:last-child {
+    border-bottom: 0;
+  }
+
+  .step-link {
+    display: inline-block;
+    margin-top: 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--b);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .step .n {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    background: var(--b);
+    color: #fff;
+    border-radius: var(--r);
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .step h3 {
+    margin-top: 0.8rem;
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  .step p {
+    margin-top: 0.45rem;
+    font-size: 0.85rem;
+    line-height: 1.9;
+  }
+
+  @media (min-width: 860px) {
+    .steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .step {
+      border-bottom: 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .step:last-child {
+      border-right: 0;
+    }
+  }
+</style>

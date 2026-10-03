@@ -1,0 +1,169 @@
+---
+import Icon from '../Icon.astro';
+import { faq } from '../../data/home';
+---
+
+<section id="faq" class="section band faq" aria-labelledby="faq-title">
+  <div class="container faq-in">
+    <div class="faq-head" data-reveal>
+      <h2 id="faq-title">{faq.title}</h2>
+      <div class="faq-acts">
+        <a class="btn btn-ghost" href={faq.more.href}>{faq.more.label}</a>
+        <a class="btn btn-outline" href={faq.button.href} target="_blank" rel="noopener">
+          <Icon name="discord" />
+          {faq.button.label}
+        </a>
+      </div>
+    </div>
+
+    <div class="faq-list" data-stagger>
+      {
+        faq.items.map((f, i) => (
+          <div class="faq-item">
+            <h3>
+              <button type="button" class="faq-q" aria-expanded="false" aria-controls={`faq-a-${i}`} id={`faq-q-${i}`}>
+                <span class="qn">Q{i + 1}</span>
+                <span class="qt">{f.q}</span>
+                <span class="plus" aria-hidden="true">
+                  <Icon name="plus" size={20} />
+                </span>
+              </button>
+            </h3>
+            <div class="faq-a" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}>
+              <div class="faq-a-in">
+                <p>{f.a}</p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* よくある質問。枠線で仕切った一覧。開いた項目だけ左に濃紺の縦罫が入る */
+  .faq-acts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .faq-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 0.9rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .faq-head h2 {
+    font-size: clamp(1.35rem, 2.6vw, 1.95rem);
+    font-weight: 900;
+  }
+
+  .faq-list {
+    margin-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+
+  .faq-q {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.7rem;
+    padding: 0.95rem clamp(12px, 2vw, 18px);
+    text-align: left;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .faq-q:hover {
+    background: var(--b-tint);
+  }
+
+  .qn {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--b);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.2em;
+  }
+
+  .qt {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .plus {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    color: var(--ink-3);
+    transition: transform 0.2s var(--ease), color 0.15s;
+  }
+
+  .faq-q[aria-expanded="true"] {
+    border-left-color: var(--b);
+    background: var(--b-tint);
+  }
+
+  .faq-q[aria-expanded="true"] .plus {
+    transform: rotate(45deg);
+    color: var(--b);
+  }
+
+  /* 開閉は grid の行の高さで行う。高さを固定しないので中身の量に左右されない */
+  .faq-a {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s var(--ease);
+  }
+
+  /*
+   * 開閉ボタンは <h3> の中にあるので、.faq-q と .faq-a は兄弟にならない。
+   * スクリプトが .faq-item に付ける is-open を手がかりにする。
+   */
+  .faq-item.is-open .faq-a {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-a-in {
+    overflow: hidden;
+  }
+
+  .faq-a p {
+    padding: 0 clamp(12px, 2vw, 18px) 1.1rem calc(clamp(12px, 2vw, 18px) + 1.9rem);
+    font-size: 0.88rem;
+    line-height: 1.95;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-a {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const items = Array.from(document.querySelectorAll<HTMLElement>('#faq .faq-item'));
+  items.forEach((item) => {
+    const btn = item.querySelector<HTMLButtonElement>('.faq-q');
+    btn?.addEventListener('click', () => {
+      const open = !item.classList.contains('is-open');
+      item.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+</script>

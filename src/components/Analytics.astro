@@ -1,0 +1,41 @@
+---
+/**
+ * Google Analytics 4 の計測タグ。
+ * site.ts の analytics.gaId が空、または開発サーバー（npm run dev）のときは何も出力しない。
+ * 「お申し込み」「新規登録」など dash.ashikanw.com へのリンクを押したときは cta_click イベントも送る
+ * （GA4側でこのイベントをキーイベント＝コンバージョンに指定できる）。
+ */
+import { analytics, dashHost } from '../data/site';
+
+const enabled = import.meta.env.PROD && analytics.gaId.length > 0;
+---
+
+{
+  enabled && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${analytics.gaId}`} />
+      <script is:inline define:vars={{ gaId: analytics.gaId, domains: analytics.linkerDomains, ctaHost: dashHost }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', gaId, { linker: { domains: domains } });
+
+        // お客様パネル（dash.ashikanw.com）へ進むリンクのクリックを記録する
+        document.addEventListener('click', function (e) {
+          var a = e.target instanceof Element ? e.target.closest('a[href]') : null;
+          if (!a) return;
+          var href = a.getAttribute('href') || '';
+          if (href.indexOf(ctaHost) === -1) return;
+          gtag('event', 'cta_click', {
+            link_url: href,
+            link_text: (a.textContent || '').trim().slice(0, 40),
+            page_location: location.href,
+          });
+        });
+      </script>
+    </>
+  )
+}

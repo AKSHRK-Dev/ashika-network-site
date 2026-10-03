@@ -1,0 +1,163 @@
+---
+/**
+ * 全ページ共通の骨組み（<head>・ヘッダー・フッター）。
+ * 各ページは <Base title="..." description="..." path="/xxx"> 本文 </Base> の形で使う。
+ */
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import { brand, site, links, ui } from '../data/site';
+
+interface Props {
+  /** ページ固有のタイトル。未指定ならトップページ用のタイトルになる */
+  title?: string;
+  description?: string;
+  /** canonical 用のパス（例: "/legal"） */
+  path?: string;
+  keywords?: string;
+  /** 試作ページなど、検索エンジンに載せたくないときに true */
+  noindex?: boolean;
+  /** このページだけの構造化データ。@graph に足される（FAQ・料金・パンくずなど） */
+  schema?: Record<string, unknown>[];
+  /** 最終更新日（YYYY-MM-DD）。構造化データの dateModified に使う */
+  updated?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  path = '/',
+  keywords,
+  noindex = false,
+  schema = [],
+  updated,
+} = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : site.homeTitle;
+const canonical = new URL(path, site.url).toString();
+const ogImage = new URL(site.ogImage.path, site.url).toString();
+
+// 検索エンジン向けの構造化データ（JSON-LD）。
+// Organization: 運営者とロゴ・SNS（全ページ）。WebSite: サイト名と別名（トップページ。検索結果の「サイト名」に使われる）
+const orgId = `${site.url}/#organization`;
+const siteId = `${site.url}/#website`;
+const organization = {
+  '@type': 'Organization',
+  '@id': orgId,
+  name: site.name,
+  alternateName: site.alternateNames,
+  url: `${site.url}/`,
+  logo: {
+    '@type': 'ImageObject',
+    url: new URL(brand.icons.favicon192, site.url).toString(),
+    width: 192,
+    height: 192,
+  },
+  image: ogImage,
+  slogan: site.tagline2,
+  description: site.description,
+  areaServed: { '@type': 'Country', name: '日本' },
+  sameAs: Object.values(links.sns),
+};
+const website = {
+  '@type': 'WebSite',
+  '@id': siteId,
+  name: site.name,
+  alternateName: site.alternateNames,
+  url: `${site.url}/`,
+  inLanguage: 'ja',
+  publisher: { '@id': orgId },
+};
+const webPage = {
+  '@type': 'WebPage',
+  '@id': `${canonical}#webpage`,
+  url: canonical,
+  name: fullTitle,
+  description,
+  isPartOf: { '@id': siteId },
+  about: { '@id': orgId },
+  inLanguage: 'ja',
+  primaryImageOfPage: { '@type': 'ImageObject', url: ogImage },
+  ...(updated ? { dateModified: updated } : {}),
+};
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [organization, website, webPage, ...schema],
+};
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Analytics />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="author" content={site.name} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+    <link rel="canonical" href={canonical} />
+    {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
+    <meta name="theme-color" content={site.themeColor} />
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(site.ogImage.width)} />
+    <meta property="og:image:height" content={String(site.ogImage.height)} />
+    <meta property="og:image:alt" content={site.ogImage.alt} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- 検索結果やタブに出るアイコン。Google は 48px の倍数の正方形を求めるので 48 / 192 を用意 -->
+    <link rel="icon" type="image/png" sizes="48x48" href={brand.icons.favicon48} />
+    <link rel="icon" type="image/png" sizes="192x192" href={brand.icons.favicon192} />
+    <link rel="apple-touch-icon" sizes="180x180" href={brand.icons.appleTouch} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <!-- ページごとに <head> へ足したいもの（規約ページのパンくず構造化データなど） -->
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#main">{ui.skipToContent}</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/motion';
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    z-index: 100;
+    padding: 8px 14px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: var(--r);
+    font-weight: 700;
+    transform: translateY(-200%);
+  }
+
+  .skip:focus {
+    transform: none;
+  }
+</style>

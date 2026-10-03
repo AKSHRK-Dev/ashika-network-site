@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { legalDocs, legalIndex } from '../data/legal';
+import { links } from '../data/site';
+---
+
+<Base title={legalIndex.title} description={legalIndex.description} path="/legal">
+  <section class="legal-hero">
+    <div class="container">
+      <h1>{legalIndex.title}</h1>
+      <p>
+        {
+          legalIndex.lead.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </p>
+    </div>
+  </section>
+
+  <section class="legal-main container">
+    <h2>{legalIndex.listHeading}</h2>
+    <ol class="doc-list" data-stagger>
+      {
+        legalDocs.map((d, i) => (
+          <li>
+            <a href={d.href}>
+              <span class="no">{String(i + 1).padStart(2, '0')}</span>
+              <span class="body">
+                <span class="ttl">{d.listTitle ?? d.title}</span>
+                <span class="en">{d.en}</span>
+                <span class="desc">{d.summary}</span>
+              </span>
+              <span class="arrow">
+                <Icon name="arrow" size={20} />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="guide" data-reveal>
+      <div>
+        <h2>{legalIndex.guide.heading}</h2>
+        <p>{legalIndex.guide.lead}</p>
+      </div>
+      <a class="btn btn-primary" href={links.shop} target="_blank" rel="noopener">
+        {legalIndex.guide.button}<Icon name="arrow" />
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal-hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding-block: clamp(28px, 4.5vw, 52px);
+  }
+
+  .legal-hero .container,
+  .legal-main {
+    max-width: 940px;
+  }
+
+  .legal-hero h1 {
+    padding-left: clamp(12px, 2vw, 18px);
+    border-left: 3px solid var(--b);
+    font-size: clamp(1.4rem, 3vw, 2.1rem);
+    font-weight: 900;
+  }
+
+  .legal-hero p {
+    margin-top: 0.9rem;
+    font-size: 0.88rem;
+    line-height: 1.9;
+  }
+
+  .legal-main {
+    padding-block: clamp(32px, 5vw, 56px) clamp(56px, 8vw, 96px);
+  }
+
+  .legal-main h2 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line-2);
+  }
+
+  /* 文書の一覧。番号・名称・説明を1行に詰め、罫線だけで区切る */
+  .doc-list {
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .doc-list li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .doc-list a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem clamp(8px, 1.5vw, 14px);
+    border-left: 3px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .doc-list a:hover {
+    background: var(--b-tint);
+    border-left-color: var(--b);
+  }
+
+  .doc-list .no {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--b);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .doc-list .ttl {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .doc-list .en {
+    display: block;
+    margin-top: 0.1rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--b-mid);
+  }
+
+  .doc-list .desc {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.82rem;
+    line-height: 1.85;
+    color: var(--ink-2);
+  }
+
+  .doc-list .arrow {
+    color: var(--ink-3);
+  }
+
+  .doc-list a:hover .arrow {
+    color: var(--b);
+  }
+
+  /* 一覧の下の案内 */
+  .guide {
+    margin-top: clamp(32px, 5vw, 48px);
+    padding: clamp(18px, 2.6vw, 26px);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--b);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    display: grid;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .guide h2 {
+    border: 0;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+
+  .guide p {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    line-height: 1.85;
+  }
+
+  @media (min-width: 760px) {
+    .guide {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+</style>

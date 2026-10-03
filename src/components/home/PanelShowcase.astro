@@ -1,0 +1,138 @@
+---
+/**
+ * パネル紹介。
+ * 画面に貼り付けて切り替える演出はやめ、3枚をそのまま縦に積む。
+ * 表示は motion.ts の [data-reveal] に任せ、スクロールで入ってきたものから順に出す。
+ * このセクション専用のスクリプトは持たない。
+ */
+import BrowserWindow from '../BrowserWindow.astro';
+import { panel } from '../../data/home';
+---
+
+<section id="panel" class="section showcase" aria-labelledby="panel-title">
+  <div class="container">
+    <div class="sec-head" data-reveal>
+      <h2 id="panel-title">
+        {
+          panel.title.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </h2>
+      <p class="lead">{panel.lead}</p>
+    </div>
+
+    <ol class="sc-list">
+      {
+        panel.shots.map((s, i) => (
+          <li class="sc-item" data-reveal style={`--d:${i * 0.05}s`}>
+            <div class="sc-text">
+              <span class="sc-no" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
+              {s.tags.length > 0 && (
+                <ul class="sc-tags">
+                  {s.tags.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div class="sc-shot">
+              <BrowserWindow
+                url={panel.url}
+                src={s.src}
+                alt={s.alt}
+                width={panel.width}
+                height={panel.height}
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .sc-list {
+    margin-top: clamp(26px, 4vw, 44px);
+    list-style: none;
+    display: grid;
+    gap: clamp(36px, 6vw, 72px);
+  }
+
+  .sc-item {
+    display: grid;
+    gap: clamp(16px, 2.5vw, 28px);
+    align-items: center;
+  }
+
+  /* ---------- 説明 ---------- */
+  .sc-text {
+    padding-left: clamp(12px, 2vw, 18px);
+    border-left: 3px solid var(--b);
+  }
+
+  .sc-no {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--b-mid);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sc-item h3 {
+    margin-top: 0.3rem;
+    font-size: clamp(1.05rem, 1.9vw, 1.4rem);
+    font-weight: 900;
+  }
+
+  .sc-item p {
+    margin-top: 0.6rem;
+    font-size: 0.88rem;
+    line-height: 1.95;
+  }
+
+  .sc-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 0.8rem;
+  }
+
+  .sc-tags li {
+    padding: 0.1rem 0.55rem;
+    border: 1px solid var(--b-line);
+    border-radius: var(--r);
+    background: var(--b-tint);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--b);
+  }
+
+  @media (min-width: 900px) {
+    .sc-item {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      gap: clamp(28px, 4vw, 56px);
+    }
+
+    /* 2枚目だけ左右を入れ替えて、同じ並びが続く単調さを避ける */
+    .sc-item:nth-child(even) .sc-text {
+      order: 2;
+    }
+
+    .sc-item:nth-child(even) .sc-shot {
+      order: 1;
+    }
+  }
+</style>

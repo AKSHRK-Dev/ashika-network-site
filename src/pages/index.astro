@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import UseCases from '../components/home/UseCases.astro';
+import Plans from '../components/home/Plans.astro';
+import Compare from '../components/home/Compare.astro';
+import Location from '../components/home/Location.astro';
+import PanelShowcase from '../components/home/PanelShowcase.astro';
+import Features from '../components/home/Features.astro';
+import Flow from '../components/home/Flow.astro';
+import Charge from '../components/home/Charge.astro';
+import Faq from '../components/home/Faq.astro';
+import Cta from '../components/home/Cta.astro';
+import { site } from '../data/site';
+import { faqSchema, serviceSchema } from '../data/schema';
+---
+
+<!--
+  並び順の意図:
+  ヒーローで金額を見せた直後に「何が揃っているか（強み）」を出し、
+  次に「自分の用途で使えるか」、そのうえで料金と他社比較へ進む。
+  パネル・拠点は裏付け、流れとFAQで不安を潰して申し込みへ送る。
+-->
+<Base path="/" keywords={site.keywords} schema={[serviceSchema(), faqSchema()]}>
+  <Hero />
+  <Features />
+  <UseCases />
+  <Plans />
+  <Compare />
+  <PanelShowcase />
+  <Location />
+  <Flow />
+  <Charge />
+  <Faq />
+  <Cta />
+</Base>

@@ -1,0 +1,233 @@
+---
+/**
+ * ヒーロー。濃紺のベタ面にキャッチコピーを置き、その下の白い帯に価格とボタンをまとめる。
+ * 帯の金額は、表示時に大きい数字から一気に減って最小構成の月額に着地する。
+ * 装飾は背景の細い罫線グリッドだけ。写真・グラデーション・影は使わない。
+ */
+import Icon from '../Icon.astro';
+import { hero } from '../../data/home';
+
+const fmt = (n: number) => n.toLocaleString('ja-JP');
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero-in">
+    <h1 id="hero-title" data-reveal>
+      {
+        hero.title.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))
+      }
+    </h1>
+
+    <!-- 文と文の改行はPCだけ。スマホでは自然に折り返す -->
+    <p class="lead" data-reveal style="--d:.1s">
+      {
+        hero.lead.map((line, i) => (
+          <>
+            {i > 0 && <br class="pc" />}
+            {line}
+          </>
+        ))
+      }
+    </p>
+
+    <div class="bar" data-reveal style="--d:.2s">
+      <p class="bar-price">
+        <span class="bar-label">{hero.bar.label}</span>
+        <span
+          class="bar-amt count"
+          data-from={hero.bar.from}
+          data-to={hero.bar.price}
+          data-duration={hero.bar.duration}
+          data-delay={hero.countDelay}
+          style={`--w:${fmt(hero.bar.from).length}ch`}>{fmt(hero.bar.price)}</span>
+        <span class="bar-suffix">{hero.bar.suffix}</span>
+        <span class="bar-note">{hero.bar.note}</span>
+      </p>
+      <div class="bar-cta">
+        <a class="btn btn-outline btn-lg" href={hero.secondary.href}>{hero.secondary.label}</a>
+        <a class="btn btn-primary btn-lg" href={hero.primary.href} target="_blank" rel="noopener">
+          {hero.primary.label}<Icon name="arrow" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: clip;
+    background: var(--b-deep);
+    color: #fff;
+    padding-block: clamp(48px, 7vw, 92px);
+  }
+
+  /* 背景の罫線グリッド。奥行きを出さず、面を引き締めるためだけに置く */
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+    background-size: 72px 72px;
+    pointer-events: none;
+  }
+
+  .hero-in {
+    position: relative;
+  }
+
+  /* ---------- キャッチコピー ---------- */
+  .hero h1 {
+    color: #fff;
+    padding-left: clamp(14px, 2.4vw, 22px);
+    border-left: 4px solid rgba(255, 255, 255, 0.55);
+    font-size: clamp(2rem, 6.4vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.28;
+    letter-spacing: -0.015em;
+  }
+
+  .hero .lead {
+    margin-top: 1.2rem;
+    padding-left: clamp(14px, 2.4vw, 22px);
+    max-width: 64ch;
+    font-size: clamp(0.88rem, 1.4vw, 1rem);
+    line-height: 1.95;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .lead .pc {
+    display: none;
+  }
+
+  /* ---------- 下の白い帯 ---------- */
+  .bar {
+    margin-top: clamp(26px, 3.8vw, 44px);
+    background: var(--bg);
+    border-radius: var(--r-lg);
+    display: grid;
+    gap: 14px;
+    padding: 16px clamp(16px, 2.5vw, 24px);
+    color: var(--ink);
+  }
+
+  .bar-price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 0.4em;
+  }
+
+  .bar-label {
+    align-self: center;
+    padding: 0 0.5em;
+    border: 1px solid var(--b-line);
+    border-radius: var(--r);
+    background: var(--b-tint);
+    color: var(--b);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .bar-amt {
+    display: inline-block;
+    /* 数字が減っている間に幅が動いてボタンがずれないよう、最大桁数ぶんを確保する */
+    min-width: var(--w);
+    text-align: right;
+    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--b);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bar-amt::before {
+    content: "¥";
+    margin-right: 0.08em;
+    font-size: 0.62em;
+    font-weight: 800;
+  }
+
+  .bar-suffix {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--b);
+  }
+
+  .bar-note {
+    width: 100%;
+    font-size: 0.76rem;
+    color: var(--ink-3);
+  }
+
+  .bar-cta {
+    display: grid;
+    gap: 8px;
+  }
+
+  @media (min-width: 560px) {
+    .bar-cta {
+      grid-auto-flow: column;
+      justify-content: start;
+    }
+  }
+
+  @media (min-width: 860px) {
+    .bar {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .bar-note {
+      width: auto;
+      padding-left: 0.8em;
+      margin-left: 0.4em;
+      border-left: 1px solid var(--line);
+      align-self: center;
+    }
+
+    .lead .pc {
+      display: inline;
+    }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 帯の金額が、大きい数字から一気に減って最小構成の月額に着地する
+  const counters = document.querySelectorAll<HTMLElement>('.hero .count');
+  if (counters.length && !reduce) {
+    const fmt = (n: number) => n.toLocaleString('ja-JP');
+    counters.forEach((el) => {
+      const from = Number(el.dataset.from);
+      const to = Number(el.dataset.to);
+      const duration = Number(el.dataset.duration) || 1200;
+      // 待ち時間と長さは src/data/home.ts の hero（countDelay と bar.duration）から data 属性で渡している
+      const delay = Number(el.dataset.delay) || 0;
+      el.textContent = fmt(from);
+      el.classList.add('is-counting');
+      const start = performance.now() + delay;
+      const tick = (now: number) => {
+        const t = Math.min(1, Math.max(0, (now - start) / duration));
+        const eased = 1 - Math.pow(1 - t, 4); // 最初は速く、最後はゆっくり
+        el.textContent = fmt(Math.round(from + (to - from) * eased));
+        if (t < 1) {
+          window.requestAnimationFrame(tick);
+        } else {
+          el.textContent = fmt(to);
+          el.classList.remove('is-counting');
+        }
+      };
+      window.requestAnimationFrame(tick);
+    });
+  }
+</script>

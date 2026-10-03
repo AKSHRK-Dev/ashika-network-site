@@ -1,0 +1,7 @@
+---
+import Doc from '../layouts/Doc.astro';
+import body from '../content/legal/kessai.html?raw';
+import { legalDocProps } from '../data/legal';
+---
+
+<Doc {...legalDocProps('/kessai')} body={body} />

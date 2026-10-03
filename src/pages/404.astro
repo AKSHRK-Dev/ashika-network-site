@@ -1,0 +1,53 @@
+---
+/** 存在しないURLのとき。Node サーバー（と多くのホスティング）が自動でこのページを返す */
+import Base from '../layouts/Base.astro';
+import { ui } from '../data/site';
+
+const nf = ui.notFound;
+---
+
+<Base title={nf.title} path="/404" noindex>
+  <section class="section nf">
+    <div class="container">
+      <p class="nf-code num">{nf.code}</p>
+      <h1>{nf.title}</h1>
+      <p class="nf-lead">{nf.lead}</p>
+      <a class="btn btn-primary" href={nf.button.href}>{nf.button.label}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-block: clamp(64px, 10vw, 128px);
+  }
+
+  .nf .container {
+    max-width: 560px;
+    border-left: 3px solid var(--b);
+    padding-left: clamp(14px, 2.5vw, 22px);
+  }
+
+  .nf-code {
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    line-height: 1;
+    color: var(--b);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .nf h1 {
+    margin-top: 0.7rem;
+    font-size: clamp(1.2rem, 2.6vw, 1.7rem);
+    font-weight: 900;
+  }
+
+  .nf-lead {
+    margin-top: 0.7rem;
+    font-size: 0.88rem;
+    line-height: 1.9;
+  }
+
+  .nf .btn {
+    margin-top: 1.5rem;
+  }
+</style>

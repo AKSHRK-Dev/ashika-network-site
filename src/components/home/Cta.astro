@@ -1,0 +1,80 @@
+---
+import Icon from '../Icon.astro';
+import { cta } from '../../data/home';
+---
+
+<section id="start" class="cta" aria-labelledby="cta-title">
+  <div class="container cta-in" data-reveal>
+    <h2 id="cta-title">
+      {
+        cta.title.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))
+      }
+    </h2>
+    <p>
+      {
+        cta.lead.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))
+      }
+    </p>
+    <div class="cta-btns">
+      <a class="btn btn-white btn-lg" href={cta.primary.href} target="_blank" rel="noopener">
+        {cta.primary.label}
+        <Icon name="arrow" />
+      </a>
+      <a class="btn btn-ghost-white btn-lg" href={cta.secondary.href} target="_blank" rel="noopener">
+        <Icon name="discord" />
+        {cta.secondary.label}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 最後の行動喚起。濃紺のベタ面で締め、ヒーローと呼応させる */
+  .cta {
+    background: var(--b-deep);
+    color: rgba(255, 255, 255, 0.85);
+    padding-block: clamp(44px, 6vw, 80px);
+  }
+
+  .cta-in {
+    max-width: 780px;
+    border-left: 3px solid rgba(255, 255, 255, 0.55);
+    padding-left: clamp(14px, 2.5vw, 22px);
+  }
+
+  .cta h2 {
+    color: #fff;
+    font-size: clamp(1.35rem, 3.2vw, 2.2rem);
+    font-weight: 900;
+    line-height: 1.4;
+  }
+
+  .cta p {
+    margin-top: 0.9rem;
+    font-size: clamp(0.86rem, 1.2vw, 0.95rem);
+    line-height: 1.95;
+  }
+
+  .cta-btns {
+    margin-top: clamp(20px, 3vw, 28px);
+    display: grid;
+    gap: 8px;
+  }
+
+  @media (min-width: 560px) {
+    .cta-btns {
+      grid-auto-flow: column;
+      justify-content: start;
+    }
+  }
+</style>

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.npm/
+.config/
+.env
+.env.*
+*.log
+.DS_Store
+__MACOSX/

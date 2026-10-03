@@ -1,0 +1,396 @@
+/* =========================================================
+   読みもののページ（ガイド・よくある質問）の見た目。
+   Guide.astro と faq.astro のどちらからも読み込む。
+   ページ固有の <style is:global> に置くと、同じ見た目を使う別のページに
+   当たらないので、ここに切り出してある。
+   ========================================================= */
+/* ---------- 見出し帯 ---------- */
+  .g-hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding-block: clamp(28px, 4.5vw, 52px);
+  }
+
+  .g-crumb {
+    font-size: 0.78rem;
+    color: var(--ink-3);
+  }
+
+  .g-crumb a:hover {
+    color: var(--b);
+    text-decoration: underline;
+  }
+
+  .g-hero h1 {
+    margin-top: 0.5rem;
+    padding-left: clamp(12px, 2vw, 18px);
+    border-left: 3px solid var(--b);
+    font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+    font-weight: 900;
+    line-height: 1.4;
+  }
+
+  .g-lead {
+    margin-top: 1rem;
+    max-width: 44em;
+    font-size: clamp(0.9rem, 1.3vw, 1rem);
+    line-height: 1.95;
+    color: var(--ink-2);
+  }
+
+  .g-date {
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    color: var(--ink-3);
+  }
+
+  /* ---------- 目次 ＋ 本文 ---------- */
+  .g-wrap {
+    padding-block: clamp(28px, 4.5vw, 56px) clamp(56px, 8vw, 96px);
+  }
+
+  .g-toc {
+    margin-bottom: 2rem;
+  }
+
+  .g-toc details {
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--bg);
+  }
+
+  .g-toc summary {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .g-toc summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .g-toc summary::after {
+    content: "＋";
+    float: right;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  .g-toc details[open] summary::after {
+    content: "−";
+  }
+
+  .g-toc details[open] summary {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .g-toc ol {
+    list-style: none;
+    padding: 0.5rem 0;
+    counter-reset: toc;
+  }
+
+  .g-toc li a {
+    display: block;
+    padding: 0.32rem 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    border-left: 2px solid transparent;
+  }
+
+  .g-toc li a:hover {
+    border-left-color: var(--b);
+    background: var(--b-tint);
+    color: var(--b);
+  }
+
+  @media (min-width: 1000px) {
+    .g-wrap {
+      display: grid;
+      grid-template-columns: 232px minmax(0, 1fr);
+      gap: clamp(32px, 5vw, 64px);
+      align-items: start;
+    }
+
+    .g-toc {
+      position: sticky;
+      top: calc(var(--header-h) + 20px);
+      margin-bottom: 0;
+    }
+
+    .g-toc summary {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .g-toc summary::after {
+      content: "";
+    }
+  }
+
+  /* ---------- 本文 ---------- */
+  .guide {
+    max-width: var(--max-doc);
+    font-size: 0.95rem;
+    line-height: 1.95;
+  }
+
+  .guide h2 {
+    margin-top: clamp(2.4rem, 4.5vw, 3.4rem);
+    padding-left: 0.75rem;
+    border-left: 4px solid var(--b);
+    font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+    font-weight: 900;
+    line-height: 1.5;
+    scroll-margin-top: calc(var(--header-h) + 16px);
+  }
+
+  .guide h3 {
+    margin-top: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: var(--b-deep);
+  }
+
+  .guide h2 + *,
+  .guide h3 + * {
+    margin-top: 0.7rem;
+  }
+
+  .guide p {
+    margin-top: 1rem;
+  }
+
+  .guide strong {
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  /* 箇条書き。記号は小さな四角（丸より実直に見える） */
+  .guide ul {
+    margin-top: 0.9rem;
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .guide ul > li {
+    padding-left: 1.25em;
+    position: relative;
+  }
+
+  .guide ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0.15em;
+    top: 0.82em;
+    width: 5px;
+    height: 5px;
+    background: var(--b-line);
+  }
+
+  .guide ol {
+    margin-top: 0.9rem;
+    padding-left: 0;
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .guide ol > li {
+    counter-increment: step;
+    padding-left: 2.2em;
+    position: relative;
+  }
+
+  .guide ol > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0.25em;
+    display: grid;
+    place-items: center;
+    width: 1.55em;
+    height: 1.55em;
+    border-radius: 50%;
+    background: var(--b);
+    color: #fff;
+    font-size: 0.75em;
+    font-weight: 700;
+  }
+
+  /* 補足の囲み */
+  .guide .note {
+    margin-top: 1.2rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--b-line);
+    border-left-width: 3px;
+    border-radius: var(--r);
+    background: var(--b-tint);
+    font-size: 0.9rem;
+  }
+
+  .guide .note > :first-child {
+    margin-top: 0;
+  }
+
+  /* 表 */
+  .guide .table {
+    margin-top: 1.2rem;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+  }
+
+  .guide table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    white-space: nowrap;
+  }
+
+  .guide th,
+  .guide td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+
+  .guide thead th {
+    background: var(--surface);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .guide tbody tr:last-child th,
+  .guide tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .guide .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .guide code {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    font-family: var(--mono);
+    font-size: 0.88em;
+  }
+
+  .guide pre {
+    margin-top: 1.1rem;
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    border-radius: var(--r);
+    background: var(--b-deep);
+    color: #e8eef6;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.8;
+  }
+
+  .guide pre code {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .guide a {
+    color: var(--b-mid);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .guide a:hover {
+    color: var(--b-deep);
+  }
+
+  /* ---------- 本文のあとの案内 ---------- */
+  .g-cta {
+    margin-top: clamp(40px, 6vw, 64px);
+    padding: clamp(22px, 3.5vw, 34px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+
+  .g-cta h2 {
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    font-weight: 900;
+  }
+
+  .g-cta p {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--ink-2);
+  }
+
+  .g-acts {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  /* ---------- 関連ページ ---------- */
+  .g-related {
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+
+  .g-related h2 {
+    font-size: 1rem;
+    font-weight: 800;
+    padding-left: 0.7rem;
+    border-left: 3px solid var(--b);
+  }
+
+  .g-related ul {
+    margin-top: 1rem;
+    list-style: none;
+    display: grid;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .g-related li + li {
+    border-top: 1px solid var(--line);
+  }
+
+  .g-related a {
+    display: block;
+    padding: 0.85rem 1.1rem;
+    background: var(--bg);
+  }
+
+  .g-related a:hover {
+    background: var(--b-tint);
+  }
+
+  .g-related .t {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .g-related .d {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--ink-3);
+  }

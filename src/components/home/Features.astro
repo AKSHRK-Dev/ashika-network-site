@@ -1,0 +1,160 @@
+---
+import { features } from '../../data/home';
+
+/** 見出しを1文字ずつ <span class="w"> に分ける（スクロールで順に色を付けるため） */
+const chars = (text: string) => Array.from(text);
+---
+
+<section id="features" class="section features" aria-labelledby="features-title">
+  <div class="container">
+    <div class="feat-head">
+      <h2 id="features-title" class="words" data-words aria-label={features.title.map((l) => l.map((s) => s.t).join('')).join(' ')}>
+        {
+          features.title.map((line, li) => (
+            <>
+              {li > 0 && <br />}
+              {line.map((seg) =>
+                seg.em ? (
+                  <em>
+                    {chars(seg.t).map((c) => (
+                      <span class="w">{c}</span>
+                    ))}
+                  </em>
+                ) : (
+                  chars(seg.t).map((c) => <span class="w">{c}</span>)
+                ),
+              )}
+            </>
+          ))
+        }
+      </h2>
+      <p data-reveal>
+        {
+          features.lead.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </p>
+    </div>
+
+    <ul class="feat-grid" data-seq>
+      {
+        features.items.map((f) => (
+          <li class:list={['feat', f.big && 'feat-big']}>
+            {f.big && (
+              <span class="big">
+                ¥<span data-count={f.big.replace(/[^\d]/g, '')}>{f.big.replace(/[^\d]/g, '')}</span>
+                <small>{features.bigUnit}</small>
+              </span>
+            )}
+            <h3>{f.title}</h3>
+            <p>{f.desc}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* 強み。罫線で区切った格子に短い項目を敷き詰める。密度で「できることの多さ」を見せる */
+  .feat-head {
+    max-width: 760px;
+  }
+
+  .feat-head h2 {
+    font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+    font-weight: 900;
+    line-height: 1.35;
+  }
+
+  .feat-head p {
+    margin-top: 0.9rem;
+    font-size: clamp(0.88rem, 1.2vw, 0.97rem);
+  }
+
+  .feat-grid {
+    margin-top: clamp(24px, 4vw, 40px);
+    list-style: none;
+    display: grid;
+    /*
+     * 項目は6つ。auto-fill にすると画面幅しだいで5列などになり、
+     * 最後の1つだけが次の行に取り残されて収まりが悪くなる。
+     * 6を割り切れる列数（1・2・3）だけを使う。
+     */
+    grid-template-columns: 1fr;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .feat {
+    padding: clamp(16px, 2.2vw, 22px);
+    box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line);
+    opacity: 0.35;
+    transition: opacity 0.35s var(--ease), background 0.2s;
+  }
+
+  /* motion.ts が順番に is-on を付ける。付くまでは薄く置いておく */
+  .feat.is-on {
+    opacity: 1;
+  }
+
+  .feat:hover {
+    background: var(--b-tint);
+  }
+
+  .feat h3 {
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding-left: 0.6rem;
+    border-left: 3px solid var(--b);
+  }
+
+  .feat p {
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    line-height: 1.85;
+  }
+
+  /* 「¥40」を出す枠だけは大きく取る */
+  .feat-big .big {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: var(--b);
+    font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+    font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .feat-big .big small {
+    margin-left: 0.2em;
+    font-size: 0.36em;
+    font-weight: 700;
+    color: var(--ink-3);
+  }
+
+  @media (min-width: 560px) {
+    .feat-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 900px) {
+    .feat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feat {
+      opacity: 1;
+      transition: none;
+    }
+  }
+</style>

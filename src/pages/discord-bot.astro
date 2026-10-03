@@ -1,0 +1,7 @@
+---
+import Guide from '../layouts/Guide.astro';
+import body from '../content/guides/discord-bot.html?raw';
+import { guideByHref } from '../data/guides';
+---
+
+<Guide guide={guideByHref('/discord-bot')} body={body} />

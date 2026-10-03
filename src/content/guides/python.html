@@ -1,0 +1,141 @@
+<h2>手元のパソコンで回すと、何が困るのか</h2>
+
+<p>Python で書いたスクリプトは、書いた時点では「動かしたいときに動かすもの」です。ところが、しばらく使っていると必ずこう思います。<strong>これ、勝手に動いていてほしい</strong>。</p>
+
+<p>毎朝データを取ってくる。1時間おきに在庫を見る。届いた通知をためて集計する。どれも、人が席に座っている必要はありません。それでもパソコンで回していると、こうなります。</p>
+
+<ul>
+  <li>パソコンを閉じると止まる。出先では動かない</li>
+  <li>更新で再起動がかかり、朝には止まっている</li>
+  <li>長い処理の途中で席を立てない</li>
+  <li>つけっぱなしの電気代が、月に数百円から千円ほどかかる</li>
+</ul>
+
+<p>置き場所を移すと、この全部がなくなります。そして<strong>月30円は、つけっぱなしの電気代より安い</strong>のが普通です。</p>
+
+<h2>どのくらいのスペックが要るのか</h2>
+
+<p>Python のスクリプトで効いてくるのは、ほとんどの場合<strong>メモリ</strong>です。読み込むデータの大きさで決まります。</p>
+
+<div class="table">
+  <table>
+    <thead>
+      <tr><th>やりたいこと</th><th>メモリの目安</th><th>向いている構成</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>APIを叩いて結果を保存する</td><td class="num">〜128MB</td><td>ミニ（256MB）</td></tr>
+      <tr><td>ページを取得して中身を取り出す</td><td class="num">128〜300MB</td><td>ベーシック（512MB）</td></tr>
+      <tr><td>数万行の表をまとめて処理する</td><td class="num">300MB〜1GB</td><td>プラス（1GB）／メモリ ベーシック</td></tr>
+      <tr><td>大きな表を丸ごと読み込む</td><td class="num">1GB〜</td><td>メモリ プラス（2GB）以上</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>pandas のように<strong>表を丸ごとメモリに載せる</strong>ライブラリを使うと、一気に必要量が増えます。読み込むファイルのサイズの、3〜5倍を見ておくと外しません。</p>
+
+<h3>標準プランと大容量メモリプラン、どちらを選ぶか</h3>
+
+<p>同じくらいの値段で比べたとき、標準プランは CPU が多く、大容量メモリプランはメモリが多い構成です。</p>
+
+<ul>
+  <li><strong>計算そのものが重い</strong>（変換、集計、繰り返しが多い）→ 標準プラン</li>
+  <li><strong>データを抱えたままにする</strong>（大きな表、キャッシュ）→ 大容量メモリプラン</li>
+</ul>
+
+<h2>決まった時刻に動かす（定期実行）</h2>
+
+<p>「毎朝7時に1回」「10分おきに1回」といった動かし方は、<code>cron</code> の書式で指定できます。書き方は5つの数字です。</p>
+
+<pre><code># 分 時 日 月 曜日
+0  7  *  *  *    毎日 7:00 に1回
+*/10 * * * *     10分おき
+0  */3 * * *     3時間おき
+0  9  * * 1      毎週月曜の 9:00</code></pre>
+
+<p>スクリプト側で <code>while True:</code> と <code>time.sleep()</code> を使って待つ方法もありますが、<strong>決まった時刻に動かすなら定期実行のほうが確実</strong>です。処理が終わればプログラムは終了するので、メモリを抱えたままになりません。</p>
+
+<div class="note">
+  <p>逆に、<strong>常に起動していてほしい</strong>もの（受信を待ち続ける、常時監視する）は、定期実行ではなく常駐で動かしてください。落ちても自動で立ち上げ直します。</p>
+</div>
+
+<h2>置いてから動かすまで</h2>
+
+<ol>
+  <li><strong>残高を入れる</strong>。クレジットカード・PayPay・銀行振込・Apple Pay・Google Pay が使えます。</li>
+  <li><strong>構成と期間を選んで購入する</strong>。買った時点で使えるようになります。</li>
+  <li><strong>ファイルを置く</strong>。ブラウザからアップロードするか、その場で書けます。SSH は要りません。</li>
+  <li><strong>依存を入れて起動する</strong>。<code>requirements.txt</code> を置いておけば、必要なライブラリがまとめて入ります。</li>
+</ol>
+
+<h3>requirements.txt を必ず置く</h3>
+
+<p>手元で <code>pip install</code> したものは、置き場所には入っていません。次のように書き出して、一緒に置いてください。</p>
+
+<pre><code>pip freeze &gt; requirements.txt</code></pre>
+
+<h3>秘密の値はコードに書かない</h3>
+
+<p>APIキーやパスワードは、コードに直接書かず環境変数から読んでください。パネルから設定できます。</p>
+
+<pre><code>import os
+
+API_KEY = os.environ["API_KEY"]</code></pre>
+
+<h2>止まらないようにする</h2>
+
+<p>常駐させるプログラムは、いつか必ず落ちます。相手のサーバーが応答しなかった、想定外のデータが来た、通信が切れた。どれも普通に起きることです。</p>
+
+<p>ASHIKA Network では<strong>異常終了を検知して自動で立ち上げ直します</strong>ので、落ちたまま朝を迎えることはありません。そのうえで、スクリプト側も次の2つだけ気をつけておくと安定します。</p>
+
+<ul>
+  <li><strong>外と通信するところは必ず <code>try</code> で囲む</strong>。1回の失敗で全部が止まらないようにする</li>
+  <li><strong>途中経過をファイルかDBに書く</strong>。立ち上げ直したときに、続きから始められるようにする</li>
+</ul>
+
+<pre><code>import time
+
+while True:
+    try:
+        do_work()
+    except Exception as e:
+        print("失敗しました:", e)
+    time.sleep(60)</code></pre>
+
+<h2>ログの見かた</h2>
+
+<p><code>print()</code> で出した内容は、ブラウザの画面にそのまま流れます。動いているかどうかを見るだけなら、これで足ります。</p>
+
+<p>長く動かすものは、<strong>時刻を一緒に出しておく</strong>と後から追いやすくなります。</p>
+
+<pre><code>import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+logging.info("処理を始めます")</code></pre>
+
+<h2>よくあるつまずき</h2>
+
+<h3>ModuleNotFoundError が出る</h3>
+
+<p>ライブラリが入っていません。<code>requirements.txt</code> を置いて、入れ直してください。手元で入れたものは自動では付いてきません。</p>
+
+<h3>文字化けする</h3>
+
+<p>ファイルを開くときに、文字コードを指定してください。指定しないと、環境によって読み方が変わります。</p>
+
+<pre><code>open("data.csv", encoding="utf-8")</code></pre>
+
+<h3>時刻が9時間ずれる</h3>
+
+<p>サーバーの時計は世界標準時で動いていることがあります。日本時間で扱いたいときは、タイムゾーンを明示してください。</p>
+
+<pre><code>from datetime import datetime, timezone, timedelta
+
+JST = timezone(timedelta(hours=9))
+print(datetime.now(JST))</code></pre>
+
+<h3>途中で落ちる</h3>
+
+<p>メモリ不足を疑ってください。大きなファイルを一度に読まず、少しずつ処理するように変えるか、構成を1つ上げるかのどちらかです。</p>
