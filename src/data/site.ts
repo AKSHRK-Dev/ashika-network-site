@@ -213,6 +213,14 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: '残高をチャージする', href: links.charge, external: true },
     ],
   },
+  {
+    title: 'ASHIKA Group',
+    items: [
+      { label: 'ASHIKA Group について', href: 'https://group.ashikanw.com/ja-jp/', external: true },
+      { label: 'StoriaMC', href: 'https://storiamc.com/ja-jp/', external: true },
+      { label: 'SABALISU', href: 'https://minecrafts.jp', external: true },
+    ],
+  },
 ];
 
 /** フッター最下段に1行で並べる規約・方針のリンク */
