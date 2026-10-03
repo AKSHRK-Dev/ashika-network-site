@@ -12,14 +12,14 @@ export const site = {
    * 「ASHIKA Network」は Google が別枠（サイト名）で出すので、ここでは繰り返さず、
    * 覚えてほしい一言と、探されている言葉を入れる。
    */
-  homeTitle: 'つながりを、止めない。月30円からのサーバー｜ASHIKA Network',
+  homeTitle: '切れないつながりを｜月30円からのサーバー｜ASHIKA Network',
   /** 検索結果の説明文（トップページと、説明を指定しないページで使う。90〜120文字が目安） */
   description:
     '動かし続けたいプログラムの置き場所を、大阪のデータセンターから月30円で提供します。Discord Bot、Webアプリ、定期実行のスクリプトなど。1ヶ月単位でご契約でき、長期の縛りはありません。',
   /** 検索エンジンに伝えるサイト名の別名（構造化データ用） */
   alternateNames: ['ASHIKA', 'ASHIKAネットワーク', 'アシカネットワーク', 'あしかネットワーク'],
   /** 見出しの下に添える一言（構造化データの slogan と、SNSカードに使う） */
-  tagline2: 'つながりを、止めない。',
+  tagline2: '切れないつながりを',
   keywords:
     'VPS,ホスティング,サーバー,格安,プログラム,ASHIKA,ASHIKA Network,アシカ,あしか,アシカネットワーク,あしかネットワーク,アシカネット,プログラミング,開発,激安,常時稼働,Python,Discord,Discord Bot,Webアプリ',
   ogImage: { path: '/uploads/image.png', width: 1200, height: 630, alt: 'ASHIKA Network ロゴ' },
