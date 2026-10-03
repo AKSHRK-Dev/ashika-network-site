@@ -230,5 +230,7 @@ export const footerText = {
     'ASHIKA Network は、動かし続けたいプログラムの置き場所を月30円から貸し出しています。\n大阪・北摂のデータセンターで運用し、1ヶ月単位でご契約いただけます。',
   copyright: '© 2026 ASHIKA Network. All rights reserved.',
   region: 'サーバーは大阪のデータセンターで運用しています。',
+  /** 最下段に出す制作者の表記（ASHIKA Group の企業サイトへのリンク） */
+  credit: { before: 'Developed by', name: 'ASHIKA Group', href: 'https://group.ashikanw.com/ja-jp/' },
   toTop: 'ページの先頭へ',
 };

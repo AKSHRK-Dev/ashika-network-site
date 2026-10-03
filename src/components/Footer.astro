@@ -79,6 +79,7 @@ import { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } fro
   <div class="ft-bottom">
     <div class="container ft-bottom-in">
       <span class="num">{footerText.copyright}</span>
+      <span class="ft-credit">{footerText.credit.before} <a href={footerText.credit.href}>{footerText.credit.name}</a></span>
       <span class="ft-region">{footerText.region}</span>
     </div>
   </div>
@@ -230,6 +231,13 @@ import { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } fro
 
   .ft-region {
     text-align: right;
+  }
+
+  .ft-credit a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* 文と文の改行はPCだけ。狭い画面では自然に折り返す */
