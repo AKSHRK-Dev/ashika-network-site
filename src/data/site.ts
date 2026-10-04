@@ -186,7 +186,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: '残高をチャージする', href: '/#charge' },
       { label: '置き場所について', href: '/#location' },
       { label: '申し込みから公開まで', href: '/#flow' },
-      { label: '無料の支援プログラム', href: 'https://group.ashikanw.com/ja-jp/support/', external: true },
+      { label: '無料の支援プログラム', href: 'https://group.ashikanw.com/ja-jp/supportprogram/', external: true },
     ],
   },
   {
@@ -218,7 +218,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     title: 'ASHIKA Group',
     items: [
       { label: 'ASHIKA Group について', href: 'https://group.ashikanw.com/ja-jp/', external: true },
-      { label: '支援プログラム', href: 'https://group.ashikanw.com/ja-jp/support/', external: true },
+      { label: '支援プログラム', href: 'https://group.ashikanw.com/ja-jp/supportprogram/', external: true },
       { label: 'StoriaMC', href: 'https://storiamc.com/ja-jp/', external: true },
       { label: 'SABALISU', href: 'https://minecrafts.jp', external: true },
     ],

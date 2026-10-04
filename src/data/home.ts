@@ -198,7 +198,7 @@ export const plans = {
     title: '非営利団体・学生・オープンソース開発者の方へ',
     text: 'ASHIKA Group の支援プログラムで、審査のうえサーバーを無料でお使いいただけます（非営利団体は20台まで、個人は10台まで）。',
     label: '支援プログラムを見る',
-    href: 'https://group.ashikanw.com/ja-jp/support/',
+    href: 'https://group.ashikanw.com/ja-jp/supportprogram/',
   },
 };
 
