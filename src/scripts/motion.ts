@@ -38,7 +38,29 @@ function clamp(v: number, min: number, max: number) {
   return Math.min(max, Math.max(min, v));
 }
 
+/**
+ * 表示の仕方を、要素の種類から決めて data-anim に書く（見た目は global.css）。
+ *   wipe: 見出しが左から幕を開けるように   curtain: 図や画面写真が引き幕のように
+ *   left / right: 横からすべり込む          flip: カードが起き上がる
+ *   zoom: 少し大きく寄ってくる              lines: 見出しの行が下からせり上がる
+ * ページ側は data-reveal を付けるだけでよい。data-anim を書けば、そちらが優先される。
+ */
+function animFor(el: HTMLElement): string {
+  if (el.id === 'hero-title') return 'lines';
+  if (el.matches('.sec-head, .faq-head, .uses-head, h2')) return 'wipe';
+  if (el.matches('figure, .map, .sc-item, .table-wrap, .alt-scroll')) return 'curtain';
+  if (el.matches('.loc-copy, .support-note, .guide')) return 'left';
+  if (el.matches('.charge-grid, .steps')) return 'kids';
+  if (el.matches('.cta-in')) return 'zoom';
+  return 'up';
+}
+
 function initReveal() {
+  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+    if (!el.dataset.anim) el.dataset.anim = animFor(el);
+    // 子要素を順番に出す種類は、子に番号を振る
+    if (el.dataset.anim === 'kids') Array.from(el.children).forEach((c, i) => (c as HTMLElement).style.setProperty('--i', String(i)));
+  });
   const groups = document.querySelectorAll<HTMLElement>('[data-stagger]');
   groups.forEach((g) => {
     Array.from(g.children).forEach((child, i) => (child as HTMLElement).style.setProperty('--i', String(i)));
@@ -57,11 +79,13 @@ function initReveal() {
   });
 
   // それ以降は「要素の上端が画面の上から tuning.revealAt の位置より上に来たら」表示開始
+  // 幕で隠して始める種類（wipe・curtain）は、隠れている間「見えていない」扱いになるので、親を見張る
+  const watched = new Map<Element, HTMLElement[]>();
   const io = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-in');
+          (watched.get(entry.target) || []).forEach((el) => el.classList.add('is-in'));
           io.unobserve(entry.target);
         }
       }
@@ -69,8 +93,27 @@ function initReveal() {
     { threshold: 0, rootMargin: `0px 0px -${Math.round((1 - tuning.revealAt) * 100)}% 0px` },
   );
   targets.forEach((el) => {
-    if (!el.classList.contains('is-in')) io.observe(el);
+    if (el.classList.contains('is-in')) return;
+    const clipped = el.dataset.anim === 'wipe' || el.dataset.anim === 'curtain';
+    const watch = clipped && el.parentElement ? el.parentElement : el;
+    if (!watched.has(watch)) {
+      watched.set(watch, []);
+      io.observe(watch);
+    }
+    watched.get(watch)!.push(el);
   });
+
+  // 念のため：observer が知らせてこなくても、スクロールして画面に入ったものは出す（iPhone の Safari 対策）
+  const pending = new Set(Array.from(targets).filter((el) => !el.classList.contains('is-in')));
+  const check = () => {
+    const limit = window.innerHeight * tuning.revealAt;
+    for (const el of pending) {
+      if (el.classList.contains('is-in')) { pending.delete(el); continue; }
+      const r = el.getBoundingClientRect();
+      if (r.top < limit && r.bottom > 0) { el.classList.add('is-in'); pending.delete(el); }
+    }
+  };
+  window.addEventListener('scroll', () => requestAnimationFrame(check), { passive: true });
 
   // 何かの理由で observer が発火しなくても、内容を隠したままにしない
   window.setTimeout(() => targets.forEach((el) => el.classList.add('is-in')), tuning.revealFallbackMs);
@@ -152,5 +195,127 @@ function initScrollLinked() {
   update();
 }
 
+/* =========================================================
+   ちょっとした仕掛け（全ページ）
+   ========================================================= */
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/** カードがマウスのほうへ少し傾き、ボタンはマウスに寄る */
+function initTilt() {
+  if (reduceMotion || !finePointer) return;
+  document.querySelectorAll<HTMLElement>('.feat-grid > li, .sc-item, .charge-grid > *, .uses-body .use, .doc-list > li').forEach((el) => {
+    el.classList.add('tilt');
+    el.addEventListener('pointermove', (ev) => {
+      const r = el.getBoundingClientRect();
+      const x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height;
+      el.style.setProperty('--ry', `${((x - 0.5) * 7).toFixed(2)}deg`);
+      el.style.setProperty('--rx', `${((0.5 - y) * 7).toFixed(2)}deg`);
+      el.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
+      el.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
+      el.classList.add('tilting');
+    });
+    el.addEventListener('pointerleave', () => {
+      el.classList.remove('tilting');
+      el.style.setProperty('--rx', '0deg');
+      el.style.setProperty('--ry', '0deg');
+    });
+  });
+  document.querySelectorAll<HTMLElement>('.btn-primary, .btn.btn-primary, .cta-in .btn').forEach((el) => {
+    el.addEventListener('pointermove', (ev) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--tx', `${((ev.clientX - r.left - r.width / 2) * 0.16).toFixed(1)}px`);
+      el.style.setProperty('--ty', `${((ev.clientY - r.top - r.height / 2) * 0.28).toFixed(1)}px`);
+    });
+    el.addEventListener('pointerleave', () => {
+      el.style.setProperty('--tx', '0px');
+      el.style.setProperty('--ty', '0px');
+    });
+  });
+}
+
+/** ヒーローの上でマウスを動かすと、泡が浮かんで光がついてくる */
+function initHeroBubbles() {
+  const hero = document.querySelector<HTMLElement>('.hero');
+  if (!hero || reduceMotion || !finePointer) return;
+  let last = 0;
+  hero.addEventListener('pointermove', (ev) => {
+    const r = hero.getBoundingClientRect();
+    hero.style.setProperty('--lx', `${(((ev.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+    hero.style.setProperty('--ly', `${(((ev.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
+    const now = performance.now();
+    if (now - last < 50) return;
+    last = now;
+    const b = document.createElement('span');
+    const size = 6 + Math.random() * 12;
+    b.className = 'bubble';
+    b.style.cssText = `left:${ev.clientX - r.left}px;top:${ev.clientY - r.top}px;width:${size}px;height:${size}px;--dx:${((Math.random() - 0.5) * 40).toFixed(0)}px`;
+    b.addEventListener('animationend', () => b.remove());
+    hero.appendChild(b);
+  });
+}
+
+/** 読んだ位置のバーと、アシカの「先頭へ戻る」ボタン */
+function initProgressAndTop() {
+  const bar = document.querySelector<HTMLElement>('.read-progress');
+  const top = document.querySelector<HTMLButtonElement>('.to-top');
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? clamp(window.scrollY / max, 0, 1) : 0})`;
+    if (top) top.classList.toggle('show', window.scrollY > window.innerHeight * 0.9);
+  };
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; update(); });
+    }
+  }, { passive: true });
+  update();
+  top?.addEventListener('click', () => {
+    top.classList.remove('launch');
+    void top.offsetWidth;
+    top.classList.add('launch');
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+  });
+}
+
+/** 隠し要素：「ashika」と打つか ↑↑↓↓←→←→BA で、アシカが降ってくる */
+function initSecret() {
+  const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let at = 0;
+  let typed = '';
+  const rain = (count: number) => {
+    if (reduceMotion) return;
+    for (let i = 0; i < count; i++) {
+      const img = document.createElement('img');
+      img.src = '/uploads/seal.png';
+      img.alt = '';
+      img.className = 'seal-rain';
+      img.style.left = `${Math.random() * 100}vw`;
+      img.style.width = `${32 + Math.random() * 48}px`;
+      img.style.animationDuration = `${2.2 + Math.random() * 2.4}s`;
+      img.style.animationDelay = `${Math.random() * 1.2}s`;
+      img.style.setProperty('--r', `${(Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 540)}deg`);
+      img.addEventListener('animationend', () => img.remove());
+      document.body.appendChild(img);
+    }
+  };
+  document.addEventListener('keydown', (ev) => {
+    const target = ev.target as HTMLElement | null;
+    if (target?.closest('input, textarea, select')) return;
+    const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
+    at = k === code[at] ? at + 1 : k === code[0] ? 1 : 0;
+    if (at === code.length) { at = 0; rain(36); }
+    if (ev.key.length === 1) {
+      typed = (typed + k).slice(-6);
+      if (typed === 'ashika') rain(24);
+    }
+  });
+}
+
 initReveal();
 initScrollLinked();
+initTilt();
+initHeroBubbles();
+initProgressAndTop();
+initSecret();

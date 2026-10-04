@@ -137,6 +137,11 @@ const jsonLd = {
       <slot />
     </main>
     <Footer />
+    <!-- 読んだ位置のバーと、先頭へ戻るボタン（動きは scripts/motion.ts） -->
+    <div class="read-progress" aria-hidden="true"></div>
+    <button class="to-top" type="button" aria-label="ページの先頭へ戻る" title="ページの先頭へ戻る">
+      <span class="ball"></span><img src="/uploads/seal.png" alt="" width="56" height="37" />
+    </button>
     <script>
       import '../scripts/motion';
     </script>

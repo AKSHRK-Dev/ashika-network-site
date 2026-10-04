@@ -379,3 +379,84 @@ p {
     color: var(--b);
   }
 }
+
+/* =========================================================
+   表示の仕方（motion.ts が data-anim を付ける）
+   ========================================================= */
+.js [data-reveal][data-anim] {
+  transition: opacity 0.7s var(--ease), transform 0.95s cubic-bezier(0.2, 0.85, 0.25, 1.06), clip-path 1.05s cubic-bezier(0.7, 0, 0.2, 1);
+  transition-delay: var(--d, 0s);
+}
+.js [data-reveal][data-anim='up'] { transform: translateY(34px) scale(0.98); }
+.js [data-reveal][data-anim='left'] { transform: translateX(-70px); }
+.js [data-reveal][data-anim='zoom'] { transform: scale(0.9); }
+/* 出し終わり（上の各種より強く効かせる） */
+.js [data-reveal][data-anim].is-in { opacity: 1; transform: none; }
+/* 見出しは左から幕を開ける */
+.js [data-reveal][data-anim='wipe'] { opacity: 1; clip-path: inset(-20% 100% -20% 0); transform: translateX(-24px); }
+.js [data-reveal][data-anim='wipe'].is-in { clip-path: inset(-20% -4% -20% -4%); }
+/* 図や画面写真は右から引き幕のように開き、中身は少し引いていく */
+.js [data-reveal][data-anim='curtain'] { opacity: 1; clip-path: inset(0 0 0 100% round 10px); transform: translateX(28px); }
+.js [data-reveal][data-anim='curtain'].is-in { clip-path: inset(-4% -4% -4% -4% round 10px); }
+.js [data-reveal][data-anim='curtain'] :is(img, svg) { transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s; }
+.js [data-reveal][data-anim='curtain']:not(.is-in) :is(img, svg) { transform: scale(1.12); }
+/* 子要素を順番に起こす（料金カードや手順） */
+.js [data-reveal][data-anim='kids'] { opacity: 1; transform: none; }
+.js [data-reveal][data-anim='kids'] > * { opacity: 0; transform: perspective(900px) rotateX(16deg) translateY(40px) scale(0.95); transition: opacity 0.6s var(--ease), transform 0.9s cubic-bezier(0.2, 0.85, 0.25, 1.1); transition-delay: calc(var(--i, 0) * 110ms + var(--d, 0s)); transform-origin: 50% 100%; }
+.js [data-reveal][data-anim='kids'].is-in > * { opacity: 1; transform: none; }
+/* ヒーローの見出しは、行ごとに下からせり上がる */
+.js [data-reveal][data-anim='lines'] { opacity: 1; transform: none; }
+.js [data-reveal][data-anim='lines'] .ln { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.js [data-reveal][data-anim='lines'] .ln > span { display: inline-block; transform: translateY(110%) rotate(3deg); transition: transform 1s cubic-bezier(0.2, 0.9, 0.2, 1); transition-delay: calc(var(--n, 0) * 140ms + 0.1s); }
+.js [data-reveal][data-anim='lines'].is-in .ln > span { transform: none; }
+/* 一覧（よくある質問・比較表など）は横からすべり込む */
+.js [data-stagger] > * { transform: translateX(-34px); transition: opacity 0.5s var(--ease), transform 0.7s cubic-bezier(0.2, 0.85, 0.25, 1.06); }
+
+/* カードの傾きと光、ボタンの吸い寄せ */
+.tilt { position: relative; }
+.tilt.tilting { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.08s linear; }
+.tilt::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.35), transparent 45%); opacity: 0; transition: opacity 0.3s; }
+.tilt.tilting::after { opacity: 1; }
+.btn { translate: var(--tx, 0) var(--ty, 0); transition: translate 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), background 0.2s, border-color 0.2s, color 0.2s; }
+/* 濃い色のボタンは、乗せると光が横切る */
+.btn-primary, .btn-white { position: relative; overflow: hidden; }
+.btn-primary::after, .btn-white::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%); transform: translateX(-130%); pointer-events: none; }
+.btn-primary:hover::after, .btn-white:hover::after { transform: translateX(130%); transition: transform 0.75s ease; }
+
+/* ヒーロー：マウスについてくる光と泡 */
+.hero { position: relative; overflow: hidden; }
+.hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(460px circle at var(--lx, 70%) var(--ly, 30%), rgba(120, 175, 235, 0.16), transparent 70%); }
+.hero > .container { position: relative; z-index: 1; }
+.bubble { position: absolute; z-index: 0; pointer-events: none; border-radius: 50%; border: 1.5px solid rgba(160, 205, 255, 0.6); background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.55), rgba(120, 175, 235, 0.12) 60%); transform: translate(-50%, -50%); animation: bubble 1.6s ease-out forwards; }
+@keyframes bubble { 70% { opacity: 0.9; } to { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% - 110px)) scale(1.3); } }
+
+/* 読んだ位置のバー（ヘッダーの下） */
+.read-progress { position: fixed; left: 0; right: 0; top: 0; z-index: 60; height: 3px; background: linear-gradient(90deg, var(--b), var(--b-bright)); transform-origin: left; transform: scaleX(0); pointer-events: none; }
+
+/* 先頭へ戻る（アシカがボールを打ち上げる） */
+.to-top { position: fixed; right: 18px; bottom: 18px; z-index: 60; width: 62px; height: 62px; border: 1px solid var(--line); border-radius: 50%; background: #fff; box-shadow: 0 10px 26px rgba(12, 47, 83, 0.18); display: grid; place-items: center; cursor: pointer; opacity: 0; transform: translateY(30px) scale(0.8); pointer-events: none; transition: opacity 0.3s, transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { transform: translateY(-4px); }
+.to-top img { width: 42px; margin-top: 12px; }
+.to-top .ball { position: absolute; top: 9px; right: 13px; width: 11px; height: 11px; border-radius: 50%; background: var(--b); animation: ball-bob 1.6s ease-in-out infinite; }
+@keyframes ball-bob { 50% { transform: translateY(-5px); } }
+.to-top.launch .ball { animation: ball-launch 0.7s cubic-bezier(0.3, 0, 0.3, 1); }
+@keyframes ball-launch { 50% { transform: translateY(-60px) scale(1.2); } }
+
+/* 隠し要素のアシカの雨 */
+.seal-rain { position: fixed; top: -80px; z-index: 95; pointer-events: none; animation: seal-fall linear forwards; }
+@keyframes seal-fall { to { transform: translateY(calc(100vh + 160px)) rotate(var(--r, 360deg)); } }
+
+@media (max-width: 760px) {
+  .js [data-reveal][data-anim='left'] { transform: translateY(30px); }
+  .js [data-reveal][data-anim='curtain'] { transform: none; }
+  .js [data-reveal][data-anim='wipe'] { transform: none; }
+  .js [data-stagger] > * { transform: translateY(14px); }
+  .js [data-reveal][data-anim].is-in, .js [data-stagger].is-in > * { transform: none; }
+  .to-top { width: 54px; height: 54px; right: 14px; bottom: 14px; }
+  .to-top img { width: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal][data-anim], .js [data-reveal][data-anim] > *, .js [data-reveal][data-anim] .ln > span, .js [data-stagger] > * { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
+  .bubble, .hero::after { display: none; }
+}

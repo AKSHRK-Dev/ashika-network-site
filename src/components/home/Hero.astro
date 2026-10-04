@@ -12,13 +12,13 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
 
 <section class="hero" aria-labelledby="hero-title">
   <div class="container hero-in">
-    <h1 id="hero-title" data-reveal>
+    <!-- 行ごとに .ln で包むと、表示のときに下からせり上がる（global.css の data-anim='lines'） -->
+    <h1 id="hero-title" data-reveal aria-label={hero.title.join('')}>
       {
         hero.title.map((line, i) => (
-          <>
-            {i > 0 && <br />}
-            {line}
-          </>
+          <span class="ln" aria-hidden="true">
+            <span style={`--n:${i}`}>{line}</span>
+          </span>
         ))
       }
     </h1>

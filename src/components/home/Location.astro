@@ -15,6 +15,9 @@ const u = vw / 100;
 const n = (v: number) => Math.round(v * 10) / 10;
 
 const [px, py] = project(M.pin);
+/* 表示されたとき、箕面市から外へ波のように色が付いていく。近い順の遅れ（秒） */
+const far = Math.max(...geo.areas.map((a) => Math.hypot(a.c[0] - px, a.c[1] - py)));
+const wave = (a: { c: [number, number] }) => n((Math.hypot(a.c[0] - px, a.c[1] - py) / far) * 0.9);
 /* 吹き出しは印の左。引き出し線でつなぐ */
 const [bx] = project(M.callout);
 
@@ -24,8 +27,8 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
   <g class="areas">
     ${geo.areas
       .map(
-        (a, i) =>
-          `<path class="city${a.city === M.city ? ' is-here' : ''}" d="${a.d}" style="--i:${i}"><title>${a.city}${a.ward}</title></path>`,
+        (a) =>
+          `<path class="city${a.city === M.city ? ' is-here' : ''}" d="${a.d}" style="--w:${wave(a)}s"><title>${a.city}${a.ward}</title></path>`,
       )
       .join('')}
   </g>
@@ -128,6 +131,18 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
 
   .location .map .city:hover {
     fill: var(--b-bright);
+  }
+
+  /* 表示されたら、箕面市から外へ波のように色が付く */
+  .js .location .map .city {
+    transition: fill 0.2s, opacity 0.5s var(--ease) var(--w, 0s), transform 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) var(--w, 0s);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .js .location .map:not(.is-in) .city {
+    opacity: 0;
+    transform: scale(0.6);
   }
 
   .location .map .city.is-here {
