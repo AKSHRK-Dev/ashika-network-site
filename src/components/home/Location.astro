@@ -1,81 +1,47 @@
 ---
 /**
  * ロケーション（大阪・北摂）。左に見出し・説明・項目の一覧、右に大阪府の地図。
- * 地図は src/data/osaka-map.ts から組み立てる。自分で起こした図で、他所の
- * 地図データは使っていない。設定（印の位置・吹き出しの文字）は
+ * 地図の形は国土数値情報（行政区域、原典は国土地理院の測量成果）で、市町村と区の境界は実際のとおり。
+ * データは src/data/osaka-areas.json（tools/osaka-map/build.py で作る）。印の位置・吹き出しの文字は
  * src/data/home.ts の location.map にある。
  */
 import { location } from '../../data/home';
-import {
-  airport,
-  areaPath,
-  awaji,
-  bounds,
-  cities,
-  cityCells,
-  labels,
-  land,
-  linePath,
-  neighborBorders,
-  osaka,
-  project,
-  rawPath,
-  rivers,
-} from '../../data/osaka-map';
+import { cityCenter, labels, map as geo, project } from '../../data/osaka-map';
 
 const M = location.map;
-
-/*
- * 大阪府は南北に長いので、左右だけ広めに余白を取って横長に収める。
- * 空いた左側に吹き出しを置く。
- */
-const b = bounds(osaka);
-const padX = (b.maxX - b.minX) * 0.42;
-const padY = (b.maxY - b.minY) * 0.06;
-const view = {
-  x: b.minX - padX,
-  y: b.minY - padY,
-  w: b.maxX - b.minX + padX * 2,
-  h: b.maxY - b.minY + padY * 2,
-};
+const [, , vw, vh] = geo.view;
 /* 文字やしるしの大きさは、表示幅の1%を単位にして決める */
-const u = view.w / 100;
+const u = vw / 100;
 const n = (v: number) => Math.round(v * 10) / 10;
 
-const cells = cityCells(b);
 const [px, py] = project(M.pin);
 /* 吹き出しは印の左。引き出し線でつなぐ */
 const [bx] = project(M.callout);
 
-const line = n(0.3 * u);
-
-const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${n(view.x)} ${n(view.y)} ${n(view.w)} ${n(view.h)}" role="img" aria-label="${M.alt}">
-  <clipPath id="osaka-clip"><path d="${areaPath(osaka)}"/></clipPath>
-  <path class="sea" d="M${n(view.x)} ${n(view.y)}h${n(view.w)}v${n(view.h)}h${n(-view.w)}Z"/>
-  <path class="land" d="${areaPath(land)}"/>
-  <path class="land" d="${areaPath(awaji)}"/>
-  ${neighborBorders.map((l) => `<path class="pref-line" d="${linePath(l)}" stroke-width="${line}"/>`).join('')}
-  <g clip-path="url(#osaka-clip)">
-    ${cells
+const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(vh)}" role="img" aria-label="${M.alt}">
+  <rect class="sea" width="${n(vw)}" height="${n(vh)}"/>
+  <path class="land" d="${geo.land}"/>
+  <g class="areas">
+    ${geo.areas
       .map(
-        (c) =>
-          `<path class="city${c.name === M.city ? ' is-here' : ''}" d="${rawPath(c.poly)}" stroke-width="${line}"/>`,
+        (a, i) =>
+          `<path class="city${a.city === M.city ? ' is-here' : ''}" d="${a.d}" style="--i:${i}"><title>${a.city}${a.ward}</title></path>`,
       )
       .join('')}
-    ${rivers.map((l) => `<path class="river" d="${linePath(l)}" stroke-width="${n(0.3 * u)}"/>`).join('')}
   </g>
-  <path class="city" d="${areaPath(airport)}" stroke-width="${line}"/>
+  <path class="ward-line" d="${geo.lines.ward}" stroke-width="${n(0.1 * u)}"/>
+  <path class="city-line" d="${geo.lines.city}" stroke-width="${n(0.24 * u)}"/>
+  <path class="pref-line" d="${geo.lines.pref}" stroke-width="${n(0.3 * u)}"/>
   ${labels
     .map((l) => {
       const [x, y] = project(l.at);
       return `<text class="${l.tone}-name" x="${n(x)}" y="${n(y)}" font-size="${n(2 * u)}" text-anchor="middle">${l.text}</text>`;
     })
     .join('')}
-  ${cities
-    .filter((c) => M.bigCities.includes(c.name))
-    .map((c) => {
-      const [x, y] = project(c.at);
-      return `<text class="city-name" x="${n(x)}" y="${n(y)}" font-size="${n(1.7 * u)}" text-anchor="middle">${c.name}</text>`;
+  ${M.bigCities
+    .map((name) => {
+      const [x, y] = cityCenter(name);
+      return `<text class="city-name" x="${n(x)}" y="${n(y)}" font-size="${n(1.7 * u)}" text-anchor="middle">${name}</text>`;
     })
     .join('')}
   <g class="mark">
@@ -140,30 +106,34 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${n(view.x)} ${n(v
     fill: var(--line);
   }
 
-  /* 隣どうしの府県を分ける線 */
-  .location .map .pref-line {
+  /* 府県の境、市町村の境、区の境（区は細く薄く） */
+  .location .map .pref-line,
+  .location .map .city-line,
+  .location .map .ward-line {
     fill: none;
     stroke: var(--bg);
     stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  /* 市町村。区切りは白い線 */
+  .location .map .ward-line {
+    opacity: 0.55;
+  }
+
+  /* 市町村・区の面 */
   .location .map .city {
     fill: var(--b);
-    stroke: var(--bg);
-    stroke-linejoin: round;
+    transition: fill 0.2s;
+  }
+
+  .location .map .city:hover {
+    fill: var(--b-bright);
   }
 
   .location .map .city.is-here {
     fill: var(--b-bright);
   }
 
-  .location .map .river {
-    fill: none;
-    stroke: var(--b-tint);
-    stroke-linecap: round;
-    opacity: 0.4;
-  }
 
   .location .map .land-name {
     fill: var(--ink-3);

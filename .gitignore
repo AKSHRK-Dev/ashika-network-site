@@ -8,3 +8,5 @@ dist/
 *.log
 .DS_Store
 __MACOSX/
+# N03 boundary data for tools/osaka-map (large; download as described in build.py)
+tools/osaka-map/data/
