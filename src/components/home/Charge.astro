@@ -5,7 +5,10 @@
  * そのまま購入ページへ進めるようにする。
  */
 import Icon from '../Icon.astro';
-import { charge } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { charge } = content(langOf(Astro.url)).home;
 ---
 
 <section id="charge" class="section charge" aria-labelledby="charge-title">

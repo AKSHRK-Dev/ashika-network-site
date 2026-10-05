@@ -1,0 +1,8 @@
+---
+/** 英語版。本文は src/content/guides/en/vps.html */
+import Guide from '../../layouts/Guide.astro';
+import body from '../../content/guides/en/vps.html?raw';
+import { guideByHref } from '../../data/en/guides';
+---
+
+<Guide guide={guideByHref('/en/vps')} body={body} />

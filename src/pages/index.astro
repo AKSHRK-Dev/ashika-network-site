@@ -11,8 +11,12 @@ import Flow from '../components/home/Flow.astro';
 import Charge from '../components/home/Charge.astro';
 import Faq from '../components/home/Faq.astro';
 import Cta from '../components/home/Cta.astro';
-import { site } from '../data/site';
 import { faqSchema, serviceSchema } from '../data/schema';
+import { content } from '../data/index';
+import { langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { site } = content(lang).site;
 ---
 
 <!--
@@ -21,7 +25,7 @@ import { faqSchema, serviceSchema } from '../data/schema';
   次に「自分の用途で使えるか」、そのうえで料金と他社比較へ進む。
   パネル・拠点は裏付け、流れとFAQで不安を潰して申し込みへ送る。
 -->
-<Base path="/" keywords={site.keywords} schema={[serviceSchema(), faqSchema()]}>
+<Base path={localize('/', lang)} keywords={site.keywords} schema={[serviceSchema(lang), faqSchema(lang)]}>
   <Hero />
   <Features />
   <UseCases />

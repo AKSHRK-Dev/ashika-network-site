@@ -8,7 +8,8 @@
  */
 import Base from './Base.astro';
 import { site } from '../data/site';
-import { breadcrumbLabels } from '../data/legal';
+import { content } from '../data/index';
+import { basePath, chrome, langOf, localize } from '../i18n';
 
 interface Props {
   title: string;
@@ -23,6 +24,12 @@ interface Props {
 }
 
 const { title, heading = title, en, date, description, path, body } = Astro.props;
+const lang = langOf(Astro.url);
+const { breadcrumbLabels } = content(lang).legal;
+const words = chrome[lang];
+const legalHref = localize('/legal', lang);
+/* 英語版は参考訳。日本語の原文へのリンクを添える */
+const originalHref = basePath(path);
 
 /*
  * 本文の h2 / h3 に id を振りながら、目次の項目を集める。
@@ -39,9 +46,9 @@ const bodyWithIds = body.replace(/<h([23])>([\s\S]*?)<\/h\1>/g, (_match, level: 
 
 // 検索結果にパンくず（ホーム › 規約・方針 › 利用規約）を出すための構造化データ
 const crumbs = [
-  { name: breadcrumbLabels.home, item: `${site.url}/` },
-  { name: breadcrumbLabels.legal, item: `${site.url}/legal` },
-  ...(path !== '/legal' ? [{ name: title, item: `${site.url}${path}` }] : []),
+  { name: breadcrumbLabels.home, item: lang === 'en' ? `${site.url}/en` : `${site.url}/` },
+  { name: breadcrumbLabels.legal, item: `${site.url}${legalHref}` },
+  ...(path !== legalHref ? [{ name: title, item: `${site.url}${path}` }] : []),
 ];
 const breadcrumb = {
   '@context': 'https://schema.org',
@@ -56,18 +63,25 @@ const breadcrumb = {
   <section class="doc-hero">
     <div class="container">
       <p class="doc-crumb">
-        <a href="/legal">{breadcrumbLabels.legal}</a>
+        <a href={legalHref}>{breadcrumbLabels.legal}</a>
       </p>
       <h1 set:html={heading} />
       <p class="doc-en">{en}</p>
       <p class="doc-date">{date}</p>
+      {
+        lang === 'en' && (
+          <p class="doc-translation">
+            {words.translationNote} <a href={originalHref} hreflang="ja" lang="ja">{words.translationLink}</a>
+          </p>
+        )
+      }
     </div>
   </section>
 
   <div class="container doc-wrap">
-    <nav class="doc-toc" aria-label="この文書の目次">
+    <nav class="doc-toc" aria-label={words.docTocAria}>
       <details open>
-        <summary>目次</summary>
+        <summary>{words.toc}</summary>
         <ol>
           {
             headings.map((h) => (
@@ -90,6 +104,24 @@ const breadcrumb = {
     background: var(--surface);
     border-bottom: 1px solid var(--line);
     padding-block: clamp(28px, 4.5vw, 52px);
+  }
+
+  .doc-translation {
+    margin-top: 1rem;
+    max-width: 720px;
+    padding: 10px 14px;
+    border-left: 3px solid var(--b);
+    background: var(--b-tint);
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  .doc-translation a {
+    color: var(--b);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .doc-crumb {

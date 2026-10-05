@@ -5,8 +5,12 @@
  * データは src/data/osaka-areas.json（tools/osaka-map/build.py で作る）。印の位置・吹き出しの文字は
  * src/data/home.ts の location.map にある。
  */
-import { location } from '../../data/home';
-import { cityCenter, labels, map as geo, project } from '../../data/osaka-map';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+import { cityCenter, labels, map as geo, placeName, project } from '../../data/osaka-map';
+
+const lang = langOf(Astro.url);
+const { location } = content(lang).home;
 
 const M = location.map;
 const [, , vw, vh] = geo.view;
@@ -28,7 +32,7 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
     ${geo.areas
       .map(
         (a) =>
-          `<path class="city${a.city === M.city ? ' is-here' : ''}" d="${a.d}" style="--w:${wave(a)}s"><title>${a.city}${a.ward}</title></path>`,
+          `<path class="city${a.city === M.city ? ' is-here' : ''}" d="${a.d}" style="--w:${wave(a)}s"><title>${placeName(a.city, a.ward, lang)}</title></path>`,
       )
       .join('')}
   </g>
@@ -38,13 +42,13 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
   ${labels
     .map((l) => {
       const [x, y] = project(l.at);
-      return `<text class="${l.tone}-name" x="${n(x)}" y="${n(y)}" font-size="${n(2 * u)}" text-anchor="middle">${l.text}</text>`;
+      return `<text class="${l.tone}-name" x="${n(x)}" y="${n(y)}" font-size="${n(2 * u)}" text-anchor="middle">${lang === 'en' ? l.en : l.text}</text>`;
     })
     .join('')}
   ${M.bigCities
     .map((name) => {
       const [x, y] = cityCenter(name);
-      return `<text class="city-name" x="${n(x)}" y="${n(y)}" font-size="${n(1.7 * u)}" text-anchor="middle">${name}</text>`;
+      return `<text class="city-name" x="${n(x)}" y="${n(y)}" font-size="${n(1.7 * u)}" text-anchor="middle">${placeName(name, '', lang)}</text>`;
     })
     .join('')}
   <g class="mark">

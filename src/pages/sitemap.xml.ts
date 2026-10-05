@@ -6,12 +6,18 @@
 import type { APIRoute } from 'astro';
 import { seo, site } from '../data/site';
 import { legalDocs } from '../data/legal';
+import { localize } from '../i18n';
 
 type Entry = { path: string; lastmod: string; changefreq: string; priority: number };
 
-const entries: Entry[] = [
+const jaEntries: Entry[] = [
   ...seo.pages,
   ...legalDocs.map((d) => ({ path: d.href, lastmod: d.updated, ...seo.legalDefaults })),
+];
+/* 英語版は同じページの頭に /en を付けたもの。日本語版より少しだけ優先度を下げる */
+const entries: Entry[] = [
+  ...jaEntries,
+  ...jaEntries.map((e) => ({ ...e, path: localize(e.path, 'en'), priority: Math.max(0.1, e.priority - 0.1) })),
 ];
 
 /** trailingSlash: 'never' に合わせる。トップページだけは末尾のスラッシュを残す */

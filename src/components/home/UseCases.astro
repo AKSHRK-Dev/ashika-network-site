@@ -6,8 +6,11 @@
  * 中身はカードに入れず、帯の上にそのまま置く。左に見出しと説明とボタン、右に「これまで／ASHIKA Networkなら」とポイント。
  */
 import Icon from '../Icon.astro';
-import { uses } from '../../data/home';
-import { vsLabels } from '../../data/compare';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { uses } = content(langOf(Astro.url)).home;
+const { vsLabels } = content(langOf(Astro.url)).compare;
 
 /** 1つの用途を見せる時間（ミリ秒）。値は src/data/home.ts の uses.duration */
 const DURATION = uses.duration;

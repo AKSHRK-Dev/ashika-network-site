@@ -1,0 +1,8 @@
+---
+/** 英語版（参考訳）。本文は src/content/legal/en/kessai.html */
+import Doc from '../../layouts/Doc.astro';
+import body from '../../content/legal/en/kessai.html?raw';
+import { legalDocProps } from '../../data/index';
+---
+
+<Doc {...legalDocProps('/en/kessai', 'en')} body={body} />

@@ -1,5 +1,8 @@
 ---
-import { flow } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { flow } = content(langOf(Astro.url)).home;
 ---
 
 <section id="flow" class="section flow" aria-labelledby="flow-title">

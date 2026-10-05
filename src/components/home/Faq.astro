@@ -1,6 +1,9 @@
 ---
 import Icon from '../Icon.astro';
-import { faq } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { faq } = content(langOf(Astro.url)).home;
 ---
 
 <section id="faq" class="section band faq" aria-labelledby="faq-title">

@@ -1,6 +1,9 @@
 ---
 import Icon from '../Icon.astro';
-import { cta } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { cta } = content(langOf(Astro.url)).home;
 ---
 
 <section id="start" class="cta" aria-labelledby="cta-title">

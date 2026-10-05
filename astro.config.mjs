@@ -8,7 +8,8 @@ export default defineConfig({
   site: 'https://www.ashikanw.com',
   trailingSlash: 'never',
   build: {
-    format: 'file',
+    // preserve: faq.astro → faq.html（従来どおり）、en/index.astro → en/index.html（/en で開ける）
+    format: 'preserve',
   },
   adapter: node({ mode: 'standalone' }),
   vite: {

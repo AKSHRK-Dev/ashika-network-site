@@ -1,0 +1,8 @@
+---
+/** 英語版（参考訳）。本文は src/content/legal/en/aup.html */
+import Doc from '../../layouts/Doc.astro';
+import body from '../../content/legal/en/aup.html?raw';
+import { legalDocProps } from '../../data/index';
+---
+
+<Doc {...legalDocProps('/en/aup', 'en')} body={body} />

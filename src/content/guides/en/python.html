@@ -1,0 +1,141 @@
+<h2>What goes wrong when you run it on your own PC</h2>
+
+<p>When you first write a Python script, it is something you run when you need it. But after using it for a while, you always end up thinking: <strong>I wish this just ran by itself</strong>.</p>
+
+<p>Fetching data every morning. Checking stock every hour. Collecting notifications and adding them up. None of these needs a person at the desk. Yet on your PC:</p>
+
+<ul>
+  <li>closing the PC stops it, and it does not run while you are out</li>
+  <li>an update restarts the PC, and by morning it has stopped</li>
+  <li>you cannot leave in the middle of a long job</li>
+  <li>leaving it on costs a few hundred to about a thousand yen a month in electricity</li>
+</ul>
+
+<p>Move it somewhere else and all of that goes away. And <strong>¥30 a month is usually cheaper than the electricity</strong> for leaving a PC on.</p>
+
+<h2>How much does it need?</h2>
+
+<p>For Python scripts, what matters is almost always <strong>memory</strong>, and that depends on how much data you load.</p>
+
+<div class="table">
+  <table>
+    <thead>
+      <tr><th>What you want to do</th><th>Memory needed</th><th>Suitable plan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Call an API and save the result</td><td class="num">up to 128MB</td><td>Mini (256MB)</td></tr>
+      <tr><td>Fetch pages and extract their content</td><td class="num">128–300MB</td><td>Basic (512MB)</td></tr>
+      <tr><td>Process tables with tens of thousands of rows</td><td class="num">300MB–1GB</td><td>Plus (1GB) / Memory Basic</td></tr>
+      <tr><td>Load a large table all at once</td><td class="num">1GB and up</td><td>Memory Plus (2GB) or larger</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Libraries such as pandas that <strong>load a whole table into memory</strong> need a lot more at once. Plan for three to five times the size of the file you load and you will not go wrong.</p>
+
+<h3>Standard or High memory?</h3>
+
+<p>At about the same price, Standard plans get more CPU and High-memory plans get more memory.</p>
+
+<ul>
+  <li><strong>The computation itself is heavy</strong> (conversion, aggregation, lots of loops): Standard</li>
+  <li><strong>You keep data in memory</strong> (large tables, caches): High memory</li>
+</ul>
+
+<h2>Running at set times (scheduled jobs)</h2>
+
+<p>Schedules like "once at 7:00 every morning" or "every 10 minutes" are written in <code>cron</code> format: five fields.</p>
+
+<pre><code># min hour day month weekday
+0  7  *  *  *    once a day at 7:00
+*/10 * * * *     every 10 minutes
+0  */3 * * *     every 3 hours
+0  9  * * 1      every Monday at 9:00</code></pre>
+
+<p>You could also wait inside the script with <code>while True:</code> and <code>time.sleep()</code>, but <strong>for set times, a scheduled job is more reliable</strong>. The program exits when the job is done, so it does not keep holding memory.</p>
+
+<div class="note">
+  <p>On the other hand, things that <strong>should always be running</strong> (waiting for incoming messages, watching something constantly) should run as an always-on program, not a scheduled job. If they crash, they are restarted automatically.</p>
+</div>
+
+<h2>From uploading to running</h2>
+
+<ol>
+  <li><strong>Add balance.</strong> Credit cards, PayPay, bank transfer, Apple Pay and Google Pay all work.</li>
+  <li><strong>Choose a plan and a period, and buy it.</strong> It is ready the moment you buy.</li>
+  <li><strong>Upload your files.</strong> Upload them from your browser, or write them right there. No SSH needed.</li>
+  <li><strong>Install dependencies and start it.</strong> With a <code>requirements.txt</code> in place, the libraries you need are installed together.</li>
+</ol>
+
+<h3>Always include requirements.txt</h3>
+
+<p>What you installed with <code>pip install</code> on your PC is not on the server. Write it out like this and upload it with your code.</p>
+
+<pre><code>pip freeze &gt; requirements.txt</code></pre>
+
+<h3>Keep secrets out of your code</h3>
+
+<p>Do not write API keys or passwords into your code; read them from environment variables. You can set these in the panel.</p>
+
+<pre><code>import os
+
+API_KEY = os.environ["API_KEY"]</code></pre>
+
+<h2>Keeping it from stopping</h2>
+
+<p>An always-on program will crash sooner or later. The other server did not answer, unexpected data came in, the connection dropped. These things happen all the time.</p>
+
+<p>ASHIKA Network <strong>detects crashes and restarts the program automatically</strong>, so it will not sit there stopped until morning. On top of that, taking care of two things in your script makes it much more stable:</p>
+
+<ul>
+  <li><strong>Wrap anything that talks to the outside in <code>try</code></strong>, so one failure does not stop everything.</li>
+  <li><strong>Write progress to a file or database</strong>, so it can carry on from where it left off after a restart.</li>
+</ul>
+
+<pre><code>import time
+
+while True:
+    try:
+        do_work()
+    except Exception as e:
+        print("Failed:", e)
+    time.sleep(60)</code></pre>
+
+<h2>Reading the logs</h2>
+
+<p>Whatever you <code>print()</code> streams straight into your browser. That is enough to see whether it is running.</p>
+
+<p>For things that run for a long time, <strong>print the time along with each message</strong> so you can trace what happened later.</p>
+
+<pre><code>import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+)
+logging.info("Starting")</code></pre>
+
+<h2>Common stumbling blocks</h2>
+
+<h3>ModuleNotFoundError</h3>
+
+<p>A library is missing. Upload <code>requirements.txt</code> and install again. What you installed on your PC does not come along by itself.</p>
+
+<h3>Garbled text</h3>
+
+<p>Specify the encoding when you open a file. Without it, the way the file is read depends on the environment.</p>
+
+<pre><code>open("data.csv", encoding="utf-8")</code></pre>
+
+<h3>Times are off by several hours</h3>
+
+<p>The server clock may run on UTC. If you want a specific time zone, set it explicitly. For Japan time:</p>
+
+<pre><code>from datetime import datetime, timezone, timedelta
+
+JST = timezone(timedelta(hours=9))
+print(datetime.now(JST))</code></pre>
+
+<h3>It crashes partway through</h3>
+
+<p>Suspect a lack of memory. Either process large files a bit at a time instead of loading them all at once, or move up one plan.</p>

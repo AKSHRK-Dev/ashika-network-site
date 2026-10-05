@@ -5,19 +5,24 @@
  * 狭い画面では開閉させず、そのまま積んで表示する（探す手間を増やさないため）。
  */
 import Icon from './Icon.astro';
-import { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } from '../data/site';
+import { content } from '../data/index';
+import { langOf } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } = content(lang).site;
 ---
 
 <footer class="footer">
   <div class="container ft-main">
     <div class="ft-brand">
-      <a class="ft-logo" href="/" aria-label={ui.footer.brandAria}>
+      <a class="ft-logo" href={lang === 'en' ? '/en' : '/'} aria-label={ui.footer.brandAria}>
         <img src={brand.footer.src} alt={site.name} width={brand.footer.width} height={brand.footer.height} />
       </a>
       <p class="ft-about">
         {
           footerText.about.split('\n').map((line, i) => (
             <>
+              {i > 0 && lang === 'en' && ' '}
               {i > 0 && <br class="pc" />}
               {line}
             </>

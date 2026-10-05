@@ -7,34 +7,39 @@
 import '../styles/guide.css';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { faqGroups, faqPage } from '../data/faq-full';
 import { breadcrumbSchema, fullFaqSchema } from '../data/schema';
 import { links, site } from '../data/site';
+import { content } from '../data/index';
+import { chrome, langOf, localize } from '../i18n';
 
-const url = `${site.url}/faq`;
+const lang = langOf(Astro.url);
+const words = chrome[lang];
+const { faqGroups, faqPage } = content(lang).faq;
+const path = localize('/faq', lang);
+const url = `${site.url}${path}`;
 ---
 
 <Base
   title={faqPage.title}
   description={faqPage.description}
-  path="/faq"
+  path={path}
   keywords={faqPage.keywords}
   updated={faqPage.updated}
-  schema={[breadcrumbSchema([{ name: faqPage.title, path: '/faq' }]), fullFaqSchema(url)]}
+  schema={[breadcrumbSchema([{ name: faqPage.title, path }], lang), fullFaqSchema(url, lang)]}
 >
   <section class="g-hero">
     <div class="container">
-      <p class="g-crumb"><a href="/">ホーム</a> <span aria-hidden="true">›</span> {faqPage.title}</p>
+      <p class="g-crumb"><a href={localize('/', lang)}>{words.home}</a> <span aria-hidden="true">›</span> {faqPage.title}</p>
       <h1>{faqPage.heading}</h1>
       <p class="g-lead">{faqPage.lead}</p>
-      <p class="g-date">最終更新 {faqPage.updatedLabel}</p>
+      <p class="g-date">{words.updated} {faqPage.updatedLabel}</p>
     </div>
   </section>
 
   <div class="container g-wrap">
-    <nav class="g-toc" aria-label="このページの目次">
+    <nav class="g-toc" aria-label={words.pageTocAria}>
       <details open>
-        <summary>目次</summary>
+        <summary>{words.toc}</summary>
         <ol>
           {faqGroups.map((g) => (
             <li><a href={`#${g.id}`}>{g.title}</a></li>
@@ -63,38 +68,28 @@ const url = `${site.url}/faq`;
       }
 
       <aside class="g-cta">
-        <h2>ここに無いことは、聞いてください</h2>
-        <p>Discord でお受けしています。同じ環境を使っている方も多いので、その場で解決することもあります。</p>
+        <h2>{faqPage.ask.title}</h2>
+        <p>{faqPage.ask.lead}</p>
         <div class="g-acts">
           <a class="btn btn-primary btn-lg" href={links.discord} target="_blank" rel="noopener">
-            Discordで聞く
+            {faqPage.ask.button}
             <Icon name="arrow" />
           </a>
-          <a class="btn btn-ghost" href="/#plans">料金を見る</a>
+          <a class="btn btn-ghost" href={localize('/#plans', lang)}>{words.seePrices}</a>
         </div>
       </aside>
 
-      <nav class="g-related" aria-label="関連するページ">
-        <h2>こちらもどうぞ</h2>
+      <nav class="g-related" aria-label={words.relatedAria}>
+        <h2>{words.related}</h2>
         <ul>
-          <li>
-            <a href="/discord-bot">
-              <span class="t">Discord Bot を24時間動かす</span>
-              <span class="d">必要なメモリの目安から、動かすまでの手順まで。</span>
-            </a>
-          </li>
-          <li>
-            <a href="/python">
-              <span class="t">Python を24時間動かす</span>
-              <span class="d">定期実行・常駐処理を、家のパソコンから離して動かす。</span>
-            </a>
-          </li>
-          <li>
-            <a href="/vps">
-              <span class="t">VPS（専有IPv4・ルート権限）</span>
-              <span class="d">2026年10月13日から受け付けます。</span>
-            </a>
-          </li>
+          {faqPage.related.map((r) => (
+            <li>
+              <a href={r.href}>
+                <span class="t">{r.title}</span>
+                <span class="d">{r.desc}</span>
+              </a>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>

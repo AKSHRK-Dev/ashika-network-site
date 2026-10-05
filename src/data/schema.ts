@@ -7,17 +7,21 @@
  * 文言や金額はすべて既存のデータから引いてくる。ここで別に書くと、
  * 画面に出ている内容と検索エンジンに渡す内容がずれていくため。
  */
+import type { Lang } from '../i18n';
+import { chrome } from '../i18n';
 import { site } from './site';
-import { faq, plans, specLabels, type Plan } from './home';
-import { allFaqItems } from './faq-full';
+import type { Plan } from './home';
+import { content } from './index';
 
 const ORG = { '@id': `${site.url}/#organization` };
 
 /** 「よくある質問」。画面に出ているものと同じ内容を渡す */
-export function faqSchema() {
+export function faqSchema(lang: Lang) {
+  const { faq } = content(lang).home;
+  const home = lang === 'en' ? `${site.url}/en` : `${site.url}/`;
   return {
     '@type': 'FAQPage',
-    '@id': `${site.url}/#faq`,
+    '@id': `${home}#faq`,
     mainEntity: faq.items.map((item) => ({
       '@type': 'Question',
       name: item.q,
@@ -27,7 +31,8 @@ export function faqSchema() {
 }
 
 /** よくある質問のページ（/faq）。こちらは全部の質問を渡す */
-export function fullFaqSchema(url: string) {
+export function fullFaqSchema(url: string, lang: Lang) {
+  const { allFaqItems } = content(lang).faq;
   return {
     '@type': 'FAQPage',
     '@id': `${url}#faq`,
@@ -40,7 +45,9 @@ export function fullFaqSchema(url: string) {
 }
 
 /** 料金表の1行を、値段つきの商品として表す */
-function planSchema(plan: Plan, kindLabel: string) {
+function planSchema(plan: Plan, kindLabel: string, lang: Lang) {
+  const { specLabels } = content(lang).home;
+  const en = lang === 'en';
   const specs = specLabels.map((label, i) => ({
     '@type': 'PropertyValue',
     name: label,
@@ -49,12 +56,14 @@ function planSchema(plan: Plan, kindLabel: string) {
 
   return {
     '@type': 'Product',
-    name: `${plan.name}（${kindLabel}）`,
-    description: `${kindLabel}の${plan.name}。${specLabels
-      .map((label, i) => `${label} ${plan.specs[i]}`)
-      .join('・')}。${plan.fit}方に向いています。`,
+    name: en ? `${plan.name} (${kindLabel})` : `${plan.name}（${kindLabel}）`,
+    description: en
+      ? `${plan.name}, ${kindLabel}. ${specLabels.map((label, i) => `${label} ${plan.specs[i]}`).join(', ')}. Best for: ${plan.fit}.`
+      : `${kindLabel}の${plan.name}。${specLabels
+          .map((label, i) => `${label} ${plan.specs[i]}`)
+          .join('・')}。${plan.fit}方に向いています。`,
     brand: ORG,
-    category: 'ホスティング',
+    category: en ? 'Hosting' : 'ホスティング',
     additionalProperty: specs,
     ...(plan.monthly === null
       ? {}
@@ -80,22 +89,25 @@ function planSchema(plan: Plan, kindLabel: string) {
 }
 
 /** 提供しているもの全体。値段の一覧を添えて、何をいくらで売っているかを伝える */
-export function serviceSchema() {
+export function serviceSchema(lang: Lang) {
+  const { plans } = content(lang).home;
+  const text = content(lang).site.site;
+  const en = lang === 'en';
   const items = plans.kinds.flatMap((kind) =>
     plans.list[kind.key].map((plan) => ({
       '@type': 'Offer',
-      itemOffered: planSchema(plan, kind.label),
+      itemOffered: planSchema(plan, kind.label, lang),
     })),
   );
 
   return {
     '@type': 'Service',
-    '@id': `${site.url}/#service`,
-    name: 'ASHIKA Network のホスティング',
-    serviceType: 'ホスティング',
-    description: site.description,
+    '@id': en ? `${site.url}/en#service` : `${site.url}/#service`,
+    name: en ? 'ASHIKA Network hosting' : 'ASHIKA Network のホスティング',
+    serviceType: en ? 'Hosting' : 'ホスティング',
+    description: text.description,
     provider: ORG,
-    areaServed: { '@type': 'Country', name: '日本' },
+    areaServed: { '@type': 'Country', name: chrome[lang].country },
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'JPY',
@@ -104,17 +116,18 @@ export function serviceSchema() {
     },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: '料金プラン',
+      name: en ? 'Pricing' : '料金プラン',
       itemListElement: items,
     },
   };
 }
 
 /** パンくず。トップから今のページまでの道のりを渡す */
-export function breadcrumbSchema(trail: { name: string; path: string }[]) {
+export function breadcrumbSchema(trail: { name: string; path: string }[], lang: Lang) {
+  const home = lang === 'en' ? '/en' : '/';
   return {
     '@type': 'BreadcrumbList',
-    itemListElement: [{ name: 'ホーム', path: '/' }, ...trail].map((c, i) => ({
+    itemListElement: [{ name: chrome[lang].home, path: home }, ...trail].map((c, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       name: c.name,

@@ -5,17 +5,26 @@
  * 現在地のナビには下線を引いて示す。狭い画面では右のボタンから引き出しメニューを開く。
  */
 import Icon from './Icon.astro';
-import { brand, nav, notice, links, site, ui } from '../data/site';
+import { content } from '../data/index';
+import { chrome, langOf, pathIn } from '../i18n';
 
 const { pathname } = Astro.url;
-const isCurrent = (href: string) => (href === '/' ? pathname === '/' : !href.startsWith('http') && pathname.startsWith(href));
+const lang = langOf(Astro.url);
+const { brand, nav, notice, links, site, ui } = content(lang).site;
+const words = chrome[lang];
+const other = lang === 'en' ? 'ja' : 'en';
+/* 同じページの別の言語。ページの中の位置（#…）は持ち越さない */
+const switchHref = pathIn(pathname, other);
+const homeHref = lang === 'en' ? '/en' : '/';
+const isCurrent = (href: string) =>
+  href === homeHref ? pathname === homeHref : !href.startsWith('http') && !href.includes('#') && pathname.replace(/\.html$/, '').startsWith(href);
 ---
 
 {
   notice.show && (
     <div class="notice">
       <div class="container">
-        <span class="notice-mark">お知らせ</span>
+        <span class="notice-mark">{words.notice}</span>
         {notice.text}
         <a href={notice.linkHref} target="_blank" rel="noopener">
           {notice.linkLabel}
@@ -28,7 +37,7 @@ const isCurrent = (href: string) => (href === '/' ? pathname === '/' : !href.sta
 
 <header class="header" id="header">
   <div class="container header-in">
-    <a class="brand" href="/" aria-label={ui.header.brandAria}>
+    <a class="brand" href={homeHref} aria-label={ui.header.brandAria}>
       <img src={brand.header.src} alt={site.name} width={brand.header.width} height={brand.header.height} />
     </a>
 
@@ -53,6 +62,10 @@ const isCurrent = (href: string) => (href === '/' ? pathname === '/' : !href.sta
     </nav>
 
     <div class="actions">
+      <a class="lang-switch" href={switchHref} hreflang={other} lang={other} aria-label={words.switchAria}>
+        <Icon name="globe" size={15} />
+        {words.switchTo}
+      </a>
       <a class="login" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
       <a class="btn btn-primary btn-sm" href={links.register} target="_blank" rel="noopener">{ui.header.register}</a>
     </div>
@@ -88,6 +101,10 @@ const isCurrent = (href: string) => (href === '/' ? pathname === '/' : !href.sta
       ))
     }
   </nav>
+  <a class="drawer-lang" href={switchHref} hreflang={other} lang={other}>
+    <Icon name="globe" size={16} />
+    {words.switchTo}
+  </a>
   <div class="drawer-foot">
     <a class="btn btn-outline" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
     <a class="btn btn-primary" href={links.register} target="_blank" rel="noopener">{ui.header.register}<Icon name="arrow" /></a>
@@ -199,6 +216,42 @@ const isCurrent = (href: string) => (href === '/' ? pathname === '/' : !href.sta
   .login:hover {
     color: var(--b);
     border-bottom-color: var(--b);
+  }
+
+  /* ---------- 言語の切り替え ---------- */
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-2);
+    padding: 4px 9px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r);
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+
+  .lang-switch:hover {
+    color: var(--b);
+    border-color: var(--b);
+    background: var(--b-tint);
+  }
+
+  .drawer-lang {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 13px var(--gutter);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .drawer-lang:hover {
+    color: var(--b);
+    background: var(--b-tint);
   }
 
   /* ---------- 開閉ボタン（狭い画面） ---------- */

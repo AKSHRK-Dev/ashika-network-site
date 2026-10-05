@@ -1,0 +1,8 @@
+---
+/** 英語版（参考訳）。本文は src/content/legal/en/terms.html */
+import Doc from '../../layouts/Doc.astro';
+import body from '../../content/legal/en/terms.html?raw';
+import { legalDocProps } from '../../data/index';
+---
+
+<Doc {...legalDocProps('/en/terms', 'en')} body={body} />

@@ -1,0 +1,8 @@
+---
+/** 英語版（参考訳）。本文は src/content/legal/en/privacy.html */
+import Doc from '../../layouts/Doc.astro';
+import body from '../../content/legal/en/privacy.html?raw';
+import { legalDocProps } from '../../data/index';
+---
+
+<Doc {...legalDocProps('/en/privacy', 'en')} body={body} />

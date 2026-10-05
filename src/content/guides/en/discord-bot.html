@@ -1,0 +1,149 @@
+<h2>Why it stops when you run it on your PC</h2>
+
+<p>A Discord bot is not finished once it is written. <strong>Your program has to be running at the very moment someone types a command</strong>. In other words, it has to stay on 24 hours a day.</p>
+
+<p>On your own PC, it stops when:</p>
+
+<ul>
+  <li>you close the lid, the PC goes to sleep, or you shut it down</li>
+  <li>a Windows update restarts it during the night</li>
+  <li>the connection drops or the router restarts</li>
+  <li>it crashed with an error while you were asleep</li>
+</ul>
+
+<p>None of these can be avoided by just being careful. A PC is a machine for people to use, not one built to run without stopping. Electricity adds up too: leaving a laptop on costs a few hundred to about a thousand yen a month in Japan. <strong>A ¥30-a-month server ends up cheaper</strong>.</p>
+
+<div class="note">
+  <p>Many people wonder whether a free cloud tier would do. Free tiers usually come with limits: they stop after a period without traffic, or cap your running hours each month. That does not suit a Discord bot, which needs to stay on.</p>
+</div>
+
+<h2>How much a bot needs</h2>
+
+<p>Discord bots are lighter than you might think. <strong>Memory</strong> is what decides it; CPU only matters if you do something very heavy.</p>
+
+<div class="table">
+  <table>
+    <thead>
+      <tr><th>Bot size</th><th>Memory needed</th><th>Suitable plan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Only answers commands</td><td class="num">up to 128MB</td><td>Mini (256MB)</td></tr>
+      <tr><td>Used daily on a few servers, simple database</td><td class="num">128–300MB</td><td>Basic (512MB)</td></tr>
+      <tr><td>Dozens of servers, music, image generation</td><td class="num">300MB–1GB</td><td>Plus (1GB) or larger</td></tr>
+      <tr><td>Keeps large amounts of data in memory</td><td class="num">1GB and up</td><td>High-memory plans</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>If unsure, <strong>start with a small plan</strong>. You can move up when it is not enough. Renting a big plan from the start only wastes money if you do not use it.</p>
+
+<h3>A note on music bots</h3>
+
+<p>Bots that play audio use more CPU and memory than other bots, because the audio is encoded all the time. For one or two servers, Plus is a safe choice; as more people use it, look at Pro or above.</p>
+
+<h2>What it costs</h2>
+
+<p>ASHIKA Network is flat rate. There is no pay-as-you-go billing, so <strong>you are never charged more than the balance you topped up</strong>.</p>
+
+<div class="table">
+  <table>
+    <thead>
+      <tr><th>Plan</th><th>Memory</th><th>CPU</th><th>Storage</th><th>Monthly</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Mini</td><td class="num">256MB</td><td class="num">20%</td><td class="num">512MB</td><td class="num">¥30</td></tr>
+      <tr><td>Basic</td><td class="num">512MB</td><td class="num">50%</td><td class="num">2048MB</td><td class="num">¥50</td></tr>
+      <tr><td>Plus</td><td class="num">1024MB</td><td class="num">100%</td><td class="num">5120MB</td><td class="num">¥110</td></tr>
+      <tr><td>Pro</td><td class="num">2048MB</td><td class="num">150%</td><td class="num">10240MB</td><td class="num">¥230</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Paying for three months at once makes each month a little cheaper. You can compare every plan on the <a href="/en#plans">pricing section</a>.</p>
+
+<h2>From getting a server to running your bot</h2>
+
+<p>No complicated setup. The steps are:</p>
+
+<ol>
+  <li><strong>Add balance.</strong> Credit cards, PayPay, bank transfer, Apple Pay and Google Pay all work, from ¥100.</li>
+  <li><strong>Choose a plan and a period, and buy it.</strong> Your connection details appear as soon as you buy, so there is no waiting.</li>
+  <li><strong>Upload your files.</strong> Upload them from your browser, or edit them right there. No SSH needed.</li>
+  <li><strong>Start it.</strong> The logs stream straight into your browser.</li>
+</ol>
+
+<p>That can all take just a few minutes. All you need is your bot token and source code; nothing has to be installed on your computer.</p>
+
+<h2>With discord.py (Python)</h2>
+
+<p>Bots written in Python can be uploaded as they are. Put a <code>requirements.txt</code> next to your code and the libraries you need are installed together.</p>
+
+<pre><code>discord.py
+python-dotenv</code></pre>
+
+<p>Do not write the token into your code; read it from an environment variable. That way you will not leak it by accident when you show someone your source.</p>
+
+<pre><code>import os
+import discord
+
+client = discord.Client(intents=discord.Intents.default())
+
+@client.event
+async def on_ready():
+    print(f"Connected as {client.user}")
+
+client.run(os.environ["DISCORD_TOKEN"])</code></pre>
+
+<div class="note">
+  <p><strong>About intents.</strong> Bots that read message content, or want to know when members join and leave, will not work unless you turn on the "privileged intents" on the Discord developer portal. If it worked on your PC but not on the server, this is often why.</p>
+</div>
+
+<h2>With discord.js (Node.js)</h2>
+
+<p>Node.js works the same way. Put your <code>package.json</code> in place and the packages you need are installed.</p>
+
+<pre><code>const { Client, GatewayIntentBits } = require("discord.js");
+
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+client.once("ready", () =&gt; {
+  console.log(`Connected as ${client.user.tag}`);
+});
+
+client.login(process.env.DISCORD_TOKEN);</code></pre>
+
+<p>You set the start command in the panel. Enter the same thing you always type on your PC, such as <code>node index.js</code>.</p>
+
+<h2>If it crashes, it starts again by itself</h2>
+
+<p>However carefully you write it, a program sometimes crashes: a temporary problem on Discord's side, input you did not expect, running out of memory.</p>
+
+<p>On ASHIKA Network, <strong>crashes are detected and the program is restarted automatically</strong>. If it falls over at night, it is running again by morning. You do not have to watch it.</p>
+
+<p>The cause of the crash is still there, though. You can follow the logs in your browser, so if it keeps crashing the same way, take a look and fix it.</p>
+
+<h2>Common stumbling blocks</h2>
+
+<h3>It works on my PC but not on the server</h3>
+
+<p>It is almost always one of these three:</p>
+
+<ul>
+  <li><strong>A library is missing</strong>: upload <code>requirements.txt</code> or <code>package.json</code> together with your code.</li>
+  <li><strong>An environment variable is missing</strong>: set the token and similar values in the panel.</li>
+  <li><strong>Privileged intents are off</strong>: turn them on in the Discord developer portal.</li>
+</ul>
+
+<h3>It runs for a while, then crashes</h3>
+
+<p>Suspect a lack of memory. If you keep data you no longer use, memory use slowly grows until it hits the limit. Either move up one plan or look over your code.</p>
+
+<h3>My token stopped working</h3>
+
+<p>If a token is published by accident, Discord disables it automatically. A common case is a token left in code pushed to GitHub. Issue a new one and read it from an environment variable instead.</p>
+
+<h2>Can I run it for free?</h2>
+
+<p>You can, but there is always a catch. Free tiers often stop after a period of time, cap your running hours each month, or end without notice. <strong>That does not fit a bot whose whole point is to keep running</strong>.</p>
+
+<p>Counting the time you spend fixing it every time it stops, ¥30 a month almost always works out cheaper. For less than a can of soda, you no longer have to keep watch.</p>

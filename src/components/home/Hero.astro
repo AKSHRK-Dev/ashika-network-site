@@ -5,7 +5,11 @@
  * 装飾は背景の細い罫線グリッドだけ。写真・グラデーション・影は使わない。
  */
 import Icon from '../Icon.astro';
-import { hero } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const lang = langOf(Astro.url);
+const { hero } = content(lang).home;
 
 const fmt = (n: number) => n.toLocaleString('ja-JP');
 ---
@@ -28,6 +32,7 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
       {
         hero.lead.map((line, i) => (
           <>
+            {i > 0 && lang === 'en' && ' '}
             {i > 0 && <br class="pc" />}
             {line}
           </>

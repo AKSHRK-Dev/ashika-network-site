@@ -1,11 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { legalDocs, legalIndex } from '../data/legal';
 import { links } from '../data/site';
+import { content } from '../data/index';
+import { langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const { legalDocs, legalIndex } = content(lang).legal;
 ---
 
-<Base title={legalIndex.title} description={legalIndex.description} path="/legal">
+<Base title={legalIndex.title} description={legalIndex.description} path={localize('/legal', lang)}>
   <section class="legal-hero">
     <div class="container">
       <h1>{legalIndex.title}</h1>

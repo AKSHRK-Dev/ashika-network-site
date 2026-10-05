@@ -2,8 +2,11 @@
 /** 存在しないURLのとき。Node サーバー（と多くのホスティング）が自動でこのページを返す */
 import Base from '../layouts/Base.astro';
 import { ui } from '../data/site';
+import { ui as uiEn } from '../data/en/site';
 
+/* 存在しないURLには、どの言語のページから来ても同じこのページが返るので、英語も並べて出す */
 const nf = ui.notFound;
+const nfEn = uiEn.notFound;
 ---
 
 <Base title={nf.title} path="/404" noindex>
@@ -13,6 +16,11 @@ const nf = ui.notFound;
       <h1>{nf.title}</h1>
       <p class="nf-lead">{nf.lead}</p>
       <a class="btn btn-primary" href={nf.button.href}>{nf.button.label}</a>
+      <div class="nf-en" lang="en">
+        <p class="nf-en-title">{nfEn.title}</p>
+        <p class="nf-lead">{nfEn.lead}</p>
+        <a class="btn btn-ghost" href={nfEn.button.href}>{nfEn.button.label}</a>
+      </div>
     </div>
   </section>
 </Base>
@@ -49,5 +57,20 @@ const nf = ui.notFound;
 
   .nf .btn {
     margin-top: 1.5rem;
+  }
+
+  .nf-en {
+    margin-top: 2.2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nf-en-title {
+    font-weight: 900;
+    font-size: 1.05rem;
+  }
+
+  .nf-en .btn {
+    margin-top: 1rem;
   }
 </style>

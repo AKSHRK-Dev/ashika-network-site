@@ -5,7 +5,10 @@
  * データは src/data/compare.ts。
  */
 import Icon from '../Icon.astro';
-import { alternatives } from '../../data/compare';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { alternatives } = content(langOf(Astro.url)).compare;
 
 const selfIndex = alternatives.selfColumn; // ASHIKA Network の列（色を付ける）
 ---

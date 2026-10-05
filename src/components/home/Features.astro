@@ -1,5 +1,8 @@
 ---
-import { features } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { features } = content(langOf(Astro.url)).home;
 
 /** 見出しを1文字ずつ <span class="w"> に分ける（スクロールで順に色を付けるため） */
 const chars = (text: string) => Array.from(text);

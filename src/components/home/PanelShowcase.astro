@@ -6,7 +6,10 @@
  * このセクション専用のスクリプトは持たない。
  */
 import BrowserWindow from '../BrowserWindow.astro';
-import { panel } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { panel } = content(langOf(Astro.url)).home;
 ---
 
 <section id="panel" class="section showcase" aria-labelledby="panel-title">

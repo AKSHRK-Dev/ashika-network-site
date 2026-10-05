@@ -1,0 +1,8 @@
+---
+/** 英語版（参考訳）。本文は src/content/legal/en/tokusho.html */
+import Doc from '../../layouts/Doc.astro';
+import body from '../../content/legal/en/tokusho.html?raw';
+import { legalDocProps } from '../../data/index';
+---
+
+<Doc {...legalDocProps('/en/tokusho', 'en')} body={body} />

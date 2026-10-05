@@ -1,7 +1,7 @@
 ---
 import Doc from '../layouts/Doc.astro';
 import body from '../content/legal/tokusho.html?raw';
-import { legalDocProps } from '../data/legal';
+import { legalDocProps } from '../data/index';
 ---
 
-<Doc {...legalDocProps('/tokusho')} body={body} />
+<Doc {...legalDocProps('/tokusho', 'ja')} body={body} />

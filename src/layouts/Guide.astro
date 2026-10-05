@@ -10,8 +10,9 @@
 import '../styles/guide.css';
 import Base from './Base.astro';
 import Icon from '../components/Icon.astro';
-import { links, site } from '../data/site';
+import { links } from '../data/site';
 import { breadcrumbSchema, faqSchema } from '../data/schema';
+import { chrome, langOf, localize } from '../i18n';
 import type { Guide } from '../data/guides';
 
 interface Props {
@@ -23,6 +24,8 @@ interface Props {
 }
 
 const { guide, body, schema = [] } = Astro.props;
+const lang = langOf(Astro.url);
+const words = chrome[lang];
 
 /*
  * 本文の h2 に id を振りながら、目次を集める。
@@ -37,8 +40,8 @@ const bodyWithIds = body.replace(/<h2>([\s\S]*?)<\/h2>/g, (_match, inner: string
 });
 
 const pageSchema = [
-  breadcrumbSchema([{ name: guide.title, path: guide.href }]),
-  ...(guide.withFaq ? [faqSchema()] : []),
+  breadcrumbSchema([{ name: guide.title, path: guide.href }], lang),
+  ...(guide.withFaq ? [faqSchema(lang)] : []),
   ...schema,
 ];
 ---
@@ -53,17 +56,17 @@ const pageSchema = [
 >
   <section class="g-hero">
     <div class="container">
-      <p class="g-crumb"><a href="/">ホーム</a> <span aria-hidden="true">›</span> {guide.crumb ?? guide.title}</p>
+      <p class="g-crumb"><a href={localize('/', lang)}>{words.home}</a> <span aria-hidden="true">›</span> {guide.crumb ?? guide.title}</p>
       <h1 set:html={guide.heading ?? guide.title} />
       <p class="g-lead">{guide.lead}</p>
-      <p class="g-date">最終更新 {guide.updatedLabel}</p>
+      <p class="g-date">{words.updated} {guide.updatedLabel}</p>
     </div>
   </section>
 
   <div class="container g-wrap">
-    <nav class="g-toc" aria-label="このページの目次">
+    <nav class="g-toc" aria-label={words.pageTocAria}>
       <details open>
-        <summary>目次</summary>
+        <summary>{words.toc}</summary>
         <ol>
           {headings.map((h) => (
             <li><a href={`#${h.id}`}>{h.label}</a></li>
@@ -76,21 +79,21 @@ const pageSchema = [
       <article class="guide" set:html={bodyWithIds} />
 
       <aside class="g-cta">
-        <h2>{guide.ctaTitle ?? 'まずは1台、置いてみてください'}</h2>
-        <p>{guide.ctaLead ?? '月30円から借りられます。合わなければ1ヶ月でやめられます。'}</p>
+        <h2>{guide.ctaTitle ?? words.guideCtaTitle}</h2>
+        <p>{guide.ctaLead ?? words.guideCtaLead}</p>
         <div class="g-acts">
           <a class="btn btn-primary btn-lg" href={links.shop} target="_blank" rel="noopener">
-            プランを選ぶ
+            {words.pickPlan}
             <Icon name="arrow" />
           </a>
-          <a class="btn btn-ghost" href="/#plans">料金を見る</a>
+          <a class="btn btn-ghost" href={localize('/#plans', lang)}>{words.seePrices}</a>
         </div>
       </aside>
 
       {
         guide.related.length > 0 && (
-          <nav class="g-related" aria-label="関連するページ">
-            <h2>こちらもどうぞ</h2>
+          <nav class="g-related" aria-label={words.relatedAria}>
+            <h2>{words.related}</h2>
             <ul>
               {guide.related.map((r) => (
                 <li>

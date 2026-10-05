@@ -1,6 +1,9 @@
 ---
 import Icon from '../Icon.astro';
-import { plans, specLabels } from '../../data/home';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { plans, specLabels } = content(langOf(Astro.url)).home;
 
 const perMonth = (quarterly: number) => Math.round((quarterly / 3) * 10) / 10;
 

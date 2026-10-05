@@ -1,0 +1,8 @@
+---
+/** 英語版。本文は src/content/guides/en/python.html */
+import Guide from '../../layouts/Guide.astro';
+import body from '../../content/guides/en/python.html?raw';
+import { guideByHref } from '../../data/en/guides';
+---
+
+<Guide guide={guideByHref('/en/python')} body={body} />
