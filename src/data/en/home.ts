@@ -22,6 +22,8 @@ export const hero = {
     duration: 1700,
     suffix: '/month and up',
     note: 'Tax included. Monthly terms.',
+    best: 'Lowest price in Japan*',
+    bestNote: '* Our own survey, October 2026: compared with the monthly price (tax included) of the cheapest plan of hosting services in Japan for Discord bots and always-on programs.',
   },
 };
 

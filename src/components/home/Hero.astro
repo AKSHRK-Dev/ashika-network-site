@@ -42,6 +42,7 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
 
     <div class="bar" data-reveal style="--d:.2s">
       <p class="bar-price">
+        <span class="bar-best">{hero.bar.best}</span>
         <span class="bar-label">{hero.bar.label}</span>
         <span
           class="bar-amt count"
@@ -59,6 +60,7 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
           {hero.primary.label}<Icon name="arrow" />
         </a>
       </div>
+      <p class="bar-foot">{hero.bar.bestNote}</p>
     </div>
   </div>
 </section>
@@ -139,6 +141,25 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
     color: var(--b);
     font-size: 0.72rem;
     font-weight: 700;
+  }
+
+  .bar-best {
+    align-self: center;
+    padding: 0.1em 0.6em;
+    border-radius: var(--r);
+    background: var(--b);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .bar-foot {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    color: var(--ink-3);
   }
 
   .bar-amt {
