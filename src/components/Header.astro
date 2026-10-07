@@ -154,6 +154,10 @@ const isCurrent = (href: string) =>
     gap: clamp(16px, 3vw, 36px);
   }
 
+  .brand {
+    flex-shrink: 0;
+  }
+
   .brand img {
     width: 128px;
   }
@@ -176,6 +180,7 @@ const isCurrent = (href: string) =>
     height: calc(var(--header-h) - 1px);
     padding-inline: 0.55rem;
     font-size: 0.85rem;
+    white-space: nowrap;
     font-weight: 500;
     color: var(--ink-2);
     border-bottom: 2px solid transparent;
@@ -382,7 +387,8 @@ const isCurrent = (href: string) =>
     transform: translateY(-5.5px) rotate(-45deg);
   }
 
-  @media (max-width: 900px) {
+  /* 6項目と右のボタンが1行に収まらない幅では、メニューボタンに切り替える */
+  @media (max-width: 1100px) {
     .gnav,
     .actions {
       display: none;

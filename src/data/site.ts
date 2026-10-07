@@ -104,6 +104,8 @@ export const links = {
   shop: 'https://dash.ashikanw.com/shop',
   register: 'https://dash.ashikanw.com/register',
   status: 'https://status.ashikanw.com',
+  /** API と SFTP の説明書（AKSHRK-Dev/ashika-docs） */
+  docs: 'https://docs.ashikanw.com',
   discord: `${short}/discord`,
   sns: {
     discord: `${short}/discord`,
@@ -164,6 +166,7 @@ export const nav: NavItem[] = [
   { label: '料金', href: '/#plans' },
   { label: '残高チャージ', href: '/#charge' },
   { label: 'よくある質問', href: '/faq' },
+  { label: 'ドキュメント', href: links.docs, external: true },
   { label: '稼働状況', href: links.status, external: true },
 ];
 
@@ -195,6 +198,8 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Discord Bot を24時間動かす', href: '/discord-bot' },
       { label: 'Python を24時間動かす', href: '/python' },
       { label: 'VPS（専有IPv4・root）', href: '/vps' },
+      { label: 'API で操作する', href: `${links.docs}/api/`, external: true },
+      { label: 'SFTP でファイルを送る', href: `${links.docs}/sftp/`, external: true },
     ],
   },
   {

@@ -54,6 +54,7 @@ export const nav: NavItem[] = [
   { label: 'Pricing', href: '/en#plans' },
   { label: 'Top up', href: '/en#charge' },
   { label: 'FAQ', href: '/en/faq' },
+  { label: 'Docs', href: links.docs, external: true },
   { label: 'Status', href: links.status, external: true },
 ];
 
@@ -83,6 +84,8 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Run a Discord bot 24/7', href: '/en/discord-bot' },
       { label: 'Run Python 24/7', href: '/en/python' },
       { label: 'VPS (dedicated IPv4, root)', href: '/en/vps' },
+      { label: 'Use the API (in Japanese)', href: `${links.docs}/api/`, external: true },
+      { label: 'Send files over SFTP (in Japanese)', href: `${links.docs}/sftp/`, external: true },
     ],
   },
   {
