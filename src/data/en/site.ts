@@ -72,12 +72,35 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'Pricing and plans', href: '/en#plans' },
       { label: 'What you can run', href: '/en#uses' },
-      { label: 'VPS (dedicated IPv4, root)', href: '/en/vps' },
-      { label: 'Topping up', href: '/en#charge' },
+      { label: 'Why ASHIKA Network', href: '/en#features' },
       { label: 'The customer panel', href: '/en#panel' },
-      { label: 'Where we are (data center)', href: '/en#location' },
       { label: 'From sign-up to launch', href: '/en#flow' },
       { label: 'Compared with doing it yourself', href: '/en#compare' },
+      { label: 'VPS (dedicated IPv4, root)', href: '/en/vps' },
+    ],
+  },
+  {
+    title: 'Plans',
+    items: [
+      { label: 'Mini (¥30/month)', href: `${links.shop}/mini`, external: true },
+      { label: 'Basic (¥50/month)', href: `${links.shop}/basic`, external: true },
+      { label: 'Plus (¥110/month)', href: `${links.shop}/plus`, external: true },
+      { label: 'Pro (¥230/month)', href: `${links.shop}/pro`, external: true },
+      { label: 'Max (¥470/month)', href: `${links.shop}/max`, external: true },
+      { label: 'Memory Basic (¥100/month)', href: `${links.shop}/mem-basic`, external: true },
+      { label: 'Memory Plus (¥120/month)', href: `${links.shop}/mem-plus`, external: true },
+      { label: 'Ask about VPS or custom builds', href: links.sns.discord, external: true },
+    ],
+  },
+  {
+    title: 'What you can run',
+    items: [
+      { label: 'Discord bots', href: '/en/discord-bot' },
+      { label: 'Python programs', href: '/en/python' },
+      { label: 'Web apps', href: '/en#uses' },
+      { label: 'Data jobs and schedules', href: '/en#uses' },
+      { label: 'Development and testing', href: '/en#uses' },
+      { label: 'Anything that needs root (VPS)', href: '/en/vps' },
     ],
   },
   {
@@ -86,8 +109,8 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Run a Discord bot 24/7', href: '/en/discord-bot' },
       { label: 'Run Python 24/7', href: '/en/python' },
       { label: 'Using a VPS', href: '/en/vps' },
+      { label: 'Send files over SFTP', href: `${links.docs}/sftp/`, external: true },
       { label: 'FAQ', href: '/en/faq' },
-      { label: 'Free support program', href: 'https://group.ashikanw.com/en-us/supportprogram/', external: true },
     ],
   },
   {
@@ -99,6 +122,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'API examples', href: `${links.docs}/api/examples/`, external: true },
       { label: 'Connect over SFTP', href: `${links.docs}/sftp/`, external: true },
       { label: 'Create an API key', href: `${links.dash}/api-keys`, external: true },
+      { label: 'GitHub', href: 'https://github.com/AKSHRK-Dev', external: true },
     ],
   },
   {
@@ -106,10 +130,22 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'Create an account', href: links.register, external: true },
       { label: 'Log in', href: links.dash, external: true },
-      { label: 'Buy a server', href: links.shop, external: true },
-      { label: 'Top up your balance', href: links.charge, external: true },
+      { label: 'Dashboard', href: `${links.dash}/dashboard`, external: true },
       { label: 'Your servers', href: `${links.dash}/servers`, external: true },
+      { label: 'Buy a server', href: links.shop, external: true },
+      { label: 'Announcements', href: `${links.dash}/announcements`, external: true },
+      { label: 'Help', href: `${links.dash}/help`, external: true },
       { label: 'Account settings', href: `${links.dash}/account`, external: true },
+    ],
+  },
+  {
+    title: 'Balance and payment',
+    items: [
+      { label: 'How topping up works', href: '/en#charge' },
+      { label: 'Buy a top-up code', href: links.charge, external: true },
+      { label: 'Billing history', href: `${links.dash}/billing`, external: true },
+      { label: 'Payment methods', href: links.charge, external: true },
+      { label: 'Payment Services Act Notice', href: '/en/kessai' },
     ],
   },
   {
@@ -119,6 +155,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Ask on Discord', href: links.sns.discord, external: true },
       { label: 'Service status', href: links.status, external: true },
       { label: 'Email us', href: 'mailto:support@ashikanw.com' },
+      { label: 'Help in the panel', href: `${links.dash}/help`, external: true },
     ],
   },
   {
@@ -133,14 +170,44 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     ],
   },
   {
+    title: 'Infrastructure',
+    items: [
+      { label: 'Our data center in Osaka', href: '/en#location' },
+      { label: 'Technology', href: 'https://group.ashikanw.com/en-us/technology/', external: true },
+      { label: 'Service status', href: links.status, external: true },
+      { label: 'The customer panel', href: '/en#panel' },
+    ],
+  },
+  {
     title: 'ASHIKA Group',
     items: [
       { label: 'About ASHIKA Group', href: 'https://group.ashikanw.com/en-us/about/', external: true },
+      { label: 'Services', href: 'https://group.ashikanw.com/en-us/services/', external: true },
       { label: 'Vision', href: 'https://group.ashikanw.com/en-us/vision/', external: true },
       { label: 'History', href: 'https://group.ashikanw.com/en-us/history/', external: true },
       { label: 'Technology', href: 'https://group.ashikanw.com/en-us/technology/', external: true },
-      { label: 'Join us', href: 'https://group.ashikanw.com/en-us/join/', external: true },
       { label: 'Brand', href: 'https://group.ashikanw.com/en-us/brand/', external: true },
+      { label: 'Contact', href: 'https://group.ashikanw.com/en-us/about/#contact', external: true },
+    ],
+  },
+  {
+    title: 'Programs',
+    items: [
+      { label: 'Free support program', href: 'https://group.ashikanw.com/en-us/supportprogram/', external: true },
+      { label: 'Support program terms', href: 'https://group.ashikanw.com/en-us/supportprogram/terms/', external: true },
+      { label: 'Join us', href: 'https://group.ashikanw.com/en-us/join/', external: true },
+      { label: 'Member terms', href: 'https://group.ashikanw.com/en-us/join/terms/', external: true },
+    ],
+  },
+  {
+    title: 'StoriaMC',
+    items: [
+      { label: 'StoriaMC home', href: 'https://storiamc.com/en-us/', external: true },
+      { label: 'Downloads', href: 'https://storiamc.com/en-us/downloads/', external: true },
+      { label: 'Release notes', href: 'https://storiamc.com/en-us/releases/', external: true },
+      { label: 'How it works', href: 'https://storiamc.com/en-us/how-it-works/', external: true },
+      { label: 'Documentation', href: 'https://storiamc.com/en-us/docs/', external: true },
+      { label: 'Storia Cluster', href: 'https://storiamc.com/en-us/docs/cluster/', external: true },
     ],
   },
   {
@@ -149,6 +216,25 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'StoriaMC', href: 'https://storiamc.com/en-us/', external: true },
       { label: 'SABALISU', href: 'https://minecrafts.jp', external: true },
       { label: '4l.vc', href: 'https://4l.vc/en', external: true },
+      { label: 'ASHIKA Group', href: 'https://group.ashikanw.com/en-us/', external: true },
+    ],
+  },
+  {
+    title: 'Follow us',
+    items: [
+      { label: 'Discord', href: links.sns.discord, external: true },
+      { label: 'YouTube', href: links.sns.youtube, external: true },
+      { label: 'note', href: links.sns.note, external: true },
+      { label: 'X', href: links.sns.x, external: true },
+      { label: 'GitHub', href: 'https://github.com/AKSHRK-Dev', external: true },
+    ],
+  },
+  {
+    title: 'This site',
+    items: [
+      { label: '日本語', href: '/' },
+      { label: 'Sitemap', href: '/sitemap.xml' },
+      { label: 'Back to home', href: '/en' },
     ],
   },
 ];

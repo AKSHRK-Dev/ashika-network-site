@@ -186,12 +186,35 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: '料金・プラン', href: '/#plans' },
       { label: 'できること', href: '/#uses' },
-      { label: 'VPS（専有IPv4・root）', href: '/vps' },
-      { label: '残高のチャージ', href: '/#charge' },
+      { label: '選ばれる理由', href: '/#features' },
       { label: 'お客様パネルの画面', href: '/#panel' },
-      { label: '置き場所（データセンター）', href: '/#location' },
       { label: '申し込みから公開まで', href: '/#flow' },
       { label: '自分で用意する場合との比較', href: '/#compare' },
+      { label: 'VPS（専有IPv4・root）', href: '/vps' },
+    ],
+  },
+  {
+    title: 'プラン',
+    items: [
+      { label: 'ミニ（月30円）', href: `${links.shop}/mini`, external: true },
+      { label: 'ベーシック（月50円）', href: `${links.shop}/basic`, external: true },
+      { label: 'プラス（月110円）', href: `${links.shop}/plus`, external: true },
+      { label: 'プロ（月230円）', href: `${links.shop}/pro`, external: true },
+      { label: 'マックス（月470円）', href: `${links.shop}/max`, external: true },
+      { label: 'メモリ ベーシック（月100円）', href: `${links.shop}/mem-basic`, external: true },
+      { label: 'メモリ プラス（月120円）', href: `${links.shop}/mem-plus`, external: true },
+      { label: 'VPS・個別構成の相談', href: links.sns.discord, external: true },
+    ],
+  },
+  {
+    title: '動かせるもの',
+    items: [
+      { label: 'Discord Bot', href: '/discord-bot' },
+      { label: 'Python のプログラム', href: '/python' },
+      { label: 'Web アプリ', href: '/#uses' },
+      { label: 'データ処理・定期実行', href: '/#uses' },
+      { label: '開発・検証用の環境', href: '/#uses' },
+      { label: 'root 権限が必要なもの（VPS）', href: '/vps' },
     ],
   },
   {
@@ -200,8 +223,8 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Discord Bot を24時間動かす', href: '/discord-bot' },
       { label: 'Python を24時間動かす', href: '/python' },
       { label: 'VPS を使う', href: '/vps' },
+      { label: 'SFTP でファイルを送る', href: `${links.docs}/sftp/`, external: true },
       { label: 'よくある質問', href: '/faq' },
-      { label: '無料の支援プログラム', href: 'https://group.ashikanw.com/ja-jp/supportprogram/', external: true },
     ],
   },
   {
@@ -213,6 +236,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'API の使い方の例', href: `${links.docs}/api/examples/`, external: true },
       { label: 'SFTP でつなぐ', href: `${links.docs}/sftp/`, external: true },
       { label: 'APIキーを発行する', href: `${links.dash}/api-keys`, external: true },
+      { label: 'GitHub', href: 'https://github.com/AKSHRK-Dev', external: true },
     ],
   },
   {
@@ -220,10 +244,22 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'はじめて登録する', href: links.register, external: true },
       { label: 'ログインする', href: links.dash, external: true },
-      { label: 'サーバーを購入する', href: links.shop, external: true },
-      { label: '残高をチャージする', href: links.charge, external: true },
+      { label: 'ダッシュボード', href: `${links.dash}/dashboard`, external: true },
       { label: 'サーバーの一覧', href: `${links.dash}/servers`, external: true },
+      { label: 'サーバーを購入する', href: links.shop, external: true },
+      { label: 'お知らせ', href: `${links.dash}/announcements`, external: true },
+      { label: 'ヘルプ', href: `${links.dash}/help`, external: true },
       { label: 'アカウントの設定', href: `${links.dash}/account`, external: true },
+    ],
+  },
+  {
+    title: '残高・お支払い',
+    items: [
+      { label: '残高のチャージについて', href: '/#charge' },
+      { label: 'チャージコードを買う', href: links.charge, external: true },
+      { label: '利用明細', href: `${links.dash}/billing`, external: true },
+      { label: 'お支払い方法', href: links.charge, external: true },
+      { label: '資金決済法に基づく表示', href: '/kessai' },
     ],
   },
   {
@@ -233,6 +269,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Discord で相談する', href: links.sns.discord, external: true },
       { label: '稼働状況', href: links.status, external: true },
       { label: 'メールでのお問い合わせ', href: 'mailto:support@ashikanw.com' },
+      { label: 'パネルのヘルプ', href: `${links.dash}/help`, external: true },
     ],
   },
   {
@@ -247,14 +284,44 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     ],
   },
   {
+    title: '設備',
+    items: [
+      { label: '大阪のデータセンター', href: '/#location' },
+      { label: '技術・設備', href: 'https://group.ashikanw.com/ja-jp/technology/', external: true },
+      { label: '稼働状況', href: links.status, external: true },
+      { label: 'お客様パネルの画面', href: '/#panel' },
+    ],
+  },
+  {
     title: 'ASHIKA Group',
     items: [
       { label: 'ASHIKA Group について', href: 'https://group.ashikanw.com/ja-jp/about/', external: true },
+      { label: 'サービス', href: 'https://group.ashikanw.com/ja-jp/services/', external: true },
       { label: '理念', href: 'https://group.ashikanw.com/ja-jp/vision/', external: true },
       { label: '沿革', href: 'https://group.ashikanw.com/ja-jp/history/', external: true },
       { label: '技術・設備', href: 'https://group.ashikanw.com/ja-jp/technology/', external: true },
-      { label: 'お手伝い募集', href: 'https://group.ashikanw.com/ja-jp/join/', external: true },
       { label: 'ブランド', href: 'https://group.ashikanw.com/ja-jp/brand/', external: true },
+      { label: 'お問い合わせ', href: 'https://group.ashikanw.com/ja-jp/about/#contact', external: true },
+    ],
+  },
+  {
+    title: '支援・参加',
+    items: [
+      { label: '無料の支援プログラム', href: 'https://group.ashikanw.com/ja-jp/supportprogram/', external: true },
+      { label: '支援プログラムの規約', href: 'https://group.ashikanw.com/ja-jp/supportprogram/terms/', external: true },
+      { label: 'お手伝い募集', href: 'https://group.ashikanw.com/ja-jp/join/', external: true },
+      { label: 'お手伝いメンバー規約', href: 'https://group.ashikanw.com/ja-jp/join/terms/', external: true },
+    ],
+  },
+  {
+    title: 'StoriaMC',
+    items: [
+      { label: 'StoriaMC のトップ', href: 'https://storiamc.com/ja-jp/', external: true },
+      { label: 'ダウンロード', href: 'https://storiamc.com/ja-jp/downloads/', external: true },
+      { label: 'リリースノート', href: 'https://storiamc.com/ja-jp/releases/', external: true },
+      { label: 'しくみ', href: 'https://storiamc.com/ja-jp/how-it-works/', external: true },
+      { label: 'ドキュメント', href: 'https://storiamc.com/ja-jp/docs/', external: true },
+      { label: 'Storia Cluster', href: 'https://storiamc.com/ja-jp/docs/cluster/', external: true },
     ],
   },
   {
@@ -263,6 +330,25 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'StoriaMC', href: 'https://storiamc.com/ja-jp/', external: true },
       { label: 'SABALISU', href: 'https://minecrafts.jp', external: true },
       { label: '4l.vc', href: 'https://4l.vc', external: true },
+      { label: 'ASHIKA Group', href: 'https://group.ashikanw.com/ja-jp/', external: true },
+    ],
+  },
+  {
+    title: 'フォローする',
+    items: [
+      { label: 'Discord', href: links.sns.discord, external: true },
+      { label: 'YouTube', href: links.sns.youtube, external: true },
+      { label: 'note', href: links.sns.note, external: true },
+      { label: 'X', href: links.sns.x, external: true },
+      { label: 'GitHub', href: 'https://github.com/AKSHRK-Dev', external: true },
+    ],
+  },
+  {
+    title: 'このサイト',
+    items: [
+      { label: 'English', href: '/en' },
+      { label: 'サイトマップ', href: '/sitemap.xml' },
+      { label: 'トップへ戻る', href: '/' },
     ],
   },
 ];
