@@ -2,14 +2,15 @@
 /**
  * 全ページ共通のフッター。
  * 濃紺の面にリンクを並べ、最下段だけ一段暗くして事業者表記を置く。
- * 狭い画面では開閉させず、そのまま積んで表示する（探す手間を増やさないため）。
+ * 左にロゴと紹介、右にリンクの列を4列ずつ並べる（規約・方針も列の1つ）。
+ * 狭い画面では開閉させず、2列のまま積んで表示する（探す手間を増やさないため）。
  */
 import Icon from './Icon.astro';
 import { content } from '../data/index';
 import { langOf } from '../i18n';
 
 const lang = langOf(Astro.url);
-const { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } = content(lang).site;
+const { brand, footerColumns, footerText, site, snsItems, ui } = content(lang).site;
 ---
 
 <footer class="footer">
@@ -65,15 +66,6 @@ const { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } = co
 
   <div class="ft-legal">
     <div class="container ft-legal-in">
-      <ul aria-label={ui.footer.legalAria}>
-        {
-          footerLegal.map((it) => (
-            <li>
-              <a href={it.href}>{it.label}</a>
-            </li>
-          ))
-        }
-      </ul>
       <a class="ft-top" href="#top">
         {footerText.toTop}
         <Icon name="arrow" size={13} />
@@ -150,7 +142,8 @@ const { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } = co
   /* ---------- リンク列 ---------- */
   .ft-cols {
     display: grid;
-    gap: clamp(24px, 4vw, 40px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px clamp(20px, 3vw, 36px);
   }
 
   .ft-col h2 {
@@ -190,7 +183,7 @@ const { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } = co
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 0.6rem 1.4rem;
   }
 
@@ -252,8 +245,7 @@ const { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } = co
 
   @media (min-width: 768px) {
     .ft-cols {
-      /* 列が増えても収まるよう、入るだけ並べて折り返す */
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .pc {
@@ -263,7 +255,8 @@ const { brand, footerColumns, footerLegal, footerText, site, snsItems, ui } = co
 
   @media (min-width: 1000px) {
     .ft-main {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+      /* ロゴと紹介は細い列に、リンクに幅を回す */
+      grid-template-columns: 240px minmax(0, 1fr);
     }
   }
 

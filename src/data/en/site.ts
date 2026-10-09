@@ -68,14 +68,16 @@ export const notice = {
 
 export const footerColumns: { title: string; items: NavItem[] }[] = [
   {
-    title: 'Learn',
+    title: 'Service',
     items: [
+      { label: 'Pricing and plans', href: '/en#plans' },
       { label: 'What you can run', href: '/en#uses' },
-      { label: 'See pricing', href: '/en#plans' },
-      { label: 'Top up your balance', href: '/en#charge' },
-      { label: 'Where we are', href: '/en#location' },
+      { label: 'VPS (dedicated IPv4, root)', href: '/en/vps' },
+      { label: 'Topping up', href: '/en#charge' },
+      { label: 'The customer panel', href: '/en#panel' },
+      { label: 'Where we are (data center)', href: '/en#location' },
       { label: 'From sign-up to launch', href: '/en#flow' },
-      { label: 'Free support program', href: 'https://group.ashikanw.com/en-us/supportprogram/', external: true },
+      { label: 'Compared with doing it yourself', href: '/en#compare' },
     ],
   },
   {
@@ -83,17 +85,20 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'Run a Discord bot 24/7', href: '/en/discord-bot' },
       { label: 'Run Python 24/7', href: '/en/python' },
-      { label: 'VPS (dedicated IPv4, root)', href: '/en/vps' },
-      { label: 'Use the API (in Japanese)', href: `${links.docs}/api/`, external: true },
-      { label: 'Send files over SFTP (in Japanese)', href: `${links.docs}/sftp/`, external: true },
+      { label: 'Using a VPS', href: '/en/vps' },
+      { label: 'FAQ', href: '/en/faq' },
+      { label: 'Free support program', href: 'https://group.ashikanw.com/en-us/supportprogram/', external: true },
     ],
   },
   {
-    title: 'Help',
+    title: 'Developers',
     items: [
-      { label: 'FAQ', href: '/en/faq' },
-      { label: 'Ask on Discord', href: links.sns.discord, external: true },
-      { label: 'Check service status', href: links.status, external: true },
+      { label: 'Docs (in Japanese)', href: links.docs, external: true },
+      { label: 'Using the API', href: `${links.docs}/api/`, external: true },
+      { label: 'API reference', href: `${links.docs}/api/reference/`, external: true },
+      { label: 'API examples', href: `${links.docs}/api/examples/`, external: true },
+      { label: 'Connect over SFTP', href: `${links.docs}/sftp/`, external: true },
+      { label: 'Create an API key', href: `${links.dash}/api-keys`, external: true },
     ],
   },
   {
@@ -103,15 +108,47 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Log in', href: links.dash, external: true },
       { label: 'Buy a server', href: links.shop, external: true },
       { label: 'Top up your balance', href: links.charge, external: true },
+      { label: 'Your servers', href: `${links.dash}/servers`, external: true },
+      { label: 'Account settings', href: `${links.dash}/account`, external: true },
+    ],
+  },
+  {
+    title: 'Support',
+    items: [
+      { label: 'FAQ', href: '/en/faq' },
+      { label: 'Ask on Discord', href: links.sns.discord, external: true },
+      { label: 'Service status', href: links.status, external: true },
+      { label: 'Email us', href: 'mailto:support@ashikanw.com' },
+    ],
+  },
+  {
+    title: 'Terms and policies',
+    items: [
+      { label: 'All terms and policies', href: '/en/legal' },
+      { label: 'Terms of Service', href: '/en/terms' },
+      { label: 'Acceptable Use Policy', href: '/en/aup' },
+      { label: 'Privacy Policy', href: '/en/privacy' },
+      { label: 'Legal Notice (SCTA)', href: '/en/tokusho' },
+      { label: 'Payment Services Act Notice', href: '/en/kessai' },
     ],
   },
   {
     title: 'ASHIKA Group',
     items: [
-      { label: 'About ASHIKA Group', href: 'https://group.ashikanw.com/en-us/', external: true },
-      { label: 'Support program', href: 'https://group.ashikanw.com/en-us/supportprogram/', external: true },
+      { label: 'About ASHIKA Group', href: 'https://group.ashikanw.com/en-us/about/', external: true },
+      { label: 'Vision', href: 'https://group.ashikanw.com/en-us/vision/', external: true },
+      { label: 'History', href: 'https://group.ashikanw.com/en-us/history/', external: true },
+      { label: 'Technology', href: 'https://group.ashikanw.com/en-us/technology/', external: true },
+      { label: 'Join us', href: 'https://group.ashikanw.com/en-us/join/', external: true },
+      { label: 'Brand', href: 'https://group.ashikanw.com/en-us/brand/', external: true },
+    ],
+  },
+  {
+    title: 'Other services',
+    items: [
       { label: 'StoriaMC', href: 'https://storiamc.com/en-us/', external: true },
       { label: 'SABALISU', href: 'https://minecrafts.jp', external: true },
+      { label: '4l.vc', href: 'https://4l.vc/en', external: true },
     ],
   },
 ];

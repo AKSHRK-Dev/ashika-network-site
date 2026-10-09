@@ -182,32 +182,37 @@ export const notice = {
 /** フッターのリンク列（PCでは3列、スマホでは積んで表示） */
 export const footerColumns: { title: string; items: NavItem[] }[] = [
   {
-    title: '知る',
+    title: 'サービス',
     items: [
+      { label: '料金・プラン', href: '/#plans' },
       { label: 'できること', href: '/#uses' },
-      { label: '料金を見る', href: '/#plans' },
-      { label: '残高をチャージする', href: '/#charge' },
-      { label: '置き場所について', href: '/#location' },
+      { label: 'VPS（専有IPv4・root）', href: '/vps' },
+      { label: '残高のチャージ', href: '/#charge' },
+      { label: 'お客様パネルの画面', href: '/#panel' },
+      { label: '置き場所（データセンター）', href: '/#location' },
       { label: '申し込みから公開まで', href: '/#flow' },
+      { label: '自分で用意する場合との比較', href: '/#compare' },
+    ],
+  },
+  {
+    title: 'ガイド',
+    items: [
+      { label: 'Discord Bot を24時間動かす', href: '/discord-bot' },
+      { label: 'Python を24時間動かす', href: '/python' },
+      { label: 'VPS を使う', href: '/vps' },
+      { label: 'よくある質問', href: '/faq' },
       { label: '無料の支援プログラム', href: 'https://group.ashikanw.com/ja-jp/supportprogram/', external: true },
     ],
   },
   {
-    title: '使いかた',
+    title: '開発者向け',
     items: [
-      { label: 'Discord Bot を24時間動かす', href: '/discord-bot' },
-      { label: 'Python を24時間動かす', href: '/python' },
-      { label: 'VPS（専有IPv4・root）', href: '/vps' },
-      { label: 'API で操作する', href: `${links.docs}/api/`, external: true },
-      { label: 'SFTP でファイルを送る', href: `${links.docs}/sftp/`, external: true },
-    ],
-  },
-  {
-    title: '困ったときは',
-    items: [
-      { label: 'よくある質問', href: '/faq' },
-      { label: 'Discordで相談する', href: links.sns.discord, external: true },
-      { label: '稼働状況を確認する', href: links.status, external: true },
+      { label: 'ドキュメント', href: links.docs, external: true },
+      { label: 'API の使い方', href: `${links.docs}/api/`, external: true },
+      { label: 'API リファレンス', href: `${links.docs}/api/reference/`, external: true },
+      { label: 'API の使い方の例', href: `${links.docs}/api/examples/`, external: true },
+      { label: 'SFTP でつなぐ', href: `${links.docs}/sftp/`, external: true },
+      { label: 'APIキーを発行する', href: `${links.dash}/api-keys`, external: true },
     ],
   },
   {
@@ -217,15 +222,47 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'ログインする', href: links.dash, external: true },
       { label: 'サーバーを購入する', href: links.shop, external: true },
       { label: '残高をチャージする', href: links.charge, external: true },
+      { label: 'サーバーの一覧', href: `${links.dash}/servers`, external: true },
+      { label: 'アカウントの設定', href: `${links.dash}/account`, external: true },
+    ],
+  },
+  {
+    title: 'サポート',
+    items: [
+      { label: 'よくある質問', href: '/faq' },
+      { label: 'Discord で相談する', href: links.sns.discord, external: true },
+      { label: '稼働状況', href: links.status, external: true },
+      { label: 'メールでのお問い合わせ', href: 'mailto:support@ashikanw.com' },
+    ],
+  },
+  {
+    title: '規約・方針',
+    items: [
+      { label: '規約・方針の一覧', href: '/legal' },
+      { label: '利用規約', href: '/terms' },
+      { label: '利用方針（AUP）', href: '/aup' },
+      { label: 'プライバシーポリシー', href: '/privacy' },
+      { label: '特定商取引法に基づく表記', href: '/tokusho' },
+      { label: '資金決済法に基づく表示', href: '/kessai' },
     ],
   },
   {
     title: 'ASHIKA Group',
     items: [
-      { label: 'ASHIKA Group について', href: 'https://group.ashikanw.com/ja-jp/', external: true },
-      { label: '支援プログラム', href: 'https://group.ashikanw.com/ja-jp/supportprogram/', external: true },
+      { label: 'ASHIKA Group について', href: 'https://group.ashikanw.com/ja-jp/about/', external: true },
+      { label: '理念', href: 'https://group.ashikanw.com/ja-jp/vision/', external: true },
+      { label: '沿革', href: 'https://group.ashikanw.com/ja-jp/history/', external: true },
+      { label: '技術・設備', href: 'https://group.ashikanw.com/ja-jp/technology/', external: true },
+      { label: 'お手伝い募集', href: 'https://group.ashikanw.com/ja-jp/join/', external: true },
+      { label: 'ブランド', href: 'https://group.ashikanw.com/ja-jp/brand/', external: true },
+    ],
+  },
+  {
+    title: '関連サービス',
+    items: [
       { label: 'StoriaMC', href: 'https://storiamc.com/ja-jp/', external: true },
       { label: 'SABALISU', href: 'https://minecrafts.jp', external: true },
+      { label: '4l.vc', href: 'https://4l.vc', external: true },
     ],
   },
 ];

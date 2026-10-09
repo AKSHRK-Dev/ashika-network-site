@@ -5,7 +5,7 @@
  *   1. src/content/legal/ に本文のHTMLを置く
  *   2. このファイルの legalDocs に1件足す
  *   3. src/pages/ に <Doc {...legalDocProps('/xxx')}> だけのページを作る
- *   4. src/data/site.ts の footerLegal にリンクを足す
+ *   4. src/data/site.ts（と en/site.ts）の footerColumns の「規約・方針」列にリンクを足す
  * の4つ。本文以外の文言はすべてここで直せる。
  */
 export type LegalDoc = {
