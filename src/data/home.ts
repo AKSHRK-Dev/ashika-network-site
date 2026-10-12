@@ -149,7 +149,7 @@ const planList: Record<PlanKind, Plan[]> = {
     { name: 'メモリ プラス', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', '共有'], fit: '重い処理を常駐させる', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
   ],
   enterprise: [
-    { name: 'VPS', monthly: null, quarterly: null, specs: ['最大 64GB', '10コア', '500GB SSD', 'なし', '1つ'], fit: '専有のIPv4とルート権限が要る', hot: true, note: '2026年10月13日から受付', href: links.discord },
+    { name: 'VPS', monthly: null, quarterly: null, specs: ['最大 64GB', '10コア', '500GB SSD', 'なし', '1つ'], fit: '専有のIPv4とルート権限が要る', hot: true, note: '2026年11月1日から受付', href: links.discord },
     { name: '個別構成', monthly: null, quarterly: null, specs: ['要相談', '要相談', '要相談', '要相談', '要相談'], fit: '上記に収まらない規模で使う', href: links.discord },
   ],
 };
@@ -160,7 +160,7 @@ export const plans = {
   kinds: [
     { key: 'standard', label: '標準プラン', desc: 'CPUとメモリの釣り合いが取れた構成。Bot・Webアプリ・検証まで幅広く使えます。' },
     { key: 'memory', label: '大容量メモリプラン', desc: 'メモリを厚く積んだ構成。データ処理など、メモリを多く使う常駐プログラム向けです。' },
-    { key: 'enterprise', label: 'エンタープライズ', desc: '専有のVPSや大規模な構成など、規格外のご要望に個別でお応えします。VPSの受付は2026年10月13日からです。それまでのご相談はDiscordでお受けします。' },
+    { key: 'enterprise', label: 'エンタープライズ', desc: '専有のVPSや大規模な構成など、規格外のご要望に個別でお応えします。VPSの受付は2026年11月1日からです。それまでのご相談はDiscordでお受けします。' },
   ] as const,
   terms: { monthly: '月額', quarterly: '3ヶ月契約' }, // お得率は料金データから自動計算
   /** 月額／3ヶ月契約の切り替えスイッチの横に出るバッジ。n には料金データから計算した最大割引率（%）が入る */

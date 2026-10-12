@@ -60,7 +60,7 @@ export const nav: NavItem[] = [
 
 export const notice = {
   show: true,
-  text: 'VPS (dedicated IPv4 with root access) opens on October 13, 2026. Questions are welcome on',
+  text: 'VPS (dedicated IPv4 with root access) now opens on November 1, 2026 (moved from October 13). Questions are welcome on',
   linkLabel: 'Discord',
   linkHref: links.discord,
   after: '',

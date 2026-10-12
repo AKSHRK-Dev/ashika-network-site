@@ -18,7 +18,7 @@ const LINK = {
   vps: {
     href: '/en/vps',
     title: 'VPS (dedicated IPv4, root access)',
-    desc: 'For when a shared plan is not enough. Orders open October 13, 2026.',
+    desc: 'For when a shared plan is not enough. Orders open November 1, 2026.',
   },
   faq: {
     href: '/en/faq',
@@ -70,14 +70,14 @@ export const guides: Guide[] = [
     title: 'VPS (dedicated IPv4, root access)',
     crumb: 'VPS',
     heading: 'VPS.<br />A whole server, yours.',
-    lead: 'For those who need more than a shared plan: a setup with its own dedicated IPv4 address and root access. Orders open on October 13, 2026.',
+    lead: 'For those who need more than a shared plan: a setup with its own dedicated IPv4 address and root access. Orders open on November 1, 2026.',
     description:
-      'The ASHIKA Network VPS comes with a dedicated IPv4 address and root access. Up to 64GB of memory, 10 cores and a 500GB SSD. Orders open October 13, 2026. Also explains how it differs from shared plans.',
+      'The ASHIKA Network VPS comes with a dedicated IPv4 address and root access. Up to 64GB of memory, 10 cores and a 500GB SSD. Orders open November 1, 2026. Also explains how it differs from shared plans.',
     keywords: 'VPS,dedicated IPv4,root access,cheap VPS,Japan VPS,Osaka,virtual server,64GB,10 cores,SSD',
     updated: '2026-09-16',
     updatedLabel: 'September 16, 2026',
     ctaTitle: 'Orders open soon',
-    ctaLead: 'We start taking orders on October 13, 2026. Until then, ask us on Discord.',
+    ctaLead: 'We start taking orders on November 1, 2026. Until then, ask us on Discord.',
     related: [LINK.plans, LINK.discordBot, LINK.faq],
   },
 ];

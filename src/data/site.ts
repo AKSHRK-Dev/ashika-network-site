@@ -173,7 +173,7 @@ export const nav: NavItem[] = [
 /** ヘッダー上のお知らせバー（出したいときは show を true に） */
 export const notice = {
   show: true,
-  text: 'VPS（専有IPv4・ルート権限つき）の受付は2026年10月13日からです。ご相談は',
+  text: 'VPS（専有IPv4・ルート権限つき）の受付は、2026年11月1日からに変更しました。ご相談は',
   linkLabel: 'Discord',
   linkHref: links.discord,
   after: 'までどうぞ。',

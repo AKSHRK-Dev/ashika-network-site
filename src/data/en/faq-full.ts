@@ -22,7 +22,7 @@ export const faqPage = {
   related: [
     { href: '/en/discord-bot', title: 'Run a Discord bot 24/7', desc: 'How much memory it needs, and the steps to get it running.' },
     { href: '/en/python', title: 'Run Python 24/7', desc: 'Scheduled and always-on jobs, away from your home PC.' },
-    { href: '/en/vps', title: 'VPS (dedicated IPv4, root access)', desc: 'Orders open October 13, 2026.' },
+    { href: '/en/vps', title: 'VPS (dedicated IPv4, root access)', desc: 'Orders open November 1, 2026.' },
   ],
 };
 
@@ -37,7 +37,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Is it shared hosting or a VPS?',
-        a: 'Standard and high-memory plans are shared: one machine is split between several customers. They come without administrator rights, and one IPv4 address is shared by port. If you need a dedicated IPv4 address and administrator rights, consider the VPS, which opens for orders on October 13, 2026.',
+        a: 'Standard and high-memory plans are shared: one machine is split between several customers. They come without administrator rights, and one IPv4 address is shared by port. If you need a dedicated IPv4 address and administrator rights, consider the VPS, which opens for orders on November 1, 2026.',
       },
       {
         q: 'Where are the servers?',
@@ -137,7 +137,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Do I get my own IP address?',
-        a: 'Standard and high-memory plans share one IP address, split by port. If you need a dedicated IPv4 address, use the VPS, which opens for orders on October 13, 2026.',
+        a: 'Standard and high-memory plans share one IP address, split by port. If you need a dedicated IPv4 address, use the VPS, which opens for orders on November 1, 2026.',
       },
       {
         q: 'Are there backups?',

@@ -49,7 +49,7 @@ const LINK = {
   vps: {
     href: '/vps',
     title: 'VPS（専有IPv4・ルート権限）',
-    desc: '共有の構成では足りない方へ。2026年10月13日から受け付けます。',
+    desc: '共有の構成では足りない方へ。2026年11月1日から受け付けます。',
   },
   faq: {
     href: '/faq',
@@ -102,14 +102,14 @@ export const guides: Guide[] = [
     title: 'VPS（専有IPv4・ルート権限）',
     crumb: 'VPS',
     heading: 'VPS。<br />まるごと1台を、あなたに。',
-    lead: '共有の構成では足りない方のために、専有のIPv4アドレスとルート権限が付いた構成をご用意します。受け付けは2026年10月13日からです。',
+    lead: '共有の構成では足りない方のために、専有のIPv4アドレスとルート権限が付いた構成をご用意します。受け付けは2026年11月1日からです。',
     description:
-      'ASHIKA Network の VPS は、専有のIPv4アドレスとルート権限が付いた構成です。最大64GBメモリ・10コア・500GB SSD まで。受け付けは2026年10月13日から。共有プランとの違いもまとめています。',
+      'ASHIKA Network の VPS は、専有のIPv4アドレスとルート権限が付いた構成です。最大64GBメモリ・10コア・500GB SSD まで。受け付けは2026年11月1日から。共有プランとの違いもまとめています。',
     keywords: 'VPS,専有IPv4,ルート権限,root,格安VPS,国内VPS,大阪,仮想サーバー,64GB,10コア,SSD',
     updated: '2026-09-16',
     updatedLabel: '2026年9月16日',
     ctaTitle: '受け付けの開始をお待ちください',
-    ctaLead: '2026年10月13日から受け付けます。それまでのご相談は Discord でお受けしています。',
+    ctaLead: '2026年11月1日から受け付けます。それまでのご相談は Discord でお受けしています。',
     related: [LINK.plans, LINK.discordBot, LINK.faq],
   },
 ];
