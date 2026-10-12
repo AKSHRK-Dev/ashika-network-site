@@ -139,7 +139,7 @@ export const plans = {
   },
   note: [
     'All prices include tax. Every plan runs in Japan.',
-    'You can pay by credit card (VISA, Mastercard, AMEX), PayPay, bank transfer, Google Pay or Apple Pay.',
+    'You can pay by credit card (VISA, Mastercard, AMEX), PayPay, bank transfer, convenience store payment, Google Pay or Apple Pay.',
     'Standard and high-memory plans share one IP address, split by port. If you need a dedicated IPv4 address, see Enterprise.',
   ],
   list: planList,
@@ -228,7 +228,7 @@ export const flow = {
   title: 'Three steps after signing up.',
   lead: 'No complicated setup. Add balance, pick a plan, upload your files.',
   steps: [
-    { title: 'Add balance', desc: 'Top up by credit card, PayPay, bank transfer, Apple Pay or Google Pay. It arrives in minutes (bank transfers take 1 to 3 business days).', href: '/en#charge', linkLabel: 'How to top up' },
+    { title: 'Add balance', desc: 'Top up by credit card, PayPay, bank transfer, convenience store payment, Apple Pay or Google Pay. It arrives in minutes (bank transfers take 1 to 3 business days).', href: '/en#charge', linkLabel: 'How to top up' },
     { title: 'Pick a plan', desc: 'Choose a plan and a period and buy it. Your connection details are issued right away.' },
     { title: 'Upload your files', desc: 'Upload your code and start it. It is now reachable from the outside.' },
   ],
@@ -241,7 +241,7 @@ export const charge = {
   facts: [
     { label: 'Product', value: 'Top-up code', note: 'Used to pay for ASHIKA Network servers.' },
     { label: 'Amount', value: '¥100 to ¥500,000', note: 'In steps of ¥100.' },
-    { label: 'Payment', value: 'PayPay, credit card, bank transfer, Apple Pay, Google Pay', note: 'We accept VISA, Mastercard and AMEX.' },
+    { label: 'Payment', value: 'PayPay, credit card, bank transfer, convenience store, Apple Pay, Google Pay', note: 'We accept VISA, Mastercard and AMEX. Convenience store payment starts at ¥200.' },
     { label: 'Delivery', value: 'Right after payment', note: 'Shown on screen and sent by email. For bank transfers, we email it once the payment is confirmed. With PayPay, you receive a STORES order number instead of a code.' },
   ],
   steps: [
@@ -266,7 +266,7 @@ export const faq = {
     },
     {
       q: 'How do I pay?',
-      a: 'You top up your balance first, and server fees are paid from it. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account. For bank transfers we send the code once the payment is confirmed (1 to 3 business days). PayPay has no top-up code: enter the order number you receive from STORES and it is added to your balance.',
+      a: 'You top up your balance first, and server fees are paid from it. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, convenience store payment, Apple Pay and Google Pay, from ¥100 (convenience stores from ¥200) to ¥500,000 in steps of ¥100. You can buy a top-up without an account. For bank transfers we send the code once the payment is confirmed (1 to 3 business days). PayPay has no top-up code: enter the order number you receive from STORES and it is added to your balance.',
     },
     {
       q: 'It says "out of stock" and I cannot buy.',
