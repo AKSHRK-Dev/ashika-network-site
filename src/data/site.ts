@@ -201,7 +201,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'プラス（月110円）', href: `${links.shop}/plus`, external: true },
       { label: 'プロ（月230円）', href: `${links.shop}/pro`, external: true },
       { label: 'マックス（月470円）', href: `${links.shop}/max`, external: true },
-      { label: 'メモリ ベーシック（月100円）', href: `${links.shop}/mem-basic`, external: true },
+      { label: 'メモリ ベーシック（月110円）', href: `${links.shop}/mem-basic`, external: true },
       { label: 'メモリ プラス（月120円）', href: `${links.shop}/mem-plus`, external: true },
       { label: 'VPS・個別構成の相談', href: links.sns.discord, external: true },
     ],

@@ -87,7 +87,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Plus (¥110/month)', href: `${links.shop}/plus`, external: true },
       { label: 'Pro (¥230/month)', href: `${links.shop}/pro`, external: true },
       { label: 'Max (¥470/month)', href: `${links.shop}/max`, external: true },
-      { label: 'Memory Basic (¥100/month)', href: `${links.shop}/mem-basic`, external: true },
+      { label: 'Memory Basic (¥110/month)', href: `${links.shop}/mem-basic`, external: true },
       { label: 'Memory Plus (¥120/month)', href: `${links.shop}/mem-plus`, external: true },
       { label: 'Ask about VPS or custom builds', href: links.sns.discord, external: true },
     ],

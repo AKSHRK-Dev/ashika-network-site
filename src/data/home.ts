@@ -145,7 +145,7 @@ const planList: Record<PlanKind, Plan[]> = {
     { name: 'マックス', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', '共有'], fit: '共有構成で使える上限まで使う', href: 'https://dash.ashikanw.com/shop/max' },
   ],
   memory: [
-    { name: 'メモリ ベーシック', monthly: 100, quarterly: 275, specs: ['1024MB', '20%', '1024MB', '1', '共有'], fit: 'まずメモリを増やしたい', href: 'https://dash.ashikanw.com/shop/mem-basic' },
+    { name: 'メモリ ベーシック', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', '共有'], fit: 'まずメモリを増やしたい', href: 'https://dash.ashikanw.com/shop/mem-basic' },
     { name: 'メモリ プラス', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', '共有'], fit: '重い処理を常駐させる', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
   ],
   enterprise: [

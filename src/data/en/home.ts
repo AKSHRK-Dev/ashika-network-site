@@ -100,7 +100,7 @@ const planList: Record<PlanKind, Plan[]> = {
     { name: 'Max', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', 'Shared'], fit: 'The most a shared plan offers', href: 'https://dash.ashikanw.com/shop/max' },
   ],
   memory: [
-    { name: 'Memory Basic', monthly: 100, quarterly: 275, specs: ['1024MB', '20%', '1024MB', '1', 'Shared'], fit: 'Just need more memory', href: 'https://dash.ashikanw.com/shop/mem-basic' },
+    { name: 'Memory Basic', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', 'Shared'], fit: 'Just need more memory', href: 'https://dash.ashikanw.com/shop/mem-basic' },
     { name: 'Memory Plus', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', 'Shared'], fit: 'Keep heavy jobs running', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
   ],
   enterprise: [
