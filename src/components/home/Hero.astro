@@ -2,7 +2,9 @@
 /**
  * ヒーロー。濃紺のベタ面にキャッチコピーを置き、その下の白い帯に価格とボタンをまとめる。
  * 帯の金額は、表示時に大きい数字から一気に減って最小構成の月額に着地する。
- * 装飾は背景の細い罫線グリッドだけ。写真・グラデーション・影は使わない。
+ * 背景は「海の中」。差し込む光の帯、立ちのぼる泡、ゆっくり泳ぐアシカ2頭を、ごく薄い白で重ねる。
+ * どれも文字の後ろに置き、読みやすさを邪魔しない濃さにとどめる。写真は使わず、すべて CSS と SVG で描く。
+ * 動きを減らす設定（prefers-reduced-motion）の人には、止まった絵として出す。
  */
 import Icon from '../Icon.astro';
 import { content } from '../../data/index';
@@ -12,9 +14,55 @@ const lang = langOf(Astro.url);
 const { hero } = content(lang).home;
 
 const fmt = (n: number) => n.toLocaleString('ja-JP');
+
+/* アシカの形（頭が右）。ひれは別の図形にして、CSS で付け根から動かす */
+const LION = `<svg viewBox="0 0 240 96" fill="currentColor">
+  <path d="M44 50C60 40 88 33 120 31C146 29 164 30 178 32C186 27 194 24 203 24C213 24 220 29 224 34C229 36 233 38 234 41C235 44 232 46 227 46C221 47 214 47 208 48C200 50 194 54 186 58C168 66 144 68 120 67C92 66 66 61 44 56Z"/>
+  <path class="fin-front" d="M170 60C166 70 158 80 142 88C137 90 134 88 137 85C147 77 152 70 154 62Z"/>
+  <g class="fin-back">
+    <path d="M48 50C36 47 24 43 12 38C8 36 4 36 3 38C2 41 5 44 9 45C20 49 32 53 46 55Z"/>
+    <path d="M48 54C36 55 24 57 12 59C7 60 4 62 5 64C6 66 10 66 14 65C26 62 38 60 50 58Z"/>
+  </g>
+  <path d="M196 27C197 23 200 22 201 24C201 26 199 28 197 29Z"/>
+  <g stroke="currentColor" stroke-width=".7" stroke-linecap="round" fill="none"><path d="M228 43L240 41"/><path d="M228 44L239 45"/><path d="M227 45L237 49"/></g>
+</svg>`;
+
+/*
+ * 立ちのぼる泡。乱数だと表示のたびに変わってしまうので、決まった並びから作る。
+ * x は横位置（%）、s は大きさ（px）、t は1回にかかる秒、d は開始のずれ（秒・負で途中から始める）
+ */
+const bubbles = Array.from({ length: 16 }, (_, i) => ({
+  x: (i * 37 + 11) % 100,
+  s: 4 + ((i * 7) % 9),
+  t: 9 + ((i * 5) % 10),
+  d: -((i * 13) % 17),
+}));
 ---
 
 <section class="hero" aria-labelledby="hero-title">
+  <div class="sea" aria-hidden="true">
+    <span class="ray" style="--x:8%;--w:9%;--t:11s"></span>
+    <span class="ray" style="--x:27%;--w:5%;--t:14s;--d:-4s"></span>
+    <span class="ray" style="--x:52%;--w:12%;--t:12s;--d:-7s"></span>
+    <span class="ray" style="--x:78%;--w:7%;--t:16s;--d:-2s"></span>
+
+    {bubbles.map((b) => <span class="bubble" style={`--x:${b.x}%;--s:${b.s}px;--t:${b.t}s;--d:${b.d}s`} />)}
+
+    <!-- 海の底：なだらかな砂地と、根元から揺れる海藻 -->
+    <svg class="floor" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0 34C140 22 260 40 420 30C590 19 700 38 860 28C1000 20 1100 32 1200 26V60H0Z" /></svg>
+    <svg class="kelp kelp-1" viewBox="0 0 40 200"><path d="M20 200C10 170 30 150 18 120C8 95 30 75 20 45C14 28 22 12 20 0C26 14 30 30 26 48C34 76 14 96 24 122C36 152 16 172 26 200Z" /></svg>
+    <svg class="kelp kelp-2" viewBox="0 0 40 200"><path d="M20 200C10 170 30 150 18 120C8 95 30 75 20 45C14 28 22 12 20 0C26 14 30 30 26 48C34 76 14 96 24 122C36 152 16 172 26 200Z" /></svg>
+    <svg class="kelp kelp-3" viewBox="0 0 40 200"><path d="M20 200C10 170 30 150 18 120C8 95 30 75 20 45C14 28 22 12 20 0C26 14 30 30 26 48C34 76 14 96 24 122C36 152 16 172 26 200Z" /></svg>
+
+    <!-- 手前の大きいアシカ（左から右へ）と、奥の小さいアシカ（右から左へ） -->
+    <div class="lane lane-near">
+      <div class="lion"><Fragment set:html={LION} /><i class="breath"></i><i class="breath"></i><i class="breath"></i></div>
+    </div>
+    <div class="lane lane-far">
+      <div class="lion"><Fragment set:html={LION} /></div>
+    </div>
+  </div>
+
   <div class="container hero-in">
     <!-- 行ごとに .ln で包むと、表示のときに下からせり上がる（global.css の data-anim='lines'） -->
     <h1 id="hero-title" data-reveal aria-label={hero.title.join('')}>
@@ -74,16 +122,236 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
     padding-block: clamp(48px, 7vw, 92px);
   }
 
-  /* 背景の罫線グリッド。奥行きを出さず、面を引き締めるためだけに置く */
-  .hero::before {
-    content: "";
+  /* ---------- 海の中（背景） ---------- */
+  .sea {
     position: absolute;
     inset: 0;
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
-    background-size: 72px 72px;
     pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* 上から差し込む光の帯。ゆっくり揺れて、濃さも少し変わる */
+  .ray {
+    position: absolute;
+    top: -10%;
+    left: var(--x);
+    width: var(--w);
+    height: 120%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 75%);
+    transform-origin: top center;
+    transform: skewX(-14deg);
+    animation: ray var(--t) ease-in-out var(--d, 0s) infinite alternate;
+  }
+
+  @keyframes ray {
+    from { transform: skewX(-18deg); opacity: 0.55; }
+    to { transform: skewX(-8deg); opacity: 1; }
+  }
+
+  /* 下から立ちのぼる泡。少し左右に揺れながら上がり、水面の手前で消える */
+  .bubble {
+    position: absolute;
+    bottom: -20px;
+    left: var(--x);
+    width: var(--s);
+    height: var(--s);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    animation: rise var(--t) linear var(--d) infinite;
+  }
+
+  @keyframes rise {
+    0% { transform: translate(0, 0); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translate(12px, -55cqh); }
+    90% { opacity: 0.8; }
+    100% { transform: translate(-6px, -110cqh); opacity: 0; }
+  }
+
+  .sea {
+    container-type: size;
+  }
+
+  /* 海の底。砂地は面より少し暗く、海藻は根元を軸にゆらゆらさせる */
+  .floor {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: clamp(36px, 6vw, 64px);
+    fill: rgba(3, 14, 28, 0.35);
+  }
+
+  .kelp {
+    position: absolute;
+    bottom: 8px;
+    width: clamp(18px, 2vw, 28px);
+    height: auto;
+    fill: rgba(120, 190, 170, 0.14);
+    transform-origin: bottom center;
+    animation: sway 5s ease-in-out infinite alternate;
+  }
+
+  .kelp-1 { right: 7%; height: clamp(110px, 14vw, 190px); }
+  .kelp-2 { right: 9.5%; height: clamp(80px, 10vw, 140px); animation-duration: 6.5s; animation-delay: -2s; }
+  .kelp-3 { left: 4%; height: clamp(90px, 11vw, 160px); animation-duration: 5.8s; animation-delay: -4s; }
+
+  @keyframes sway {
+    from { transform: rotate(-6deg); }
+    to { transform: rotate(6deg); }
+  }
+
+  /* アシカが泳ぐ通り道。幅いっぱいの箱を横に動かし、その中のアシカを上下に揺らす */
+  .lane {
+    position: absolute;
+    inset: 0;
+  }
+
+  .lion {
+    position: absolute;
+    width: clamp(220px, 30vw, 430px);
+    color: rgba(214, 233, 250, 0.17);
+    animation: bob 2.8s ease-in-out infinite alternate;
+  }
+
+  .lion :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .lane-near {
+    animation: swim-right 30s linear infinite;
+  }
+
+  .lane-near .lion {
+    top: 46%;
+  }
+
+  /* 奥のアシカは小さく薄く、逆向きにゆっくり */
+  .lane-far {
+    animation: swim-left 46s linear -18s infinite;
+  }
+
+  .lane-far .lion {
+    top: 18%;
+    width: clamp(120px, 15vw, 210px);
+    color: rgba(214, 233, 250, 0.09);
+    animation-duration: 3.4s;
+  }
+
+  .lane-far .lion :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  @keyframes swim-right {
+    0% { transform: translate(-45%, 0); }
+    30% { transform: translate(5%, -6cqh); }
+    60% { transform: translate(55%, 5cqh); }
+    100% { transform: translate(110%, -2cqh); }
+  }
+
+  @keyframes swim-left {
+    0% { transform: translate(110%, 0); }
+    50% { transform: translate(40%, 6cqh); }
+    100% { transform: translate(-30%, -3cqh); }
+  }
+
+  /* 体のうねり（頭を少し上げ下げ） */
+  @keyframes bob {
+    from { transform: translateY(-6px) rotate(-3deg); }
+    to { transform: translateY(6px) rotate(3deg); }
+  }
+
+  /* ひれ。付け根を軸にして動かす */
+  .lion :global(.fin-back) {
+    transform-box: fill-box;
+    transform-origin: right center;
+    animation: flap 0.9s ease-in-out infinite alternate;
+  }
+
+  .lion :global(.fin-front) {
+    transform-box: fill-box;
+    transform-origin: right top;
+    animation: paddle 1.4s ease-in-out infinite alternate;
+  }
+
+  @keyframes flap {
+    from { transform: rotate(-9deg); }
+    to { transform: rotate(9deg); }
+  }
+
+  @keyframes paddle {
+    from { transform: rotate(-12deg); }
+    to { transform: rotate(10deg); }
+  }
+
+  /* 鼻先から出る小さな泡 */
+  .breath {
+    position: absolute;
+    right: 1%;
+    top: 30%;
+    width: 7px;
+    height: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    animation: breath 2.6s ease-out infinite;
+  }
+
+  .breath:nth-of-type(2) {
+    width: 5px;
+    height: 5px;
+    animation-delay: 0.9s;
+  }
+
+  .breath:nth-of-type(3) {
+    width: 4px;
+    height: 4px;
+    animation-delay: 1.7s;
+  }
+
+  @keyframes breath {
+    0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+    15% { opacity: 1; }
+    100% { transform: translate(10px, -70px) scale(1.1); opacity: 0; }
+  }
+
+  /* スマホでは下の白い帯が大きく、アシカの通り道を隠すので、上の空いているところを泳がせる */
+  @media (max-width: 859px) {
+    .lane-near .lion { top: 24%; }
+    .lane-far .lion { top: 6%; }
+  }
+
+  /* 動きを減らす設定の人には、止まった絵として出す（アシカは右寄りに置く） */
+  @media (prefers-reduced-motion: reduce) {
+    .kelp,
+    .ray,
+    .bubble,
+    .lion,
+    .breath,
+    .lion :global(.fin-back),
+    .lion :global(.fin-front) {
+      animation: none;
+    }
+
+    .bubble {
+      display: none;
+    }
+
+    .breath {
+      display: none;
+    }
+
+    .lane-near {
+      animation: none;
+      transform: translate(58%, 0);
+    }
+
+    .lane-far {
+      animation: none;
+      transform: translate(20%, 0);
+    }
   }
 
   .hero-in {
