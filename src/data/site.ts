@@ -92,10 +92,10 @@ export const analytics = {
 } as const;
 
 /**
- * 広告（Google AdSense）。
- * client にサイト運営者ID（ca-pub-XXXXXXXXXXXXXXXX）を入れると、本番ビルドでだけ広告のタグが読み込まれる。空のままなら何も読み込まない。
- * どこに何の広告を出すかは AdSense の管理画面（自動広告）で決める。
- * 同じIDを public/ads.txt にも書いておくこと。プライバシーポリシー第7条で広告の Cookie について明記済み。
+ * 広告（Google AdSense）のサイト運営者ID（ca-pub-XXXXXXXXXXXXXXXX）。
+ * 広告を出すのはブログ（blog.ashikanw.com、ID は向こうの BLOG_ADSENSE_CLIENT）だけ。
+ * このサイトには広告のスクリプトは入れず、サイト確認用の <meta> と public/ads.txt（サブドメインの分もここで見られる）だけを置く。
+ * プライバシーポリシー第7条で広告の Cookie について明記済み。
  */
 export const adsense = {
   client: 'ca-pub-7891788447365232',

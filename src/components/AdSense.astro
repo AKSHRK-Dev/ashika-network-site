@@ -1,6 +1,8 @@
 ---
 /**
- * Google AdSense の広告タグ。
+ * Google AdSense のサイト確認用のタグ。
+ * 広告はブログ（blog.ashikanw.com）にだけ出すので、このサイトでは広告のスクリプトは読み込まず、
+ * AdSense にサイトの持ち主だと分かってもらうための <meta> だけを出す（ads.txt と同じ ID）。
  * site.ts の adsense.client が空、または開発サーバー（npm run dev）のときは何も出力しない。
  */
 import { adsense } from '../data/site';
@@ -8,4 +10,4 @@ import { adsense } from '../data/site';
 const enabled = import.meta.env.PROD && adsense.client.length > 0;
 ---
 
-{enabled && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense.client}`} crossorigin="anonymous" />}
+{enabled && <meta name="google-adsense-account" content={adsense.client} />}
