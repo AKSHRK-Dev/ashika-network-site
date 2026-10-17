@@ -1,0 +1,11 @@
+---
+/**
+ * Google AdSense の広告タグ。
+ * site.ts の adsense.client が空、または開発サーバー（npm run dev）のときは何も出力しない。
+ */
+import { adsense } from '../data/site';
+
+const enabled = import.meta.env.PROD && adsense.client.length > 0;
+---
+
+{enabled && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense.client}`} crossorigin="anonymous" />}

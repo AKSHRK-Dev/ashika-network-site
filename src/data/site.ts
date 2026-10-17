@@ -83,12 +83,22 @@ export const ui = {
  * アクセス解析（Google Analytics 4）。
  * gaId に測定ID（G-XXXXXXXXXX）を入れると、本番ビルドでだけ計測タグが読み込まれる。空のままなら何も読み込まない。
  * dash.ashikanw.com にも同じIDのタグを入れると、トップページ→登録→購入のつながりを1つのプロパティで追える。
- * プライバシーポリシー第四条（アクセス解析ツール）で Google Analytics と Cookie の利用を明記済み。
+ * プライバシーポリシー第7条（アクセス解析・広告）で Google Analytics と Cookie の利用を明記済み。
  */
 export const analytics = {
   gaId: 'G-CH166MZ5W5',
   /** ドメインをまたいでも同じ訪問者として数えるドメイン */
   linkerDomains: ['ashikanw.com', 'dash.ashikanw.com'],
+} as const;
+
+/**
+ * 広告（Google AdSense）。
+ * client にサイト運営者ID（ca-pub-XXXXXXXXXXXXXXXX）を入れると、本番ビルドでだけ広告のタグが読み込まれる。空のままなら何も読み込まない。
+ * どこに何の広告を出すかは AdSense の管理画面（自動広告）で決める。
+ * 同じIDを public/ads.txt にも書いておくこと。プライバシーポリシー第7条で広告の Cookie について明記済み。
+ */
+export const adsense = {
+  client: 'ca-pub-7891788447365232',
 } as const;
 
 /**
