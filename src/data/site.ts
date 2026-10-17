@@ -116,6 +116,8 @@ export const links = {
   status: 'https://status.ashikanw.com',
   /** API と SFTP の説明書（AKSHRK-Dev/ashika-docs） */
   docs: 'https://docs.ashikanw.com',
+  /** お知らせ・使い方の記事（AKSHRK-Dev/ashika-blog） */
+  blog: 'https://blog.ashikanw.com',
   discord: `${short}/discord`,
   sns: {
     discord: `${short}/discord`,
@@ -178,6 +180,7 @@ export const nav: NavItem[] = [
   { label: 'よくある質問', href: '/faq' },
   { label: 'ドキュメント', href: links.docs, external: true },
   { label: '稼働状況', href: links.status, external: true },
+  { label: 'ブログ', href: links.blog, external: true },
 ];
 
 /** ヘッダー上のお知らせバー（出したいときは show を true に） */
@@ -235,6 +238,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'VPS を使う', href: '/vps' },
       { label: 'SFTP でファイルを送る', href: `${links.docs}/sftp/`, external: true },
       { label: 'よくある質問', href: '/faq' },
+      { label: 'ブログ（お知らせ・使い方）', href: links.blog, external: true },
     ],
   },
   {

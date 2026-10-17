@@ -212,6 +212,7 @@ const isCurrent = (href: string) =>
   .login {
     font-size: 0.85rem;
     font-weight: 700;
+    white-space: nowrap;
     color: var(--ink);
     padding-bottom: 1px;
     border-bottom: 1px solid var(--line-2);
@@ -387,7 +388,7 @@ const isCurrent = (href: string) =>
     transform: translateY(-5.5px) rotate(-45deg);
   }
 
-  /* 6項目と右のボタンが1行に収まらない幅では、メニューボタンに切り替える */
+  /* 7項目と右のボタンが1行に収まらない幅では、メニューボタンに切り替える（1080px で収まらなくなる） */
   @media (max-width: 1100px) {
     .gnav,
     .actions {

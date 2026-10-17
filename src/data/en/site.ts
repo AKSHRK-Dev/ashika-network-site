@@ -111,6 +111,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Using a VPS', href: '/en/vps' },
       { label: 'Send files over SFTP', href: `${links.docs}/sftp/`, external: true },
       { label: 'FAQ', href: '/en/faq' },
+      { label: 'Blog (Japanese)', href: links.blog, external: true },
     ],
   },
   {
