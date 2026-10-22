@@ -76,6 +76,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Topping up', href: '/en#charge' },
       { label: 'The customer panel', href: '/en#panel' },
       { label: 'Where we are (data center)', href: '/en#location' },
+      { label: 'Server specs', href: '/en/specs' },
       { label: 'From sign-up to launch', href: '/en#flow' },
       { label: 'Compared with doing it yourself', href: '/en#compare' },
     ],

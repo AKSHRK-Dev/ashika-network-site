@@ -6,11 +6,14 @@
  * src/data/home.ts の location.map にある。
  */
 import { content } from '../../data/index';
-import { langOf } from '../../i18n';
+import { langOf, localize } from '../../i18n';
 import { cityCenter, labels, map as geo, placeName, project } from '../../data/osaka-map';
 
 const lang = langOf(Astro.url);
 const { location } = content(lang).home;
+const { nodes, specsPage } = content(lang).specs;
+/* トップでは所在の行は省く（地図で分かるので） */
+const homeRows = (specs: { k: string; v: string }[]) => specs.slice(0, 5);
 
 const M = location.map;
 const [, , vw, vh] = geo.view;
@@ -98,14 +101,14 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
     <h3 class="nodes-h">{location.nodesTitle}</h3>
     <ul class="node-list">
       {
-        location.nodes.map((node) => (
+        nodes.map((node) => (
           <li class="node">
             <p class="node-name">
               {node.name}
               <span class="node-id">{node.id}</span>
             </p>
             <dl>
-              {node.specs.map((s) => (
+              {homeRows(node.specs).map((s) => (
                 <div class="node-row">
                   <dt>{s.k}</dt>
                   <dd>{s.v}</dd>
@@ -116,6 +119,7 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
         ))
       }
     </ul>
+    <p class="nodes-more"><a href={localize('/specs', lang)}>{specsPage.homeLink} →</a></p>
   </div>
 </section>
 
@@ -428,6 +432,18 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--ink);
+  }
+
+  .nodes-more {
+    margin-top: 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .nodes-more a {
+    color: var(--b-mid);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   @media (max-width: 860px) {

@@ -144,6 +144,7 @@ export const seo = {
     { path: '/python', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.9 },
     { path: '/vps', lastmod: '2026-09-16', changefreq: 'weekly', priority: 0.8 },
     { path: '/faq', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.8 },
+    { path: '/specs', lastmod: '2026-10-22', changefreq: 'monthly', priority: 0.6 },
     { path: '/legal', lastmod: '2026-09-09', changefreq: 'monthly', priority: 0.4 },
   ],
   /** 規約ページに共通で使う値（日付だけは legalDocs の updated を使う） */
@@ -203,6 +204,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: '残高のチャージ', href: '/#charge' },
       { label: 'お客様パネルの画面', href: '/#panel' },
       { label: '置き場所（データセンター）', href: '/#location' },
+      { label: 'サーバーのスペック', href: '/specs' },
       { label: '申し込みから公開まで', href: '/#flow' },
       { label: '自分で用意する場合との比較', href: '/#compare' },
     ],

@@ -161,30 +161,6 @@ export const location = {
     { k: 'Choosing', v: 'We have one site, so there is nothing to choose when you buy' },
   ],
   nodesTitle: 'Server hardware',
-  nodes: [
-    {
-      name: 'Node 1',
-      id: 'osaka-01',
-      specs: [
-        { k: 'CPU', v: 'AMD Ryzen 5 4500' },
-        { k: 'Memory', v: 'DDR4 32GB' },
-        { k: 'Storage', v: 'HDD 3TB' },
-        { k: 'Network', v: '1Gbps' },
-        { k: 'Power', v: 'Redundant power supply' },
-      ],
-    },
-    {
-      name: 'Node 2',
-      id: 'osaka-02',
-      specs: [
-        { k: 'CPU', v: 'Intel Xeon E5-2696 v4' },
-        { k: 'Memory', v: 'DDR4 48GB' },
-        { k: 'Storage', v: 'NVMe SSD 1TB + HDD 3TB' },
-        { k: 'Network', v: '1Gbps' },
-        { k: 'Power', v: 'Redundant power supply' },
-      ],
-    },
-  ],
   map: {
     city: '箕面市',
     pin: [135.4706, 34.8267] as [number, number],

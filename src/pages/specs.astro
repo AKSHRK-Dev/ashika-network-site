@@ -1,0 +1,167 @@
+---
+/**
+ * サーバー本体（ノード）のスペックのページ。中身は src/data/specs.ts（英語は src/data/en/specs.ts）。
+ * トップページの「置き場所」の欄も同じデータを使う。
+ */
+import '../styles/guide.css';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema } from '../data/schema';
+import { content } from '../data/index';
+import { chrome, langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const words = chrome[lang];
+const { nodes, specsPage } = content(lang).specs;
+const path = localize('/specs', lang);
+---
+
+<Base
+  title={specsPage.title}
+  description={specsPage.description}
+  path={path}
+  updated={specsPage.updated}
+  schema={[breadcrumbSchema([{ name: specsPage.title, path }], lang)]}
+>
+  <section class="g-hero">
+    <div class="container">
+      <p class="g-crumb"><a href={localize('/', lang)}>{words.home}</a> <span aria-hidden="true">›</span> {specsPage.title}</p>
+      <h1>{specsPage.heading}</h1>
+      <p class="g-lead">{specsPage.lead}</p>
+      <p class="g-date">{words.updated} {specsPage.updatedLabel}</p>
+    </div>
+  </section>
+
+  <div class="container sp-main">
+    <h2 class="sp-h2">{specsPage.nodesHeading}</h2>
+    <ul class="sp-nodes" data-stagger>
+      {
+        nodes.map((node) => (
+          <li class="sp-node">
+            <p class="sp-name">
+              {node.name}
+              <span class="sp-id">{node.id}</span>
+            </p>
+            <dl>
+              {node.specs.map((s) => (
+                <div class="sp-row">
+                  <dt>{s.k}</dt>
+                  <dd>
+                    {s.v}
+                    {'sub' in s && s.sub && <span class="sp-sub">{s.sub}</span>}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section class="sp-notes" data-reveal>
+      <h2 class="sp-h2">{specsPage.notesHeading}</h2>
+      <ul>
+        {specsPage.notes.map((n) => <li>{n}</li>)}
+      </ul>
+      <a class="btn btn-primary" href={lang === 'en' ? '/en#plans' : '/#plans'}>
+        {specsPage.plansLink}<Icon name="arrow" />
+      </a>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .sp-main {
+    max-width: 980px;
+    padding-block: clamp(28px, 4.5vw, 48px) clamp(56px, 8vw, 96px);
+  }
+
+  .sp-h2 {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .sp-nodes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 16px;
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sp-node {
+    padding: 1.2rem 1.35rem 0.7rem;
+    border: 1px solid var(--line-2);
+    border-top: 3px solid var(--b);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+  }
+
+  .sp-name {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--b-deep);
+  }
+
+  .sp-id {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-3);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .sp-node dl {
+    margin-top: 0.7rem;
+  }
+
+  .sp-row {
+    display: grid;
+    grid-template-columns: 6.5em minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--line-2);
+  }
+
+  .sp-row dt {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-3);
+    line-height: 1.7;
+  }
+
+  .sp-row dd {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .sp-sub {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+
+  .sp-notes {
+    margin-top: clamp(32px, 5vw, 48px);
+    padding: clamp(18px, 2.6vw, 26px);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--b);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+
+  .sp-notes ul {
+    margin: 0.8rem 0 1.2rem;
+    padding-left: 1.2em;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--ink-2);
+  }
+</style>
