@@ -93,6 +93,30 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
       <figcaption>{location.map.caption}</figcaption>
     </figure>
   </div>
+
+  <div class="container nodes" data-reveal>
+    <h3 class="nodes-h">{location.nodesTitle}</h3>
+    <ul class="node-list">
+      {
+        location.nodes.map((node) => (
+          <li class="node">
+            <p class="node-name">
+              {node.name}
+              <span class="node-id">{node.id}</span>
+            </p>
+            <dl>
+              {node.specs.map((s) => (
+                <div class="node-row">
+                  <dt>{s.k}</dt>
+                  <dd>{s.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>
 
 <style is:global>
@@ -336,6 +360,74 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
     font-size: 0.72rem;
     line-height: 1.7;
     color: var(--ink-3);
+  }
+
+  /* ---------- ノードごとのスペック（地図の下に横並び） ---------- */
+  .nodes {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+
+  .nodes-h {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .node-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 16px;
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .node {
+    padding: 1.1rem 1.25rem 0.6rem;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+  }
+
+  .node-name {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--b-deep);
+  }
+
+  .node-id {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-3);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .node dl {
+    margin-top: 0.6rem;
+  }
+
+  .node-row {
+    display: grid;
+    grid-template-columns: 6em minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--line-2);
+  }
+
+  .node-row dt {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-3);
+    line-height: 1.7;
+  }
+
+  .node-row dd {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
   }
 
   @media (max-width: 860px) {
