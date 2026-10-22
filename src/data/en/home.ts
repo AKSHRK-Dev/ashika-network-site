@@ -168,6 +168,7 @@ export const location = {
       specs: [
         { k: 'CPU', v: 'AMD Ryzen 5 4500' },
         { k: 'Memory', v: 'DDR4 32GB' },
+        { k: 'Storage', v: 'HDD 3TB' },
         { k: 'Network', v: '1Gbps' },
         { k: 'Power', v: 'Redundant power supply' },
       ],
@@ -178,6 +179,7 @@ export const location = {
       specs: [
         { k: 'CPU', v: 'Intel Xeon E5-2696 v4' },
         { k: 'Memory', v: 'DDR4 48GB' },
+        { k: 'Storage', v: 'HDD 3TB' },
         { k: 'Network', v: '1Gbps' },
         { k: 'Power', v: 'Redundant power supply' },
       ],
