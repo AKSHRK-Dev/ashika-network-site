@@ -21,7 +21,7 @@ export const site = {
   /** 見出しの下に添える一言（構造化データの slogan と、SNSカードに使う） */
   tagline2: '切れないつながりを',
   keywords:
-    'VPS,ホスティング,サーバー,格安,プログラム,ASHIKA,ASHIKA Network,アシカ,あしか,アシカネットワーク,あしかネットワーク,アシカネット,プログラミング,開発,激安,常時稼働,Python,Discord,Discord Bot,Webアプリ',
+    'ホスティング,サーバー,格安,プログラム,ASHIKA,ASHIKA Network,アシカ,あしか,アシカネットワーク,あしかネットワーク,アシカネット,プログラミング,開発,激安,常時稼働,Python,Discord,Discord Bot,Webアプリ',
   ogImage: { path: '/uploads/image.png', width: 1200, height: 630, alt: 'ASHIKA Network ロゴ' },
   themeColor: '#14497e',
   /**
@@ -142,7 +142,6 @@ export const seo = {
     { path: '/', lastmod: '2026-09-16', changefreq: 'weekly', priority: 1 },
     { path: '/discord-bot', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.9 },
     { path: '/python', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.9 },
-    { path: '/vps', lastmod: '2026-09-16', changefreq: 'weekly', priority: 0.8 },
     { path: '/faq', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.8 },
     { path: '/specs', lastmod: '2026-10-22', changefreq: 'monthly', priority: 0.6 },
     { path: '/legal', lastmod: '2026-09-09', changefreq: 'monthly', priority: 0.4 },
@@ -187,10 +186,10 @@ export const nav: NavItem[] = [
 /** ヘッダー上のお知らせバー（出したいときは show を true に） */
 export const notice = {
   show: true,
-  text: 'VPS（専有IPv4・ルート権限つき）の受付は、2026年11月1日からに変更しました。ご相談は',
+  text: 'VPS（専有IPv4・ルート権限つき）の提供は中止しました。お待ちいただいた皆さまには申し訳ございません。詳しくは',
   linkLabel: 'Discord',
   linkHref: links.discord,
-  after: 'までどうぞ。',
+  after: 'のお知らせをご覧ください。',
 };
 
 /** フッターのリンク列（PCでは3列、スマホでは積んで表示） */
@@ -200,7 +199,6 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: '料金・プラン', href: '/#plans' },
       { label: 'できること', href: '/#uses' },
-      { label: 'VPS（専有IPv4・root）', href: '/vps' },
       { label: '残高のチャージ', href: '/#charge' },
       { label: 'お客様パネルの画面', href: '/#panel' },
       { label: '置き場所（データセンター）', href: '/#location' },
@@ -214,7 +212,6 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'Discord Bot を24時間動かす', href: '/discord-bot' },
       { label: 'Python を24時間動かす', href: '/python' },
-      { label: 'VPS を使う', href: '/vps' },
       { label: 'よくある質問', href: '/faq' },
       { label: 'ブログ（お知らせ・使い方）', href: links.blog, external: true },
       { label: '無料の支援プログラム', href: 'https://group.ashikanw.com/ja-jp/supportprogram/', external: true },

@@ -18,7 +18,7 @@ export const site = {
   alternateNames: ['ASHIKA', 'ASHIKAネットワーク', 'アシカネットワーク', 'あしかネットワーク'],
   tagline2: 'Connections that stay on',
   keywords:
-    'hosting,server,cheap hosting,Japan hosting,Osaka,Discord bot hosting,Python hosting,Node.js hosting,24/7,VPS,ASHIKA,ASHIKA Network',
+    'hosting,server,cheap hosting,Japan hosting,Osaka,Discord bot hosting,Python hosting,Node.js hosting,24/7,ASHIKA,ASHIKA Network',
   ogImage: { path: '/uploads/image.png', width: 1200, height: 630, alt: 'ASHIKA Network logo' },
   themeColor: '#14497e',
   googleVerification: '',
@@ -60,10 +60,10 @@ export const nav: NavItem[] = [
 
 export const notice = {
   show: true,
-  text: 'VPS (dedicated IPv4 with root access) now opens on November 1, 2026 (moved from October 13). Questions are welcome on',
+  text: 'We have cancelled the VPS (dedicated IPv4 with root access). We are sorry to everyone who was waiting. Details are in our announcement on',
   linkLabel: 'Discord',
   linkHref: links.discord,
-  after: '',
+  after: '.',
 };
 
 export const footerColumns: { title: string; items: NavItem[] }[] = [
@@ -72,7 +72,6 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'Pricing and plans', href: '/en#plans' },
       { label: 'What you can run', href: '/en#uses' },
-      { label: 'VPS (dedicated IPv4, root)', href: '/en/vps' },
       { label: 'Topping up', href: '/en#charge' },
       { label: 'The customer panel', href: '/en#panel' },
       { label: 'Where we are (data center)', href: '/en#location' },
@@ -86,7 +85,6 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
     items: [
       { label: 'Run a Discord bot 24/7', href: '/en/discord-bot' },
       { label: 'Run Python 24/7', href: '/en/python' },
-      { label: 'Using a VPS', href: '/en/vps' },
       { label: 'FAQ', href: '/en/faq' },
       { label: 'Blog (Japanese)', href: links.blog, external: true },
       { label: 'Free support program', href: 'https://group.ashikanw.com/en-us/supportprogram/', external: true },

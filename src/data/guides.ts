@@ -46,11 +46,6 @@ const LINK = {
     title: 'Python を24時間動かす',
     desc: '定期実行・スクレイピング・常駐処理を、家のパソコンから離して動かす方法。',
   },
-  vps: {
-    href: '/vps',
-    title: 'VPS（専有IPv4・ルート権限）',
-    desc: '共有の構成では足りない方へ。2026年11月1日から受け付けます。',
-  },
   faq: {
     href: '/faq',
     title: 'よくある質問',
@@ -73,7 +68,7 @@ export const guides: Guide[] = [
     description:
       'Discord Bot を24時間動かす方法を、必要なメモリの目安・料金・手順の順に説明します。discord.py と discord.js のどちらにも対応。月30円から、パソコンを閉じても止まらない置き場所を用意できます。',
     keywords:
-      'Discord Bot,24時間,常時稼働,ホスティング,discord.py,discord.js,無料,格安,VPS,レンタルサーバー,Python,Node.js,落ちる,動かし続ける',
+      'Discord Bot,24時間,常時稼働,ホスティング,discord.py,discord.js,無料,格安,レンタルサーバー,Python,Node.js,落ちる,動かし続ける',
     updated: '2026-09-16',
     updatedLabel: '2026年9月16日',
     ctaTitle: 'Bot の置き場所を、いま用意する',
@@ -90,27 +85,12 @@ export const guides: Guide[] = [
     description:
       'Python のスクリプトを24時間動かす方法をまとめました。cron での定期実行、常駐処理、必要なメモリの目安、パソコンで動かす場合との違いまで。月30円から国内のデータセンターで動かせます。',
     keywords:
-      'Python,24時間,常時実行,定期実行,cron,スクレイピング,自動化,サーバー,ホスティング,格安,VPS,スクリプト,常駐',
+      'Python,24時間,常時実行,定期実行,cron,スクレイピング,自動化,サーバー,ホスティング,格安,スクリプト,常駐',
     updated: '2026-09-16',
     updatedLabel: '2026年9月16日',
     ctaTitle: 'スクリプトの置き場所を用意する',
     ctaLead: '軽い処理なら月30円から。重くなってきたら、上の構成に移せます。',
     related: [LINK.discordBot, LINK.plans, LINK.faq],
-  },
-  {
-    href: '/vps',
-    title: 'VPS（専有IPv4・ルート権限）',
-    crumb: 'VPS',
-    heading: 'VPS。<br />まるごと1台を、あなたに。',
-    lead: '共有の構成では足りない方のために、専有のIPv4アドレスとルート権限が付いた構成をご用意します。受け付けは2026年11月1日からです。',
-    description:
-      'ASHIKA Network の VPS は、専有のIPv4アドレスとルート権限が付いた構成です。最大64GBメモリ・10コア・500GB SSD まで。受け付けは2026年11月1日から。共有プランとの違いもまとめています。',
-    keywords: 'VPS,専有IPv4,ルート権限,root,格安VPS,国内VPS,大阪,仮想サーバー,64GB,10コア,SSD',
-    updated: '2026-09-16',
-    updatedLabel: '2026年9月16日',
-    ctaTitle: '受け付けの開始をお待ちください',
-    ctaLead: '2026年11月1日から受け付けます。それまでのご相談は Discord でお受けしています。',
-    related: [LINK.plans, LINK.discordBot, LINK.faq],
   },
 ];
 

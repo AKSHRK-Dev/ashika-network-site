@@ -1,8 +1,6 @@
 ---
-/** 英語版。本文は src/content/guides/en/vps.html */
-import Guide from '../../layouts/Guide.astro';
-import body from '../../content/guides/en/vps.html?raw';
-import { guideByHref } from '../../data/en/guides';
+/** 英語版。中身は日本語版と同じページで、URL（/en/…）から言語を決めている */
+import Page from '../vps.astro';
 ---
 
-<Guide guide={guideByHref('/en/vps')} body={body} />
+<Page />

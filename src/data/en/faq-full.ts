@@ -11,7 +11,7 @@ export const faqPage = {
   description:
     'Answers to common questions about ASHIKA Network: prices and payment, what you can run, how to size your server, contract periods and cancelling, and what to do when something goes wrong. Hosting from ¥30 a month.',
   keywords:
-    'ASHIKA Network,FAQ,pricing,payment,PayPay,cancel,specs,memory,Discord bot,Python,Node.js,VPS,hosting',
+    'ASHIKA Network,FAQ,pricing,payment,PayPay,cancel,specs,memory,Discord bot,Python,Node.js,hosting',
   updated: '2026-10-05',
   updatedLabel: 'October 5, 2026',
   ask: {
@@ -22,7 +22,6 @@ export const faqPage = {
   related: [
     { href: '/en/discord-bot', title: 'Run a Discord bot 24/7', desc: 'How much memory it needs, and the steps to get it running.' },
     { href: '/en/python', title: 'Run Python 24/7', desc: 'Scheduled and always-on jobs, away from your home PC.' },
-    { href: '/en/vps', title: 'VPS (dedicated IPv4, root access)', desc: 'Orders open November 1, 2026.' },
   ],
 };
 
@@ -37,7 +36,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Is it shared hosting or a VPS?',
-        a: 'Standard and high-memory plans are shared: one machine is split between several customers. They come without administrator rights, and one IPv4 address is shared by port. If you need a dedicated IPv4 address and administrator rights, consider the VPS, which opens for orders on November 1, 2026.',
+        a: 'Standard and high-memory plans are shared: one machine is split between several customers. They come without administrator rights, and one IPv4 address is shared by port. We have cancelled the VPS with a dedicated IPv4 address and administrator rights.',
       },
       {
         q: 'Where are the servers?',
@@ -137,11 +136,11 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Do I get my own IP address?',
-        a: 'Standard and high-memory plans share one IP address, split by port. If you need a dedicated IPv4 address, use the VPS, which opens for orders on November 1, 2026.',
+        a: 'Standard and high-memory plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
       },
       {
         q: 'Are there backups?',
-        a: 'Each plan keeps a set number of backups: one for Mini, and more for the larger plans. The VPS comes without backups, so please arrange your own.',
+        a: 'Each plan keeps a set number of backups: one for Mini, and more for the larger plans.',
       },
       {
         q: 'What happens if my program crashes?',

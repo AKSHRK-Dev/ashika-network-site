@@ -104,7 +104,6 @@ const planList: Record<PlanKind, Plan[]> = {
     { name: 'Memory Plus', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', 'Shared'], fit: 'Keep heavy jobs running', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
   ],
   enterprise: [
-    { name: 'VPS', monthly: null, quarterly: null, specs: ['Up to 64GB', '10 cores', '500GB SSD', 'None', '1 dedicated'], fit: 'You need dedicated IPv4 and root', hot: true, note: 'Orders open November 1, 2026', href: links.discord },
     { name: 'Custom', monthly: null, quarterly: null, specs: ['Ask us', 'Ask us', 'Ask us', 'Ask us', 'Ask us'], fit: 'Bigger than anything above', href: links.discord },
   ],
 };
@@ -115,7 +114,7 @@ export const plans = {
   kinds: [
     { key: 'standard', label: 'Standard', desc: 'Balanced CPU and memory. Works for bots, web apps and testing alike.' },
     { key: 'memory', label: 'High memory', desc: 'Plenty of memory. For always-on programs that use a lot of it, such as data processing.' },
-    { key: 'enterprise', label: 'Enterprise', desc: 'Dedicated VPS and large setups, arranged one by one. VPS orders open on November 1, 2026; until then, ask us on Discord.' },
+    { key: 'enterprise', label: 'Enterprise', desc: 'Large setups and other special requests, arranged one by one. Ask us on Discord.' },
   ] as const,
   terms: { monthly: 'Monthly', quarterly: '3 months' },
   badge: (n: number) => `Save up to ${n}%`,
@@ -140,7 +139,7 @@ export const plans = {
   note: [
     'All prices include tax. Every plan runs in Japan.',
     'You can pay by credit card (VISA, Mastercard, AMEX), PayPay, bank transfer, convenience store payment, Google Pay or Apple Pay.',
-    'Standard and high-memory plans share one IP address, split by port. If you need a dedicated IPv4 address, see Enterprise.',
+    'Standard and high-memory plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
   ],
   list: planList,
   support: {

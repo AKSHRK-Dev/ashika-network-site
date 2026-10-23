@@ -15,11 +15,6 @@ const LINK = {
     title: 'Run Python 24/7',
     desc: 'Scheduled jobs, scraping and always-on scripts, away from your home PC.',
   },
-  vps: {
-    href: '/en/vps',
-    title: 'VPS (dedicated IPv4, root access)',
-    desc: 'For when a shared plan is not enough. Orders open November 1, 2026.',
-  },
   faq: {
     href: '/en/faq',
     title: 'FAQ',
@@ -42,7 +37,7 @@ export const guides: Guide[] = [
     description:
       'How to run a Discord bot 24/7: how much memory it needs, what it costs, and the steps. Works with discord.py and discord.js. From ¥30 a month, a place that keeps running when your PC is off.',
     keywords:
-      'Discord bot,24/7,always on,hosting,discord.py,discord.js,cheap,VPS,Python,Node.js,keep running,Japan',
+      'Discord bot,24/7,always on,hosting,discord.py,discord.js,cheap,Python,Node.js,keep running,Japan',
     updated: '2026-09-16',
     updatedLabel: 'September 16, 2026',
     ctaTitle: 'Get a home for your bot now',
@@ -58,27 +53,12 @@ export const guides: Guide[] = [
     lead: 'Scheduled scripts, data collection, always-on jobs. On your home PC they stop every time it restarts. Move them somewhere else and that worry is gone.',
     description:
       'How to run Python scripts 24/7: scheduled jobs with cron, always-on processes, how much memory you need, and how it compares to running on your PC. From ¥30 a month in a data center in Japan.',
-    keywords: 'Python,24/7,always on,scheduled,cron,scraping,automation,server,hosting,cheap,VPS,script,Japan',
+    keywords: 'Python,24/7,always on,scheduled,cron,scraping,automation,server,hosting,cheap,script,Japan',
     updated: '2026-09-16',
     updatedLabel: 'September 16, 2026',
     ctaTitle: 'Get a home for your scripts',
     ctaLead: 'Light jobs start at ¥30 a month. When they grow, move up a plan.',
     related: [LINK.discordBot, LINK.plans, LINK.faq],
-  },
-  {
-    href: '/en/vps',
-    title: 'VPS (dedicated IPv4, root access)',
-    crumb: 'VPS',
-    heading: 'VPS.<br />A whole server, yours.',
-    lead: 'For those who need more than a shared plan: a setup with its own dedicated IPv4 address and root access. Orders open on November 1, 2026.',
-    description:
-      'The ASHIKA Network VPS comes with a dedicated IPv4 address and root access. Up to 64GB of memory, 10 cores and a 500GB SSD. Orders open November 1, 2026. Also explains how it differs from shared plans.',
-    keywords: 'VPS,dedicated IPv4,root access,cheap VPS,Japan VPS,Osaka,virtual server,64GB,10 cores,SSD',
-    updated: '2026-09-16',
-    updatedLabel: 'September 16, 2026',
-    ctaTitle: 'Orders open soon',
-    ctaLead: 'We start taking orders on November 1, 2026. Until then, ask us on Discord.',
-    related: [LINK.plans, LINK.discordBot, LINK.faq],
   },
 ];
 

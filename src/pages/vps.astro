@@ -1,7 +1,78 @@
 ---
-import Guide from '../layouts/Guide.astro';
-import body from '../content/guides/vps.html?raw';
-import { guideByHref } from '../data/guides';
+/**
+ * VPS の提供中止のお知らせ（2026年10月23日）。もとの案内ページへのリンクが Discord などに残っているので、
+ * 消さずにこのお知らせを出す。検索には載せない（noindex・サイトマップからも外した）。
+ */
+import '../styles/guide.css';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { links } from '../data/site';
+import { chrome, langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const words = chrome[lang];
+const t =
+  lang === 'en'
+    ? {
+        title: 'VPS discontinued',
+        heading: 'We have cancelled the VPS',
+        date: 'October 23, 2026',
+        body: [
+          'We had planned to offer a VPS with a dedicated IPv4 address and root access, but we have decided not to provide it, because we could not offer it fairly to every customer.',
+          'We are very sorry to everyone who was looking forward to it.',
+          'In its place, we plan to start a trial of Minecraft servers (Java Edition only). We will share the details separately.',
+        ],
+        plans: 'See our plans',
+        discord: 'Announcements on Discord',
+      }
+    : {
+        title: 'VPS 提供中止のお知らせ',
+        heading: 'VPS の提供を中止しました',
+        date: '2026年10月23日',
+        body: [
+          '専有の IPv4 アドレスとルート権限が付いた VPS の提供を予定していましたが、すべてのお客様に公平に提供することができないため、提供を中止いたしました。',
+          'VPS の提供を期待されていたお客様には大変申し訳ございません。',
+          'VPS に代わり、マインクラフトサーバー（Java 版限定）の試験的な提供を始める予定です。詳しくは別途お知らせいたします。',
+        ],
+        plans: 'いまのプランを見る',
+        discord: 'Discord のお知らせを見る',
+      };
 ---
 
-<Guide guide={guideByHref('/vps')} body={body} />
+<Base title={t.title} description={t.body[0]} path={localize('/vps', lang)} noindex>
+  <section class="g-hero">
+    <div class="container">
+      <p class="g-crumb"><a href={localize('/', lang)}>{words.home}</a> <span aria-hidden="true">›</span> {t.title}</p>
+      <h1>{t.heading}</h1>
+      <p class="g-date">{t.date}</p>
+    </div>
+  </section>
+  <div class="container vps-end">
+    {t.body.map((line) => <p>{line}</p>)}
+    <div class="vps-actions">
+      <a class="btn btn-primary" href={lang === 'en' ? '/en#plans' : '/#plans'}>{t.plans}<Icon name="arrow" /></a>
+      <a class="btn" href={links.discord} target="_blank" rel="noopener">{t.discord}</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .vps-end {
+    max-width: 760px;
+    padding-block: clamp(28px, 4.5vw, 48px) clamp(56px, 8vw, 96px);
+  }
+
+  .vps-end p {
+    margin-top: 1rem;
+    font-size: 0.98rem;
+    line-height: 1.95;
+    color: var(--ink-2);
+  }
+
+  .vps-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 2rem;
+  }
+</style>
