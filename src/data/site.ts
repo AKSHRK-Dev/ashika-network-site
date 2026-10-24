@@ -149,7 +149,8 @@ export const seo = {
   /** 規約ページに共通で使う値（日付だけは legalDocs の updated を使う） */
   legalDefaults: { changefreq: 'monthly', priority: 0.5 },
   /** robots.txt で検索エンジンに見せないパス。例: ['/private'] */
-  disallow: [] as string[],
+  // 運営者の氏名の画像（特定商取引法・資金決済法の表示）。検索エンジンに読み取らせない
+  disallow: ['/legal-img/'] as string[],
 };
 
 /**
