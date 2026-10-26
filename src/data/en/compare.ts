@@ -9,20 +9,19 @@ export const alternatives = {
   yen: '',
   perMonth: '/mo',
   rows: [
-    { name: 'ASHIKA Network', self: true, plan: 'Memory Plus, 2 GB memory, 50% CPU', monthly: 120, perGb: 60, tax: 'tax incl.', url: 'https://www.ashikanw.com/en#plans' },
-    { name: 'NyaHost', plan: '2GB plan, 0.5 vCPU (game server)', monthly: 180, perGb: 90, tax: 'tax not stated', url: 'https://nyahost.com/price/' },
-    { name: 'AGAMES', plan: 'App server, 1 core, 2 GB memory', monthly: 398, perGb: 199, tax: 'tax not stated', url: 'https://agames.jp/' },
-    { name: 'SORAHOST', plan: 'Programming server, 2 GB memory, 50% CPU', monthly: 416, perGb: 208, tax: 'tax incl.', url: 'https://sorahost.net/' },
-    { name: 'UGOEMO Cloud', plan: 'CloudCompute U1 small, 1 vCPU, 2 GB', monthly: 660, perGb: 330, tax: 'tax incl. (¥600 before tax)', url: 'https://cloud.ugoemo.net/services/cloud-compute' },
-    { name: 'Shin VPS', plan: 'Standard, 2 cores, 2 GB (1-month term)', monthly: 1040, perGb: 520, tax: 'tax not stated', url: 'https://www.shin-vps.jp/service/price.php' },
+    { name: 'ASHIKA Network', self: true, plan: 'Memory Plus, 2 GB memory, 50% CPU', monthly: 120, perGb: 60, tax: 'tax incl.' },
+    { name: 'Service A', plan: 'Game server, 0.5 vCPU, 2 GB', monthly: 180, perGb: 90, tax: 'tax not stated' },
+    { name: 'Service B', plan: 'App server, 1 core, 2 GB', monthly: 398, perGb: 199, tax: 'tax not stated' },
+    { name: 'Service C', plan: 'Server for programs, 50% CPU, 2 GB', monthly: 416, perGb: 208, tax: 'tax incl.' },
+    { name: 'Service D', plan: 'Cloud virtual server, 1 vCPU, 2 GB', monthly: 660, perGb: 330, tax: 'tax incl. (¥600 before tax)' },
+    { name: 'Service E', plan: 'VPS, 2 cores, 2 GB (1-month term)', monthly: 1040, perGb: 520, tax: 'tax not stated' },
   ],
   notes: [
-    'Monthly prices as shown on each company\'s official site on October 26, 2026. They may have changed since.',
+    'Other services are shown without their names. Monthly prices as shown on each company\'s official site on October 26, 2026; they may have changed since.',
     'CPU, disk, traffic, contract terms and the kind of service (VPS, game server and so on) differ between companies. This compares memory only.',
-    '"Tax not stated" means we could not find whether the price on the official price list includes tax; we show the price as listed. UGOEMO Cloud lists prices before tax, so we added 10%.',
-    'SORAHOST: ¥80 base (includes 256 MB) plus ¥24 per extra 128 MB. AGAMES: ¥241 base (includes 1 GB) plus ¥157 for 2 GB.',
+    '"Tax not stated" means we could not find whether the listed price includes tax; we show it as listed. Prices listed before tax have 10% added.',
+    'For services that include a fixed amount of memory in a base price and charge for more, we added enough to reach 2 GB.',
   ],
-  sourcesLabel: 'Price pages',
 };
 
 export const vsLabels = { before: 'Before', after: 'With ASHIKA Network' };

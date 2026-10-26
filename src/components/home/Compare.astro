@@ -31,9 +31,7 @@ const max = Math.max(...alternatives.rows.map((r) => r.perGb));
           {
             alternatives.rows.map((r) => (
               <tr class:list={[r.self && 'self-row']}>
-                <th scope="row">
-                  <a href={r.url} target={r.self ? undefined : '_blank'} rel={r.self ? undefined : 'noopener nofollow'}>{r.name}</a>
-                </th>
+                <th scope="row">{r.name}</th>
                 <td class="plan">{r.plan}</td>
                 <td class="num">
                   <span class="amt">{money(r.monthly)}</span>
@@ -62,15 +60,6 @@ const max = Math.max(...alternatives.rows.map((r) => r.perGb));
   /* ---------- メモリ1GBあたりの表 ---------- */
   .gb-table {
     min-width: 680px;
-  }
-
-  .gb-table tbody th a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .gb-table tbody th a:hover {
-    text-decoration: underline;
   }
 
   .gb-table .plan {
