@@ -23,6 +23,8 @@ export const hero = {
   ],
   primary: { label: 'プランを選ぶ', href: links.shop },
   secondary: { label: '料金を比べる', href: '#plans' },
+  /** 右に出すパネルの画面の説明（読み上げ用） */
+  visualAlt: 'お客様パネルのサーバーの画面（コンソールに Bot のログが流れている）',
   /** 数字が減り始めるまでの待ち時間（ミリ秒）。ページを開いてすぐでは目に入らないので少し待つ */
   countDelay: 350,
   /** 見出しの金額の動き（from から price へ）と、帯に出す注記。duration はミリ秒 */

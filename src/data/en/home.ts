@@ -19,6 +19,8 @@ export const hero = {
   ],
   primary: { label: 'Choose a plan', href: links.shop },
   secondary: { label: 'Compare prices', href: '#plans' },
+  /** 右に出すパネルの画面の説明（読み上げ用） */
+  visualAlt: 'The server screen of the control panel, with a bot\'s log in the console',
   countDelay: 350,
   bar: {
     from: 1200,

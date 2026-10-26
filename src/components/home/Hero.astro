@@ -2,7 +2,8 @@
 /**
  * ヒーロー。濃紺のベタ面に、いちばん大きく「月額30円から！国内最安値」を置き、その下に強みを3つ並べる。
  * 見出しの金額は、表示時に大きい数字から一気に減って最小構成の月額に着地する。
- * 下の白い帯には、ボタンと、見出し・強みの根拠の注記をまとめる。キャッチコピーはフッターにある。
+ * その下にボタンを紺の面へ直接並べ、根拠の注記は小さく添える（白い箱で囲まない）。
+ * PC では右にお客様パネルの画面を置く。キャッチコピーはフッターにある。
  * 背景は濃紺の単色に、ごく薄い大きな「ASHIKA」の文字を斜めに置いて見切れさせるだけ。
  * 飾りは足さない（グラデーション・枠・影を重ねると、かえって安っぽく見えるため）。
  */
@@ -22,6 +23,7 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
     <span class="bg-word">ASHIKA</span>
   </div>
   <div class="container hero-in">
+    <div class="hero-text">
     <!-- 行ごとに .ln で包むと、表示のときに下からせり上がる（global.css の data-anim='lines'） -->
     <h1
       id="hero-title"
@@ -46,6 +48,7 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
       {
         hero.points.map((pt) => (
           <li>
+            <Icon name="check" size={18} />
             <b>{pt.value}</b>
             <span>
               {pt.label}
@@ -68,15 +71,17 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
       }
     </p>
 
-    <div class="bar" data-reveal style="--d:.2s">
-      <p class="bar-note">{hero.bar.note}</p>
-      <div class="bar-cta">
-        <a class="btn btn-outline btn-lg" href={hero.secondary.href}>{hero.secondary.label}</a>
-        <a class="btn btn-primary btn-lg" href={hero.primary.href} target="_blank" rel="noopener">
-          {hero.primary.label}<Icon name="arrow" />
-        </a>
-      </div>
-      <p class="bar-foot">{hero.bar.bestNote}<br />{hero.bar.uptimeNote}</p>
+    <div class="cta" data-reveal style="--d:.2s">
+      <a class="btn btn-white btn-lg" href={hero.primary.href} target="_blank" rel="noopener">
+        {hero.primary.label}<Icon name="arrow" />
+      </a>
+      <a class="btn btn-ghost-white btn-lg" href={hero.secondary.href}>{hero.secondary.label}</a>
+      <span class="cta-note">{hero.bar.note}</span>
+    </div>
+    <p class="hero-notes" data-reveal style="--d:.25s">{hero.bar.bestNote}<br />{hero.bar.uptimeNote}</p>
+    </div>
+    <div class="hero-visual" data-reveal style="--d:.15s">
+      <img src="/uploads/panel/server.webp" alt={hero.visualAlt} width="2000" height="1183" loading="eager" decoding="async" />
     </div>
   </div>
 </section>
@@ -116,12 +121,72 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
 
   .hero-in {
     position: relative;
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+
+  /* ---------- ボタンと注記（紺の面に直接置く） ---------- */
+  .cta {
+    margin-top: clamp(24px, 3.4vw, 36px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 14px;
+  }
+
+  .cta-note {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .hero-notes {
+    margin-top: 1.1rem;
+    max-width: 70ch;
+    font-size: 0.7rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* ---------- 右のパネルの画面（PC だけ） ---------- */
+  .hero-visual {
+    display: none;
+  }
+
+  .hero-visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  @media (min-width: 1000px) {
+    /* 右にパネルの画面があるので、背景の文字は出さない */
+    .bg-word {
+      display: none;
+    }
+
+    .hero-in {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+      gap: 56px;
+    }
+
+    .hero-visual {
+      display: block;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .cta .btn {
+      width: 100%;
+    }
   }
 
   /* ---------- いちばん大きい見出し（月額30円から！国内最安値） ---------- */
   .hero h1 {
     color: #fff;
-    font-size: clamp(2.1rem, 7vw, 4.6rem);
+    font-size: clamp(2.1rem, 6.4vw, 4.1rem);
     font-weight: 900;
     line-height: 1.22;
     letter-spacing: -0.015em;
@@ -152,49 +217,32 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
     font-size: 0.7em;
   }
 
-  /* ---------- 見出しの下の強み（区切り線だけで並べる） ---------- */
+  /* ---------- 見出しの下の強み（チェックの印を付けて縦に並べる） ---------- */
   .points {
     margin-top: clamp(18px, 2.8vw, 26px);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 0;
+    display: grid;
+    gap: 0.45rem;
     list-style: none;
   }
 
   .points li {
-    display: inline-flex;
+    display: flex;
     align-items: baseline;
-    gap: 0.35em;
-    padding-right: 1.1em;
-    margin-right: 1.1em;
-    border-right: 1px solid rgba(255, 255, 255, 0.25);
-    font-size: clamp(0.88rem, 1.5vw, 1rem);
+    gap: 0.4em;
+    font-size: clamp(0.92rem, 1.5vw, 1.05rem);
     color: rgba(255, 255, 255, 0.8);
   }
 
-  .points li:last-child {
-    border-right: 0;
-    margin-right: 0;
-    padding-right: 0;
+  .points li :global(svg) {
+    align-self: center;
+    flex-shrink: 0;
+    color: #8fd0ff;
   }
 
   .points b {
-    font-size: 1.15em;
+    font-size: 1.12em;
     font-weight: 900;
     color: #fff;
-  }
-
-  @media (max-width: 560px) {
-    .points {
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .points li {
-      border-right: 0;
-      margin-right: 0;
-      padding-right: 0;
-    }
   }
 
   .hero .lead {
@@ -210,57 +258,17 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
   }
 
   /* ---------- 下の白い帯 ---------- */
-  .bar {
-    margin-top: clamp(26px, 3.8vw, 44px);
-    background: var(--bg);
-    border-radius: var(--r-lg);
-    display: grid;
-    gap: 14px;
-    padding: 16px clamp(16px, 2.5vw, 24px);
-    color: var(--ink);
-  }
 
 
 
 
-  .bar-foot {
-    grid-column: 1 / -1;
-    margin: 0;
-    font-size: 0.7rem;
-    line-height: 1.6;
-    color: var(--ink-3);
-  }
 
 
 
 
-  .bar-note {
-    margin: 0;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--ink-2);
-  }
 
-  .bar-cta {
-    display: grid;
-    gap: 8px;
-  }
-
-  @media (min-width: 560px) {
-    .bar-cta {
-      grid-auto-flow: column;
-      justify-content: start;
-    }
-  }
 
   @media (min-width: 860px) {
-    .bar {
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 24px;
-    }
-
-
     .lead .pc {
       display: inline;
     }
