@@ -1,7 +1,8 @@
 ---
 /**
- * ヒーロー。濃紺のベタ面にキャッチコピーを置き、その下の白い帯に価格とボタンをまとめる。
- * 帯の金額は、表示時に大きい数字から一気に減って最小構成の月額に着地する。
+ * ヒーロー。濃紺のベタ面に、いちばん大きく「月額30円から！国内最安値」を置き、その下に強みを3つ並べる。
+ * 見出しの金額は、表示時に大きい数字から一気に減って最小構成の月額に着地する。
+ * 下の白い帯には、ボタンと、見出し・強みの根拠の注記をまとめる。キャッチコピーはフッターにある。
  * 背景は「海の中」。差し込む光の帯、立ちのぼる泡、ゆっくり泳ぐアシカ2頭を、ごく薄い白で重ねる。
  * どれも文字の後ろに置き、読みやすさを邪魔しない濃さにとどめる。写真は使わず、すべて CSS と SVG で描く。
  * 動きを減らす設定（prefers-reduced-motion）の人には、止まった絵として出す。
@@ -65,16 +66,38 @@ const bubbles = Array.from({ length: 16 }, (_, i) => ({
 
   <div class="container hero-in">
     <!-- 行ごとに .ln で包むと、表示のときに下からせり上がる（global.css の data-anim='lines'） -->
-    <h1 id="hero-title" data-reveal aria-label={hero.title.join('')}>
+    <h1
+      id="hero-title"
+      data-reveal
+      aria-label={`${hero.headline.before}${fmt(hero.bar.price)}${hero.headline.after} ${hero.headline.second}`}>
+      <span class="ln" aria-hidden="true">
+        <span style="--n:0">
+          {hero.headline.before}<span
+            class="h-amt count"
+            data-from={hero.bar.from}
+            data-to={hero.bar.price}
+            data-duration={hero.bar.duration}
+            data-delay={hero.countDelay}
+           >{fmt(hero.bar.price)}</span>{hero.headline.after}
+        </span>
+      </span>
+      <span class="ln" aria-hidden="true">
+        <span style="--n:1" class="h-best">{hero.headline.second}<sup>{hero.headline.mark}</sup></span>
+      </span>
+    </h1>
+    <ul class="points" data-reveal style="--d:.08s">
       {
-        hero.title.map((line, i) => (
-          <span class="ln" aria-hidden="true">
-            <span style={`--n:${i}`}>{line}</span>
-          </span>
+        hero.points.map((pt) => (
+          <li>
+            <b>{pt.value}</b>
+            <span>
+              {pt.label}
+              {pt.mark && <sup>{pt.mark}</sup>}
+            </span>
+          </li>
         ))
       }
-    </h1>
-
+    </ul>
     <!-- 文と文の改行はPCだけ。スマホでは自然に折り返す -->
     <p class="lead" data-reveal style="--d:.1s">
       {
@@ -89,26 +112,14 @@ const bubbles = Array.from({ length: 16 }, (_, i) => ({
     </p>
 
     <div class="bar" data-reveal style="--d:.2s">
-      <p class="bar-price">
-        <span class="bar-best">{hero.bar.best}</span>
-        <span class="bar-label">{hero.bar.label}</span>
-        <span
-          class="bar-amt count"
-          data-from={hero.bar.from}
-          data-to={hero.bar.price}
-          data-duration={hero.bar.duration}
-          data-delay={hero.countDelay}
-          style={`--w:${fmt(hero.bar.from).length}ch`}>{fmt(hero.bar.price)}</span>
-        <span class="bar-suffix">{hero.bar.suffix}</span>
-        <span class="bar-note">{hero.bar.note}</span>
-      </p>
+      <p class="bar-note">{hero.bar.note}</p>
       <div class="bar-cta">
         <a class="btn btn-outline btn-lg" href={hero.secondary.href}>{hero.secondary.label}</a>
         <a class="btn btn-primary btn-lg" href={hero.primary.href} target="_blank" rel="noopener">
           {hero.primary.label}<Icon name="arrow" />
         </a>
       </div>
-      <p class="bar-foot">{hero.bar.bestNote}</p>
+      <p class="bar-foot">{hero.bar.bestNote}<br />{hero.bar.uptimeNote}</p>
     </div>
   </div>
 </section>
@@ -358,15 +369,73 @@ const bubbles = Array.from({ length: 16 }, (_, i) => ({
     position: relative;
   }
 
-  /* ---------- キャッチコピー ---------- */
+  /* ---------- いちばん大きい見出し（月額30円から！国内最安値） ---------- */
   .hero h1 {
     color: #fff;
     padding-left: clamp(14px, 2.4vw, 22px);
     border-left: 4px solid rgba(255, 255, 255, 0.55);
-    font-size: clamp(2rem, 6.4vw, 4.2rem);
+    font-size: clamp(2.1rem, 7vw, 4.6rem);
     font-weight: 900;
-    line-height: 1.28;
+    line-height: 1.22;
     letter-spacing: -0.015em;
+  }
+
+  .h-amt {
+    display: inline-block;
+    /* 幅は取り置かない（減っている間だけ後ろの文字が少し動くが、止まったときに「月額」との間が空かない） */
+    margin-inline: 0.06em;
+    font-size: 1.35em;
+    line-height: 1;
+    color: #ffd84d;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .h-best {
+    display: inline-block;
+    margin-top: 0.12em;
+    padding: 0.02em 0.32em 0.06em;
+    border-radius: 0.14em;
+    background: #ffd84d;
+    color: var(--b-deep);
+  }
+
+  .hero h1 sup,
+  .points sup {
+    font-size: 0.4em;
+    vertical-align: super;
+    margin-left: 0.1em;
+  }
+
+  .points sup {
+    font-size: 0.7em;
+  }
+
+  /* ---------- 見出しの下の強み ---------- */
+  .points {
+    margin-top: clamp(18px, 2.8vw, 28px);
+    padding-left: clamp(14px, 2.4vw, 22px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+  }
+
+  .points li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35em;
+    padding: 0.5em 0.95em;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .points b {
+    font-size: 1.15em;
+    font-weight: 900;
+    color: #fff;
   }
 
   .hero .lead {
@@ -393,34 +462,8 @@ const bubbles = Array.from({ length: 16 }, (_, i) => ({
     color: var(--ink);
   }
 
-  .bar-price {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0 0.4em;
-  }
 
-  .bar-label {
-    align-self: center;
-    padding: 0 0.5em;
-    border: 1px solid var(--b-line);
-    border-radius: var(--r);
-    background: var(--b-tint);
-    color: var(--b);
-    font-size: 0.72rem;
-    font-weight: 700;
-  }
 
-  .bar-best {
-    align-self: center;
-    padding: 0.1em 0.6em;
-    border-radius: var(--r);
-    background: var(--b);
-    color: #fff;
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-  }
 
   .bar-foot {
     grid-column: 1 / -1;
@@ -430,35 +473,14 @@ const bubbles = Array.from({ length: 16 }, (_, i) => ({
     color: var(--ink-3);
   }
 
-  .bar-amt {
-    display: inline-block;
-    /* 数字が減っている間に幅が動いてボタンがずれないよう、最大桁数ぶんを確保する */
-    min-width: var(--w);
-    text-align: right;
-    font-size: clamp(1.9rem, 4.5vw, 2.6rem);
-    font-weight: 900;
-    line-height: 1;
-    color: var(--b);
-    font-variant-numeric: tabular-nums;
-  }
 
-  .bar-amt::before {
-    content: "¥";
-    margin-right: 0.08em;
-    font-size: 0.62em;
-    font-weight: 800;
-  }
 
-  .bar-suffix {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--b);
-  }
 
   .bar-note {
-    width: 100%;
-    font-size: 0.76rem;
-    color: var(--ink-3);
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-2);
   }
 
   .bar-cta {
@@ -480,13 +502,6 @@ const bubbles = Array.from({ length: 16 }, (_, i) => ({
       gap: 24px;
     }
 
-    .bar-note {
-      width: auto;
-      padding-left: 0.8em;
-      margin-left: 0.4em;
-      border-left: 1px solid var(--line);
-      align-self: center;
-    }
 
     .lead .pc {
       display: inline;
@@ -497,7 +512,7 @@ const bubbles = Array.from({ length: 16 }, (_, i) => ({
 <script>
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // 帯の金額が、大きい数字から一気に減って最小構成の月額に着地する
+  // 見出しの金額が、大きい数字から一気に減って最小構成の月額に着地する
   const counters = document.querySelectorAll<HTMLElement>('.hero .count');
   if (counters.length && !reduce) {
     const fmt = (n: number) => n.toLocaleString('ja-JP');

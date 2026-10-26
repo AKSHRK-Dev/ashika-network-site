@@ -77,7 +77,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: 'Where we are (data center)', href: '/en#location' },
       { label: 'Server specs', href: '/en/specs' },
       { label: 'From sign-up to launch', href: '/en#flow' },
-      { label: 'Compared with doing it yourself', href: '/en#compare' },
+      { label: 'Price comparison', href: '/en#compare' },
     ],
   },
   {
@@ -163,6 +163,8 @@ export const footerLegal: NavItem[] = [
 ];
 
 export const footerText = {
+  /** キャッチコピー（以前はトップの見出し。いまはフッターに置く） */
+  catch: 'Connections that stay on',
   about:
     'ASHIKA Network rents out a place for the programs you want to keep running, from ¥30 a month.\nWe run everything in a data center in northern Osaka, Japan, on monthly terms.',
   copyright: '© 2026 ASHIKA Network. All rights reserved.',

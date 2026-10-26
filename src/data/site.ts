@@ -205,7 +205,7 @@ export const footerColumns: { title: string; items: NavItem[] }[] = [
       { label: '置き場所（データセンター）', href: '/#location' },
       { label: 'サーバーのスペック', href: '/specs' },
       { label: '申し込みから公開まで', href: '/#flow' },
-      { label: '自分で用意する場合との比較', href: '/#compare' },
+      { label: '他社との料金比較', href: '/#compare' },
     ],
   },
   {
@@ -292,6 +292,8 @@ export const footerLegal: NavItem[] = [
 ];
 
 export const footerText = {
+  /** キャッチコピー（以前はトップの見出し。いまはフッターに置く） */
+  catch: '切れない つながりを',
   about:
     'ASHIKA Network は、動かし続けたいプログラムの置き場所を月30円から貸し出しています。\n大阪・北摂のデータセンターで運用し、1ヶ月単位でご契約いただけます。',
   copyright: '© 2026 ASHIKA Network. All rights reserved.',

@@ -7,23 +7,26 @@ import type { Plan, PlanKind, UseCase } from '../home';
 
 /* ---------- Hero ---------- */
 export const hero = {
-  title: ['Connections', 'that stay on'],
+  headline: { before: 'From ¥', after: ' a month', second: 'Lowest price in Japan', mark: '*1' },
+  points: [
+    { value: '99.9%', label: 'server uptime', mark: '*2' },
+    { value: 'Custom domains', label: 'supported' },
+    { value: 'Many kinds', label: 'of hosting' },
+  ],
   lead: [
-    'Discord bots and web apps keep running as long as they have a place to live.',
-    'We give them that place, from ¥30 a month, in a data center in Osaka.',
+    'Discord bots, web apps and Minecraft servers keep running as long as they have a place to live.',
+    'We run everything in a data center in Osaka, on monthly terms.',
   ],
   primary: { label: 'Choose a plan', href: links.shop },
   secondary: { label: 'Compare prices', href: '#plans' },
   countDelay: 350,
   bar: {
-    label: 'Smallest plan',
     from: 1200,
     price: 30,
     duration: 1700,
-    suffix: '/month and up',
     note: 'Tax included. Monthly terms.',
-    best: 'Lowest price in Japan*',
-    bestNote: '* Our own survey, October 2026: compared with the monthly price (tax included) of the cheapest plan of hosting services in Japan for Discord bots and always-on programs.',
+    bestNote: '*1 Our own survey, October 2026: compared with the monthly price (tax included) of the cheapest plan of hosting services in Japan for Discord bots and always-on programs.',
+    uptimeNote: '*2 Measured uptime of our server (Node1) from September 17 to October 2026, by the external monitoring service HetrixTools. This does not guarantee future uptime.',
   },
 };
 

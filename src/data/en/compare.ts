@@ -1,24 +1,28 @@
 /**
- * 英語版の「自分で用意する場合」との比較（src/data/compare.ts の英語版）。
+ * 英語版の比較表（メモリ1GBあたりの月額。src/data/compare.ts の英語版）。
  */
 export const alternatives = {
-  title: 'Rent one, or set it up yourself',
-  lead: 'You could run it on your own PC, or rent a pay-as-you-go cloud. Here is how they differ.',
-  columns: ['ASHIKA Network', 'Your own PC', 'Pay-as-you-go cloud'],
-  scrollHint: 'Scroll sideways to see the other options',
-  itemAria: 'Item',
-  selfColumn: 0,
+  title: 'Compared per 1 GB of memory',
+  lead: 'For each hosting service in Japan we took the cheapest plan with 2 GB of memory and turned its monthly price into a price per 1 GB.',
+  columns: ['Service', 'Plan compared', 'Monthly (2 GB)', 'Per 1 GB'],
+  scrollHint: 'Scroll sideways to see the other columns',
+  yen: '',
+  perMonth: '/mo',
   rows: [
-    { label: 'Monthly cost', cells: ['From ¥30. Flat rate', 'Electricity and wear on the PC', 'Pay for what you use. Hard to predict'] },
-    { label: 'Upfront cost', cells: ['None', 'Buying the PC', 'A few thousand yen and up'] },
-    { label: 'How you pay', cells: ['From your topped-up balance', '—', 'Credit card, sometimes in dollars'] },
-    { label: 'Running 24/7', cells: ['Just runs', 'Leave the PC on', 'Just runs'] },
-    { label: 'When it crashes', cells: ['Restarts by itself', 'You notice and fix it', 'Depends on your setup'] },
-    { label: 'Reaching it from outside', cells: ['Connection details on purchase', 'Port forwarding and other setup', 'Depends on the region'] },
-    { label: 'Time to get started', cells: ['Minutes after buying', 'Getting and setting up a PC', 'Creating an account and building the setup'] },
-    { label: 'When you are done', cells: ['Ends with the contract period', 'You still have the PC', 'Remember to delete everything'] },
+    { name: 'ASHIKA Network', self: true, plan: 'Memory Plus, 2 GB memory, 50% CPU', monthly: 120, perGb: 60, tax: 'tax incl.', url: 'https://www.ashikanw.com/en#plans' },
+    { name: 'NyaHost', plan: '2GB plan, 0.5 vCPU (game server)', monthly: 180, perGb: 90, tax: 'tax not stated', url: 'https://nyahost.com/price/' },
+    { name: 'AGAMES', plan: 'App server, 1 core, 2 GB memory', monthly: 398, perGb: 199, tax: 'tax not stated', url: 'https://agames.jp/' },
+    { name: 'SORAHOST', plan: 'Programming server, 2 GB memory, 50% CPU', monthly: 416, perGb: 208, tax: 'tax incl.', url: 'https://sorahost.net/' },
+    { name: 'UGOEMO Cloud', plan: 'CloudCompute U1 small, 1 vCPU, 2 GB', monthly: 660, perGb: 330, tax: 'tax incl. (¥600 before tax)', url: 'https://cloud.ugoemo.net/services/cloud-compute' },
+    { name: 'Shin VPS', plan: 'Standard, 2 cores, 2 GB (1-month term)', monthly: 1040, perGb: 520, tax: 'tax not stated', url: 'https://www.shin-vps.jp/service/price.php' },
   ],
-  notes: ['All prices include tax. The comparison shows typical cases and varies by setup and provider.'],
+  notes: [
+    'Monthly prices as shown on each company\'s official site on October 26, 2026. They may have changed since.',
+    'CPU, disk, traffic, contract terms and the kind of service (VPS, game server and so on) differ between companies. This compares memory only.',
+    '"Tax not stated" means we could not find whether the price on the official price list includes tax; we show the price as listed. UGOEMO Cloud lists prices before tax, so we added 10%.',
+    'SORAHOST: ¥80 base (includes 256 MB) plus ¥24 per extra 128 MB. AGAMES: ¥241 base (includes 1 GB) plus ¥157 for 2 GB.',
+  ],
+  sourcesLabel: 'Price pages',
 };
 
 export const vsLabels = { before: 'Before', after: 'With ASHIKA Network' };
