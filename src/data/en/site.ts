@@ -59,7 +59,7 @@ export const nav: NavItem[] = [
 ];
 
 export const notice = {
-  show: true,
+  show: false,
   text: 'We have cancelled the VPS (dedicated IPv4 with root access). We are sorry to everyone who was waiting. Details are in our announcement on',
   linkLabel: 'Discord',
   linkHref: links.discord,

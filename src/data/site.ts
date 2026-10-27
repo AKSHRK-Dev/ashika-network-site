@@ -186,7 +186,7 @@ export const nav: NavItem[] = [
 
 /** ヘッダー上のお知らせバー（出したいときは show を true に） */
 export const notice = {
-  show: true,
+  show: false,
   text: 'VPS（専有IPv4・ルート権限つき）の提供は中止しました。お待ちいただいた皆さまには申し訳ございません。詳しくは',
   linkLabel: 'Discord',
   linkHref: links.discord,
