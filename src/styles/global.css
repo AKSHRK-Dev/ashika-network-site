@@ -423,12 +423,9 @@ p {
 .btn-primary::after, .btn-white::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%); transform: translateX(-130%); pointer-events: none; }
 .btn-primary:hover::after, .btn-white:hover::after { transform: translateX(130%); transition: transform 0.75s ease; }
 
-/* ヒーロー：マウスについてくる光と泡 */
+/* ヒーローの中身は背景の飾りより前に出す */
 .hero { position: relative; overflow: hidden; }
-.hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(460px circle at var(--lx, 70%) var(--ly, 30%), rgba(120, 175, 235, 0.16), transparent 70%); }
 .hero > .container { position: relative; z-index: 1; }
-.bubble { position: absolute; z-index: 0; pointer-events: none; border-radius: 50%; border: 1.5px solid rgba(160, 205, 255, 0.6); background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.55), rgba(120, 175, 235, 0.12) 60%); transform: translate(-50%, -50%); animation: bubble 1.6s ease-out forwards; }
-@keyframes bubble { 70% { opacity: 0.9; } to { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% - 110px)) scale(1.3); } }
 
 /* 読んだ位置のバー（ヘッダーの下） */
 .read-progress { position: fixed; left: 0; right: 0; top: 0; z-index: 60; height: 3px; background: linear-gradient(90deg, var(--b), var(--b-bright)); transform-origin: left; transform: scaleX(0); pointer-events: none; }
@@ -458,5 +455,4 @@ p {
 }
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal][data-anim], .js [data-reveal][data-anim] > *, .js [data-reveal][data-anim] .ln > span, .js [data-stagger] > * { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
-  .bubble, .hero::after { display: none; }
 }

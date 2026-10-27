@@ -233,27 +233,6 @@ function initTilt() {
   });
 }
 
-/** ヒーローの上でマウスを動かすと、泡が浮かんで光がついてくる */
-function initHeroBubbles() {
-  const hero = document.querySelector<HTMLElement>('.hero');
-  if (!hero || reduceMotion || !finePointer) return;
-  let last = 0;
-  hero.addEventListener('pointermove', (ev) => {
-    const r = hero.getBoundingClientRect();
-    hero.style.setProperty('--lx', `${(((ev.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
-    hero.style.setProperty('--ly', `${(((ev.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
-    const now = performance.now();
-    if (now - last < 50) return;
-    last = now;
-    const b = document.createElement('span');
-    const size = 6 + Math.random() * 12;
-    b.className = 'bubble';
-    b.style.cssText = `left:${ev.clientX - r.left}px;top:${ev.clientY - r.top}px;width:${size}px;height:${size}px;--dx:${((Math.random() - 0.5) * 40).toFixed(0)}px`;
-    b.addEventListener('animationend', () => b.remove());
-    hero.appendChild(b);
-  });
-}
-
 /** 読んだ位置のバーと、アシカの「先頭へ戻る」ボタン */
 function initProgressAndTop() {
   const bar = document.querySelector<HTMLElement>('.read-progress');
@@ -316,6 +295,5 @@ function initSecret() {
 initReveal();
 initScrollLinked();
 initTilt();
-initHeroBubbles();
 initProgressAndTop();
 initSecret();
