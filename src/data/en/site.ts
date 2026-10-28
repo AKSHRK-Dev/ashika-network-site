@@ -58,14 +58,6 @@ export const nav: NavItem[] = [
   { label: 'Status', href: links.status, external: true },
 ];
 
-export const notice = {
-  show: false,
-  text: 'We have cancelled the VPS (dedicated IPv4 with root access). We are sorry to everyone who was waiting. Details are in our announcement on',
-  linkLabel: 'Discord',
-  linkHref: links.discord,
-  after: '.',
-};
-
 export const footerColumns: { title: string; items: NavItem[] }[] = [
   {
     title: 'Service',

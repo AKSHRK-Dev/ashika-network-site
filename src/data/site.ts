@@ -184,15 +184,6 @@ export const nav: NavItem[] = [
   { label: 'ブログ', href: links.blog, external: true },
 ];
 
-/** ヘッダー上のお知らせバー（出したいときは show を true に） */
-export const notice = {
-  show: false,
-  text: 'VPS（専有IPv4・ルート権限つき）の提供は中止しました。お待ちいただいた皆さまには申し訳ございません。詳しくは',
-  linkLabel: 'Discord',
-  linkHref: links.discord,
-  after: 'のお知らせをご覧ください。',
-};
-
 /** フッターのリンク列（PCでは3列、スマホでは積んで表示） */
 export const footerColumns: { title: string; items: NavItem[] }[] = [
   {

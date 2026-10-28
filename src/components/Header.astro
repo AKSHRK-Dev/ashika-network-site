@@ -10,7 +10,7 @@ import { chrome, langOf, pathIn } from '../i18n';
 
 const { pathname } = Astro.url;
 const lang = langOf(Astro.url);
-const { brand, nav, notice, links, site, ui } = content(lang).site;
+const { brand, nav, links, site, ui } = content(lang).site;
 const words = chrome[lang];
 const other = lang === 'en' ? 'ja' : 'en';
 /* 同じページの別の言語。ページの中の位置（#…）は持ち越さない */
@@ -20,20 +20,12 @@ const isCurrent = (href: string) =>
   href === homeHref ? pathname === homeHref : !href.startsWith('http') && !href.includes('#') && pathname.replace(/\.html$/, '').startsWith(href);
 ---
 
-{
-  notice.show && (
-    <div class="notice">
-      <div class="container">
-        <span class="notice-mark">{words.notice}</span>
-        {notice.text}
-        <a href={notice.linkHref} target="_blank" rel="noopener">
-          {notice.linkLabel}
-        </a>
-        {notice.after}
-      </div>
-    </div>
-  )
-}
+<!--
+  いちばん上のお知らせの帯。中身はここには書かず、本番の server.mjs がページを返すときに、
+  管理画面（dash.ashikanw.com の「ホームページのお知らせ」）で作ったものに置き換える。
+  ビルドし直さなくても変わるように、目印のコメントだけを置いておく。
+-->
+<Fragment set:html="<!--ashika:site-notice-->" />
 
 <header class="header" id="header">
   <div class="container header-in">
@@ -113,31 +105,6 @@ const isCurrent = (href: string) =>
 
 <style>
   /* ---------- お知らせバー ---------- */
-  .notice {
-    background: var(--b-deep);
-    color: #fff;
-    font-size: 0.78rem;
-    line-height: 1.6;
-    padding: 7px 0;
-    text-align: center;
-  }
-
-  .notice-mark {
-    display: inline-block;
-    margin-right: 0.6em;
-    padding: 0 0.5em;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: var(--r);
-    font-size: 0.72rem;
-    font-weight: 700;
-  }
-
-  .notice a {
-    margin-inline: 0.3em;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
   /* ---------- ヘッダー本体 ---------- */
   .header {
     position: sticky;

@@ -10,3 +10,6 @@ dist/
 __MACOSX/
 # N03 boundary data for tools/osaka-map (large; download as described in build.py)
 tools/osaka-map/data/
+
+# server.mjs が覚えておくお知らせ（パネルから読めた最後の中身）
+.cache/

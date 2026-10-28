@@ -52,7 +52,6 @@ export const locale = {
 /** レイアウトに直接書いていた細かい文言 */
 export const chrome = {
   ja: {
-    notice: 'お知らせ',
     toTop: 'ページの先頭へ戻る',
     toc: '目次',
     docTocAria: 'この文書の目次',
@@ -73,7 +72,6 @@ export const chrome = {
     translationLink: '',
   },
   en: {
-    notice: 'Notice',
     toTop: 'Back to the top',
     toc: 'Contents',
     docTocAria: 'Contents of this document',
