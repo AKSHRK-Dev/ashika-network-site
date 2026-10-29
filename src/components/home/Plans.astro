@@ -235,6 +235,29 @@ const L = plans.labels;
     color: #fff;
   }
 
+  /* 狭い画面では、分類を2列に並べる（4つを1行に詰めると、名前が途中で折り返して読みにくい） */
+  @media (max-width: 640px) {
+    .seg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+    }
+
+    .seg button {
+      white-space: nowrap;
+      border-bottom: 1px solid var(--line-2);
+    }
+
+    .seg button:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .seg button:nth-last-child(-n + 2):nth-child(2n + 1),
+    .seg button:nth-last-child(-n + 2):nth-child(2n + 1) ~ button {
+      border-bottom: 0;
+    }
+  }
+
   /* 契約期間の切り替え */
   .term {
     display: flex;

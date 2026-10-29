@@ -36,7 +36,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Is it shared hosting or a VPS?',
-        a: 'Standard and high-memory plans are shared: one machine is split between several customers. They come without administrator rights, and one IPv4 address is shared by port. We have cancelled the VPS with a dedicated IPv4 address and administrator rights.',
+        a: 'Standard, high-memory and Next.js plans are shared: one machine is split between several customers. They come without administrator rights, and one IPv4 address is shared by port. We have cancelled the VPS with a dedicated IPv4 address and administrator rights.',
       },
       {
         q: 'Where are the servers?',
@@ -112,7 +112,7 @@ export const faqGroups: FaqGroup[] = [
     items: [
       {
         q: 'Which languages can I use?',
-        a: 'Python and Node.js. Discord bots, web apps, scheduled scripts and anything else written in them can be uploaded and run as they are.',
+        a: 'Python and Node.js. Discord bots, web apps, scheduled scripts and anything else written in them can be uploaded and run as they are. Next.js has its own plans.',
       },
       {
         q: 'Do I need to connect over SSH?',
@@ -127,6 +127,10 @@ export const faqGroups: FaqGroup[] = [
         a: 'At the same price, Standard plans get more CPU and High-memory plans get more memory. Choose Standard for bots and sites, and High memory for jobs that use a lot of memory.',
       },
       {
+        q: 'How are the Next.js plans different from Standard?',
+        a: 'They are made for Next.js sites and apps. Upload your files and we build and publish them. Builds use a lot of memory, so there are two sizes, 2GB and 4GB. Custom domains work too.',
+      },
+      {
         q: 'What do "20%" and "100%" CPU mean?',
         a: 'They show how much of one CPU core you can use, where one full core is 100%. 20% is a fifth of a core, and 200% is two cores. Nothing is used while your program is idle.',
       },
@@ -136,7 +140,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Do I get my own IP address?',
-        a: 'Standard and high-memory plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
+        a: 'Standard, high-memory and Next.js plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
       },
       {
         q: 'Are there backups?',

@@ -8,7 +8,7 @@ export const specsPage = {
   nodesHeading: 'Nodes',
   notesHeading: 'Good to know',
   notes: [
-    'Standard and High-memory plans share a node with other customers. See the pricing table for the memory, CPU and storage of each plan.',
+    'Standard, High-memory and Next.js plans share a node with other customers. See the pricing table for the memory, CPU and storage of each plan.',
     'We decide which node runs your server, so there is nothing to choose when you buy.',
     'We update this page when we replace or add hardware.',
   ],

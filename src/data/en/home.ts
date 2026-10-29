@@ -14,7 +14,7 @@ export const hero = {
     { value: 'Many kinds', label: 'of hosting' },
   ],
   lead: [
-    'Discord bots, web apps and Minecraft servers keep running as long as they have a place to live.',
+    'Discord bots, Next.js sites and web apps keep running as long as they have a place to live.',
     'We run everything in a data center in Osaka, on monthly terms.',
   ],
   primary: { label: 'Choose a plan', href: links.shop },
@@ -55,10 +55,10 @@ export const uses = {
     },
     {
       label: 'Web app',
-      tag: 'Standard plans',
+      tag: 'Standard / Next.js plans',
       title: ['Show people', 'what you made'],
-      desc: ['Runs on the major runtimes. Point your own domain at it and it is live.'],
-      points: ['Keep the language you already use', 'Custom domains and HTTPS', 'Fast for visitors in Japan'],
+      desc: ['Runs on the major runtimes. For Next.js, just upload your files and we build and publish them.'],
+      points: ['Dedicated Next.js plans', 'Custom domains and HTTPS', 'Fast for visitors in Japan'],
       vs: {
         who: 'On free hosting',
         before: 'Projects vanish if left alone for a while, or HTTPS is not available.',
@@ -108,6 +108,10 @@ const planList: Record<PlanKind, Plan[]> = {
     { name: 'Memory Basic', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', 'Shared'], fit: 'Just need more memory', href: 'https://dash.ashikanw.com/shop/mem-basic' },
     { name: 'Memory Plus', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', 'Shared'], fit: 'Keep heavy jobs running', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
   ],
+  nextjs: [
+    { name: 'Next.js 2GB', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '5', 'Shared'], fit: 'Small sites and personal apps', hot: true, href: 'https://dash.ashikanw.com/shop/nextjs-2gb' },
+    { name: 'Next.js 4GB', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', 'Shared'], fit: 'Image-heavy sites and busy apps', href: 'https://dash.ashikanw.com/shop/nextjs-4gb' },
+  ],
   enterprise: [
     { name: 'Custom', monthly: null, quarterly: null, specs: ['Ask us', 'Ask us', 'Ask us', 'Ask us', 'Ask us'], fit: 'Bigger than anything above', href: links.discord },
   ],
@@ -119,6 +123,7 @@ export const plans = {
   kinds: [
     { key: 'standard', label: 'Standard', desc: 'Balanced CPU and memory. Works for bots, web apps and testing alike.' },
     { key: 'memory', label: 'High memory', desc: 'Plenty of memory. For always-on programs that use a lot of it, such as data processing.' },
+    { key: 'nextjs', label: 'Next.js', desc: 'Made for Next.js sites and apps. Upload your files and we build and publish them, with enough memory for the build.' },
     { key: 'enterprise', label: 'Enterprise', desc: 'Large setups and other special requests, arranged one by one. Ask us on Discord.' },
   ] as const,
   terms: { monthly: 'Monthly', quarterly: '3 months' },
@@ -144,7 +149,7 @@ export const plans = {
   note: [
     'All prices include tax. Every plan runs in Japan.',
     'You can pay by credit card (VISA, Mastercard, AMEX), PayPay, bank transfer, convenience store payment, Google Pay or Apple Pay.',
-    'Standard and high-memory plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
+    'Standard, high-memory and Next.js plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
   ],
   list: planList,
   support: {

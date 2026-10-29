@@ -18,7 +18,7 @@ export const hero = {
     { value: '多種多様', label: 'なホスティングに対応' },
   ],
   lead: [
-    'Discord Bot も Web アプリも Minecraft も、置き場所さえあれば動き続けます。',
+    'Discord Bot も Next.js のサイトも Web アプリも、置き場所さえあれば動き続けます。',
     '大阪のデータセンターで運用し、1ヶ月単位でご契約いただけます。',
   ],
   primary: { label: 'プランを選ぶ', href: links.shop },
@@ -75,10 +75,10 @@ export const uses = {
     },
     {
       label: 'Webアプリ',
-      tag: '標準プラン',
+      tag: '標準 / Next.js プラン',
       title: ['作ったものを', '人に見せる'],
-      desc: ['主要なランタイムに対応。独自ドメインを当てればそのまま公開できます。'],
-      points: ['使い慣れた言語のまま置ける', '独自ドメイン・HTTPSに対応', '国内配信なので表示が速い'],
+      desc: ['主要なランタイムに対応。Next.js はファイルを置くだけで、ビルドして公開します。'],
+      points: ['Next.js 専用のプランを用意', '独自ドメイン・HTTPSに対応', '国内配信なので表示が速い'],
       vs: {
         who: '無料のホスティングだと',
         before: '一定期間触らないと消える、HTTPSが使えないといった制約がつきまといます。',
@@ -131,7 +131,7 @@ export type Plan = {
 
 export const specLabels = ['メモリ', 'CPU', '容量', 'バックアップ', 'IPv4'];
 
-export type PlanKind = 'standard' | 'memory' | 'enterprise';
+export type PlanKind = 'standard' | 'memory' | 'nextjs' | 'enterprise';
 
 /**
  * 種別ごとのプラン一覧。
@@ -150,6 +150,10 @@ const planList: Record<PlanKind, Plan[]> = {
     { name: 'メモリ ベーシック', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', '共有'], fit: 'まずメモリを増やしたい', href: 'https://dash.ashikanw.com/shop/mem-basic' },
     { name: 'メモリ プラス', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', '共有'], fit: '重い処理を常駐させる', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
   ],
+  nextjs: [
+    { name: 'Next.js 2GB', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '5', '共有'], fit: '小さめのサイトや個人のアプリ', hot: true, href: 'https://dash.ashikanw.com/shop/nextjs-2gb' },
+    { name: 'Next.js 4GB', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', '共有'], fit: '画像の多いサイトやアクセスの多いアプリ', href: 'https://dash.ashikanw.com/shop/nextjs-4gb' },
+  ],
   enterprise: [
     { name: '個別構成', monthly: null, quarterly: null, specs: ['要相談', '要相談', '要相談', '要相談', '要相談'], fit: '上記に収まらない規模で使う', href: links.discord },
   ],
@@ -161,6 +165,7 @@ export const plans = {
   kinds: [
     { key: 'standard', label: '標準プラン', desc: 'CPUとメモリの釣り合いが取れた構成。Bot・Webアプリ・検証まで幅広く使えます。' },
     { key: 'memory', label: '大容量メモリプラン', desc: 'メモリを厚く積んだ構成。データ処理など、メモリを多く使う常駐プログラム向けです。' },
+    { key: 'nextjs', label: 'Next.js プラン', desc: 'Next.js のサイト・アプリ向けの構成。ファイルを置くと、こちらでビルドしてから公開します。ビルドに足りるメモリを用意しています。' },
     { key: 'enterprise', label: 'エンタープライズ', desc: '大規模な構成など、規格外のご要望に個別でお応えします。ご相談はDiscordでお受けします。' },
   ] as const,
   terms: { monthly: '月額', quarterly: '3ヶ月契約' }, // お得率は料金データから自動計算
@@ -197,7 +202,7 @@ export const plans = {
   note: [
     '表示はすべて税込です。全プラン国内で運用しています。',
     'お支払いはクレジットカード（VISA・MasterCard・AMEX）・PayPay・銀行振込・コンビニ決済・Google Pay・Apple Pay に対応しています。',
-    '標準プラン・大容量メモリプランは1つのIPアドレスをポートで分けて使います。専有のIPv4アドレスは提供していません。',
+    '標準プラン・大容量メモリプラン・Next.js プランは1つのIPアドレスをポートで分けて使います。専有のIPv4アドレスは提供していません。',
   ],
   list: planList,
   /** 料金表の下に出す、支援プログラム（ASHIKA Group）への案内 */
