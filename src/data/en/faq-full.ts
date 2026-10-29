@@ -70,7 +70,7 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'How do I pay?',
-        a: 'You top up your balance first, and server fees are paid from it. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, convenience store payment, Apple Pay and Google Pay, from ¥100 (convenience stores from ¥200) to ¥500,000 in steps of ¥100. You can buy a top-up without an account.',
+        a: 'You top up your balance first, and server fees are paid from it. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account.',
       },
       {
         q: 'How does paying with PayPay work?',
