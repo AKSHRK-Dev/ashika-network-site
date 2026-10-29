@@ -20,7 +20,7 @@ export const hero = {
   primary: { label: 'Choose a plan', href: links.shop },
   secondary: { label: 'Compare prices', href: '#plans' },
   /** 右に出すパネルの画面の説明（読み上げ用） */
-  visualAlt: 'The server screen of the control panel, with a bot\'s log in the console',
+  visualAlt: 'The server console screen of the control panel',
   countDelay: 350,
   bar: {
     from: 1200,
@@ -193,21 +193,21 @@ export const panel = {
       title: 'Balance and contracts at a glance',
       desc: 'How much is left, and which server runs until when. You see it the moment you open it.',
       tags: [],
-      src: '/uploads/panel/dashboard.webp',
+      src: '/uploads/panel/dashboard.webp?v=20261029',
       alt: 'Dashboard screen',
     },
     {
       title: 'The console is in your browser',
       desc: 'Start, stop, restart and read the logs without connecting over SSH.',
       tags: [],
-      src: '/uploads/panel/server.webp',
+      src: '/uploads/panel/server.webp?v=20261029',
       alt: 'Server console screen',
     },
     {
       title: 'Add more in minutes',
       desc: 'Pick a plan and a period. It is paid from your balance and ready to use.',
       tags: [],
-      src: '/uploads/panel/shop.webp',
+      src: '/uploads/panel/shop.webp?v=20261029',
       alt: 'Server purchase screen',
     },
   ],

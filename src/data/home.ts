@@ -24,7 +24,7 @@ export const hero = {
   primary: { label: 'プランを選ぶ', href: links.shop },
   secondary: { label: '料金を比べる', href: '#plans' },
   /** 右に出すパネルの画面の説明（読み上げ用） */
-  visualAlt: 'お客様パネルのサーバーの画面（コンソールに Bot のログが流れている）',
+  visualAlt: 'お客様パネルの、サーバーのコンソール画面',
   /** 数字が減り始めるまでの待ち時間（ミリ秒）。ページを開いてすぐでは目に入らないので少し待つ */
   countDelay: 350,
   /** 見出しの金額の動き（from から price へ）と、帯に出す注記。duration はミリ秒 */
@@ -259,21 +259,21 @@ export const panel = {
       title: '残高も契約も1画面で',
       desc: '今いくら残っていて、どのサーバーがいつまで動くのか。開いた瞬間に分かります。',
       tags: [],
-      src: '/uploads/panel/dashboard.webp',
+      src: '/uploads/panel/dashboard.webp?v=20261029',
       alt: 'ダッシュボード画面',
     },
     {
       title: 'コンソールはブラウザの中',
       desc: '起動・停止・再起動もログの確認も、SSHを繋がずにそのまま行えます。',
       tags: [],
-      src: '/uploads/panel/server.webp',
+      src: '/uploads/panel/server.webp?v=20261029',
       alt: 'サーバーのコンソール画面',
     },
     {
       title: '増やしたくなったら数分で',
       desc: '構成と期間を選ぶだけ。残高から引き落として、そのまま使い始められます。',
       tags: [],
-      src: '/uploads/panel/shop.webp',
+      src: '/uploads/panel/shop.webp?v=20261029',
       alt: 'サーバー購入画面',
     },
   ],
