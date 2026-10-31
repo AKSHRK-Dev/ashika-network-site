@@ -98,19 +98,19 @@ export const specLabels = ['Memory', 'CPU', 'Storage', 'Backups', 'IPv4'];
 
 const planList: Record<PlanKind, Plan[]> = {
   standard: [
-    { name: 'Mini', monthly: 30, quarterly: 90, specs: ['256MB', '20%', '512MB', '1', 'Shared'], fit: 'Try out your first server', href: 'https://dash.ashikanw.com/shop/mini' },
-    { name: 'Basic', monthly: 50, quarterly: 120, specs: ['512MB', '50%', '2048MB', '2', 'Shared'], fit: 'Keep a bot or site always on', hot: true, href: 'https://dash.ashikanw.com/shop/basic' },
-    { name: 'Plus', monthly: 110, quarterly: 300, specs: ['1024MB', '100%', '5120MB', '3', 'Shared'], fit: 'Busier projects, or more of them', href: 'https://dash.ashikanw.com/shop/plus' },
-    { name: 'Pro', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '4', 'Shared'], fit: 'Several services in one place', href: 'https://dash.ashikanw.com/shop/pro' },
-    { name: 'Max', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', 'Shared'], fit: 'The most a shared plan offers', href: 'https://dash.ashikanw.com/shop/max' },
+    { name: 'Mini', monthly: 30, quarterly: 90, specs: ['256MB', '20%', '512MB', '1', 'Shared'], fit: 'Try out your first server', href: 'https://dash.ashikanw.com/order/mini' },
+    { name: 'Basic', monthly: 50, quarterly: 120, specs: ['512MB', '50%', '2048MB', '2', 'Shared'], fit: 'Keep a bot or site always on', hot: true, href: 'https://dash.ashikanw.com/order/basic' },
+    { name: 'Plus', monthly: 110, quarterly: 300, specs: ['1024MB', '100%', '5120MB', '3', 'Shared'], fit: 'Busier projects, or more of them', href: 'https://dash.ashikanw.com/order/plus' },
+    { name: 'Pro', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '4', 'Shared'], fit: 'Several services in one place', href: 'https://dash.ashikanw.com/order/pro' },
+    { name: 'Max', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', 'Shared'], fit: 'The most a shared plan offers', href: 'https://dash.ashikanw.com/order/max' },
   ],
   memory: [
-    { name: 'Memory Basic', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', 'Shared'], fit: 'Just need more memory', href: 'https://dash.ashikanw.com/shop/mem-basic' },
-    { name: 'Memory Plus', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', 'Shared'], fit: 'Keep heavy jobs running', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
+    { name: 'Memory Basic', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', 'Shared'], fit: 'Just need more memory', href: 'https://dash.ashikanw.com/order/mem-basic' },
+    { name: 'Memory Plus', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', 'Shared'], fit: 'Keep heavy jobs running', hot: true, href: 'https://dash.ashikanw.com/order/mem-plus' },
   ],
   nextjs: [
-    { name: 'Next.js 2GB', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '5', 'Shared'], fit: 'Small sites and personal apps', hot: true, href: 'https://dash.ashikanw.com/shop/nextjs-2gb' },
-    { name: 'Next.js 4GB', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', 'Shared'], fit: 'Image-heavy sites and busy apps', href: 'https://dash.ashikanw.com/shop/nextjs-4gb' },
+    { name: 'Next.js 2GB', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '5', 'Shared'], fit: 'Small sites and personal apps', hot: true, href: 'https://dash.ashikanw.com/order/nextjs-2gb' },
+    { name: 'Next.js 4GB', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', 'Shared'], fit: 'Image-heavy sites and busy apps', href: 'https://dash.ashikanw.com/order/nextjs-4gb' },
   ],
   enterprise: [
     { name: 'Custom', monthly: null, quarterly: null, specs: ['Ask us', 'Ask us', 'Ask us', 'Ask us', 'Ask us'], fit: 'Bigger than anything above', href: links.discord },
@@ -235,19 +235,19 @@ export const features = {
 
 /* ---------- Three steps ---------- */
 export const flow = {
-  title: 'Three steps after signing up.',
-  lead: 'No complicated setup. Add balance, pick a plan, upload your files.',
+  title: 'Three steps to get started.',
+  lead: 'No complicated setup. Pick a plan, pay, upload your files.',
   steps: [
-    { title: 'Add balance', desc: 'Top up by credit card, PayPay, bank transfer, Apple Pay or Google Pay. It arrives in minutes (bank transfers take 1 to 3 business days).', href: '/en#charge', linkLabel: 'How to top up' },
-    { title: 'Pick a plan', desc: 'Choose a plan and a period and buy it. Your connection details are issued right away.' },
+    { title: 'Pick a plan', desc: 'Choose a plan from the pricing table, then a period and software. You can create an account just before paying.', href: '/en#plans', linkLabel: 'See pricing' },
+    { title: 'Pay', desc: 'On the spot (credit card, Apple Pay, Google Pay, bank transfer) or from your topped-up balance. Your connection details are issued right away (bank transfers once the payment arrives).', href: '/en#charge', linkLabel: 'About top-ups' },
     { title: 'Upload your files', desc: 'Upload your code and start it. It is now reachable from the outside.' },
   ],
 };
 
 /* ---------- Top up ---------- */
 export const charge = {
-  title: 'Servers are paid from your balance.',
-  lead: 'You add balance first, and server fees are paid from it. Balance is added with a top-up code.',
+  title: 'Pay on the spot, or from your balance.',
+  lead: 'Pay for each order on the spot, or from a balance you added in advance. Balance is added with a top-up code (this is where PayPay works).',
   facts: [
     { label: 'Product', value: 'Top-up code', note: 'Used to pay for ASHIKA Network servers.' },
     { label: 'Amount', value: '¥100 to ¥500,000', note: 'In steps of ¥100.' },
@@ -276,7 +276,7 @@ export const faq = {
     },
     {
       q: 'How do I pay?',
-      a: 'You top up your balance first, and server fees are paid from it. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account. For bank transfers we send the code once the payment is confirmed (1 to 3 business days). PayPay has no top-up code: enter the order number you receive from STORES and it is added to your balance.',
+      a: 'You can pay on the spot each time (credit card, Apple Pay, Google Pay or bank transfer), or pay from a balance you topped up in advance. Renewals and add-ons work the same way. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account. For bank transfers we send the code once the payment is confirmed (1 to 3 business days). PayPay has no top-up code: enter the order number you receive from STORES and it is added to your balance.',
     },
     {
       q: 'It says "out of stock" and I cannot buy.',

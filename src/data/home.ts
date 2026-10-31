@@ -140,19 +140,19 @@ export type PlanKind = 'standard' | 'memory' | 'nextjs' | 'enterprise';
  */
 const planList: Record<PlanKind, Plan[]> = {
   standard: [
-    { name: 'ミニ', monthly: 30, quarterly: 90, specs: ['256MB', '20%', '512MB', '1', '共有'], fit: 'まず1台置いてみたい', href: 'https://dash.ashikanw.com/shop/mini' },
-    { name: 'ベーシック', monthly: 50, quarterly: 120, specs: ['512MB', '50%', '2048MB', '2', '共有'], fit: 'Botやサイトを常時動かす', hot: true, href: 'https://dash.ashikanw.com/shop/basic' },
-    { name: 'プラス', monthly: 110, quarterly: 300, specs: ['1024MB', '100%', '5120MB', '3', '共有'], fit: '人が集まる・台数を増やす', href: 'https://dash.ashikanw.com/shop/plus' },
-    { name: 'プロ', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '4', '共有'], fit: '複数のサービスをまとめて置く', href: 'https://dash.ashikanw.com/shop/pro' },
-    { name: 'マックス', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', '共有'], fit: '共有構成で使える上限まで使う', href: 'https://dash.ashikanw.com/shop/max' },
+    { name: 'ミニ', monthly: 30, quarterly: 90, specs: ['256MB', '20%', '512MB', '1', '共有'], fit: 'まず1台置いてみたい', href: 'https://dash.ashikanw.com/order/mini' },
+    { name: 'ベーシック', monthly: 50, quarterly: 120, specs: ['512MB', '50%', '2048MB', '2', '共有'], fit: 'Botやサイトを常時動かす', hot: true, href: 'https://dash.ashikanw.com/order/basic' },
+    { name: 'プラス', monthly: 110, quarterly: 300, specs: ['1024MB', '100%', '5120MB', '3', '共有'], fit: '人が集まる・台数を増やす', href: 'https://dash.ashikanw.com/order/plus' },
+    { name: 'プロ', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '4', '共有'], fit: '複数のサービスをまとめて置く', href: 'https://dash.ashikanw.com/order/pro' },
+    { name: 'マックス', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', '共有'], fit: '共有構成で使える上限まで使う', href: 'https://dash.ashikanw.com/order/max' },
   ],
   memory: [
-    { name: 'メモリ ベーシック', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', '共有'], fit: 'まずメモリを増やしたい', href: 'https://dash.ashikanw.com/shop/mem-basic' },
-    { name: 'メモリ プラス', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', '共有'], fit: '重い処理を常駐させる', hot: true, href: 'https://dash.ashikanw.com/shop/mem-plus' },
+    { name: 'メモリ ベーシック', monthly: 110, quarterly: 300, specs: ['1024MB', '20%', '1024MB', '1', '共有'], fit: 'まずメモリを増やしたい', href: 'https://dash.ashikanw.com/order/mem-basic' },
+    { name: 'メモリ プラス', monthly: 120, quarterly: 330, specs: ['2048MB', '50%', '2048MB', '2', '共有'], fit: '重い処理を常駐させる', hot: true, href: 'https://dash.ashikanw.com/order/mem-plus' },
   ],
   nextjs: [
-    { name: 'Next.js 2GB', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '5', '共有'], fit: '小さめのサイトや個人のアプリ', hot: true, href: 'https://dash.ashikanw.com/shop/nextjs-2gb' },
-    { name: 'Next.js 4GB', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', '共有'], fit: '画像の多いサイトやアクセスの多いアプリ', href: 'https://dash.ashikanw.com/shop/nextjs-4gb' },
+    { name: 'Next.js 2GB', monthly: 230, quarterly: 630, specs: ['2048MB', '150%', '10240MB', '5', '共有'], fit: '小さめのサイトや個人のアプリ', hot: true, href: 'https://dash.ashikanw.com/order/nextjs-2gb' },
+    { name: 'Next.js 4GB', monthly: 470, quarterly: 1290, specs: ['4096MB', '200%', '20480MB', '5', '共有'], fit: '画像の多いサイトやアクセスの多いアプリ', href: 'https://dash.ashikanw.com/order/nextjs-4gb' },
   ],
   enterprise: [
     { name: '個別構成', monthly: null, quarterly: null, specs: ['要相談', '要相談', '要相談', '要相談', '要相談'], fit: '上記に収まらない規模で使う', href: links.discord },
@@ -304,10 +304,10 @@ export const features = {
 /* ---------- 3ステップ ---------- */
 export const flow = {
   title: '申し込んでから、3手。',
-  lead: '難しい設定は挟みません。残高を入れて、構成を選んで、ファイルを置くだけです。',
+  lead: '難しい設定は挟みません。構成を選んで、お支払いして、ファイルを置くだけです。',
   steps: [
-    { title: '残高を入れる', desc: 'クレジットカード・PayPay・銀行振込・Apple Pay・Google Pay でチャージします。反映は数分です（銀行振込のみ1〜3営業日）。', href: '/#charge', linkLabel: 'チャージのしかたを見る' },
-    { title: '構成を選ぶ', desc: 'プランと期間を決めて購入。接続先はその場で発行されます。' },
+    { title: '構成を選ぶ', desc: '料金表からプランを選び、期間とソフトウェアを決めます。アカウントはお支払いの前に作れます。', href: '/#plans', linkLabel: '料金表を見る' },
+    { title: 'お支払いする', desc: 'その場で（クレジットカード・Apple Pay・Google Pay・銀行振込）か、チャージした残高から。接続先はその場で発行されます（銀行振込は入金の確認後）。', href: '/#charge', linkLabel: '残高のチャージについて' },
     { title: 'ファイルを置く', desc: 'コードをアップロードして起動。これで外から繋がるようになります。' },
   ],
 };
@@ -320,8 +320,8 @@ export const flow = {
  * この場で読み切れるようにしておく。
  */
 export const charge = {
-  title: 'サーバー代は、残高から。',
-  lead: 'あらかじめ残高を入れておき、そこからサーバー代をお支払いいただきます。残高はチャージコードで入れます。',
+  title: 'その場払いでも、残高からでも。',
+  lead: 'サーバー代は、お申し込みのたびにその場でお支払いいただくか、あらかじめ入れておいた残高からお支払いいただけます。残高はチャージコードで入れます（PayPay はこちらでお使いいただけます）。',
   /** 扱っているもの。審査で確認される項目をそのまま並べる */
   facts: [
     { label: '商品', value: 'チャージコード', note: 'ASHIKA Network のサーバー料金にお使いいただけます。' },
@@ -353,7 +353,7 @@ export const faq = {
     },
     {
       q: '支払いはどうやってしますか？',
-      a: '先に残高をチャージし、そこからサーバー代をお支払いいただきます。チャージは PayPay・クレジットカード（VISA・MasterCard・AMEX）・銀行振込・Apple Pay・Google Pay に対応しており、100円から500,000円まで100円単位でご指定いただけます。チャージはアカウントの登録なしでもご購入いただけます。銀行振込は、入金の確認が取れてからコードをお送りします（1〜3営業日）。PayPayのみチャージコードはなく、STORESから届くオーダー番号をご入力いただくと残高に入ります。',
+      a: 'お申し込みのたびにその場でお支払いいただく方法（クレジットカード・Apple Pay・Google Pay・銀行振込）と、先にチャージした残高からお支払いいただく方法を選べます。延長や買い足しも同じです。残高へのチャージは PayPay・クレジットカード（VISA・MasterCard・AMEX）・銀行振込・Apple Pay・Google Pay に対応しており、100円から500,000円まで100円単位でご指定いただけます。チャージはアカウントの登録なしでもご購入いただけます。銀行振込は、入金の確認が取れてからコードをお送りします（1〜3営業日）。PayPayのみチャージコードはなく、STORESから届くオーダー番号をご入力いただくと残高に入ります。',
     },
     {
       q: '「在庫なし」と出て買えません。',
