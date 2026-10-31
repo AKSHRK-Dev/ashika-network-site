@@ -30,7 +30,7 @@ export const ui = {
     brandAria: `${site.name} home`,
     navAria: 'Main navigation',
     login: 'Log in',
-    register: 'Sign up',
+    register: 'Get started',
     menuAria: 'Menu',
     menuOpen: 'Open menu',
     menuClose: 'Close menu',

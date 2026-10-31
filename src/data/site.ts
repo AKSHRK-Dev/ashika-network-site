@@ -111,7 +111,8 @@ export const links = {
   dash: 'https://dash.ashikanw.com',
   /** 残高チャージ（ログインなしで買える専用サイト） */
   charge: 'https://charge.ashikanw.com',
-  shop: 'https://dash.ashikanw.com/shop',
+  /** プランの一覧（ログインなしで開ける。選ぶとお申し込みへ） */
+  shop: 'https://dash.ashikanw.com/order',
   register: 'https://dash.ashikanw.com/register',
   status: 'https://status.ashikanw.com',
   /** API と SFTP の説明書（AKSHRK-Dev/ashika-docs） */
