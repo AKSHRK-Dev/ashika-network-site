@@ -148,7 +148,7 @@ export const plans = {
   },
   note: [
     'All prices include tax. Every plan runs in Japan.',
-    'You can pay by credit card (VISA, Mastercard, AMEX), PayPay, bank transfer, Google Pay or Apple Pay.',
+    'You can pay by credit card (VISA, Mastercard, AMEX), bank transfer, Google Pay or Apple Pay, or through our STORES shop with PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later).',
     'Standard, high-memory and Next.js plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
   ],
   list: planList,
@@ -247,17 +247,17 @@ export const flow = {
 /* ---------- Top up ---------- */
 export const charge = {
   title: 'Pay on the spot, or from your balance.',
-  lead: 'Pay for each order on the spot, or from a balance you added in advance. Balance is added with a top-up code (this is where PayPay works).',
+  lead: 'Pay for each order on the spot, or from a balance you added in advance. Balance is added with a top-up code (this is where PayPay, JCB, convenience store and carrier billing work).',
   facts: [
     { label: 'Product', value: 'Top-up code', note: 'Used to pay for ASHIKA Network servers.' },
     { label: 'Amount', value: '¥100 to ¥500,000', note: 'In steps of ¥100.' },
-    { label: 'Payment', value: 'PayPay, credit card, bank transfer, Apple Pay, Google Pay', note: 'We accept VISA, Mastercard and AMEX.' },
-    { label: 'Delivery', value: 'Right after payment', note: 'Shown on screen and sent by email. For bank transfers, we email it once the payment is confirmed. With PayPay, you receive a STORES order number instead of a code.' },
+    { label: 'Payment', value: 'Credit card, bank transfer, Apple Pay, Google Pay, PayPay, convenience store, carrier billing and more', note: 'Cards: VISA, Mastercard and AMEX. Through STORES: PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later).' },
+    { label: 'Delivery', value: 'Right after payment', note: 'Shown on screen and sent by email. For bank transfers, we email it once the payment is confirmed. When paying through STORES (PayPay, convenience store and so on), you receive a STORES order number instead of a code; for convenience store payment, after you have paid at the store.' },
   ],
   steps: [
     { title: 'Choose an amount', desc: 'Pick a common amount, or type one in steps of ¥100.' },
-    { title: 'Pay', desc: 'Card and bank transfer payments issue a top-up code. PayPay takes you to another page and sends an order number after payment. No account needed for either.' },
-    { title: 'Add it to your balance', desc: 'Enter the code under "Balance and history" in the customer panel. With PayPay, enter the order number instead.' },
+    { title: 'Pay', desc: 'Card and bank transfer payments issue a top-up code. PayPay, JCB, convenience store and carrier billing take you to our STORES page and send an order number after payment. No account needed for either.' },
+    { title: 'Add it to your balance', desc: 'Enter the code under "Balance and history" in the customer panel. For STORES payments, enter the order number instead.' },
   ],
   primary: { label: 'Top up your balance', href: links.charge },
   secondary: { label: 'Payment Services Act Notice', href: '/en/kessai' },
@@ -276,7 +276,7 @@ export const faq = {
     },
     {
       q: 'How do I pay?',
-      a: 'You can pay on the spot each time (credit card, Apple Pay, Google Pay or bank transfer), or pay from a balance you topped up in advance. Renewals and add-ons work the same way. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account. For bank transfers we send the code once the payment is confirmed (1 to 3 business days). PayPay has no top-up code: enter the order number you receive from STORES and it is added to your balance.',
+      a: 'You can pay on the spot each time (credit card, Apple Pay, Google Pay or bank transfer), or pay from a balance you topped up in advance. Renewals and add-ons work the same way. Top-ups accept credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, plus PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later) through our STORES shop, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account. For bank transfers we send the code once the payment is confirmed (1 to 3 business days). STORES payments have no top-up code: enter the order number you receive from STORES and it is added to your balance.',
     },
     {
       q: 'It says "out of stock" and I cannot buy.',

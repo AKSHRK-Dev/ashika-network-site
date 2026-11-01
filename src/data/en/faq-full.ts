@@ -70,11 +70,11 @@ export const faqGroups: FaqGroup[] = [
       },
       {
         q: 'How do I pay?',
-        a: 'You can pay on the spot each time (credit card, Apple Pay, Google Pay or bank transfer), or pay from a balance you topped up in advance. Renewals and add-ons work the same way. Top-ups accept PayPay, credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account.',
+        a: 'You can pay on the spot each time (credit card, Apple Pay, Google Pay or bank transfer), or pay from a balance you topped up in advance. Renewals and add-ons work the same way. Top-ups accept credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, plus PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later) through our STORES shop, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account.',
       },
       {
-        q: 'How does paying with PayPay work?',
-        a: 'PayPay payments are made on our shop page on STORES. After paying, STORES sends you an order number; enter it with the amount on the top-up screen and it is added to your balance right away. PayPay is the only method without a top-up code.',
+        q: 'How does paying with PayPay, convenience store payment and the like work?',
+        a: 'PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later) are paid on our shop page on STORES (top-ups only, not for paying an order on the spot). After paying, STORES sends you an order number; enter it with the amount on the top-up screen and it is added to your balance right away. For convenience store payment, enter it after you have paid at the store. STORES payments have no top-up code.',
       },
       {
         q: 'How long does a bank transfer take?',
