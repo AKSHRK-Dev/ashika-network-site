@@ -1,0 +1,130 @@
+---
+/**
+ * お客様情報が閲覧可能な状態にあったことのお知らせ（2026年11月6日）。
+ * メールと Discord で出したものと同じ内容。トップの帯（パネルの「ホームページのお知らせ」）からリンクする。
+ */
+import '../styles/guide.css';
+import Base from '../layouts/Base.astro';
+import { chrome, langOf, localize } from '../i18n';
+
+const lang = langOf(Astro.url);
+const words = chrome[lang];
+const t =
+  lang === 'en'
+    ? {
+        title: 'Notice about customer information',
+        heading: 'Customer information could have been viewed by third parties',
+        date: 'November 6, 2026',
+        lead: 'Because of a bug in the ASHIKA Network admin screens, third parties who were not logged in could view customer information. We apologize for the concern and inconvenience this has caused.',
+        sections: [
+          {
+            heading: 'Information that may have been viewed',
+            items: ['Email addresses and names', 'Balances and details of the servers you use', 'Activity history, including IP addresses', 'Purchase history'],
+          },
+          {
+            heading: 'Passwords',
+            text: 'Passwords are stored in a form that cannot be restored, and are not shown in the admin screens.',
+          },
+          {
+            heading: 'What we have done',
+            items: ['We fixed the bug on November 4, 2026', 'Since November 6, 2026, personal information has been stored encrypted'],
+          },
+          {
+            heading: 'Current status',
+            text: 'We are still investigating whether third parties actually viewed this information. We will let you know as soon as we learn more.',
+          },
+          {
+            heading: 'What we ask of you',
+            text: 'Please watch out for suspicious emails or DMs that claim to be from ASHIKA Network. We will never ask for your password or authentication codes.',
+          },
+        ],
+        contact: 'If you have any questions, please contact support@ashikanw.com or open a ticket on Discord.',
+      }
+    : {
+        title: 'お客様情報に関するお知らせ',
+        heading: 'お客様情報が閲覧可能な状態にあったことのお知らせ',
+        date: '2026年11月6日',
+        lead: 'ASHIKA Network の管理画面の不具合により、ログインしていない第三者が、お客様の情報を閲覧できる状態にあったことが判明しました。ご迷惑とご心配をおかけしますことを、お詫び申し上げます。',
+        sections: [
+          {
+            heading: '閲覧できた可能性のある情報',
+            items: ['メールアドレス、お名前', '残高、ご利用中のサーバーの情報', '操作履歴（IP アドレスを含む）', '購入履歴'],
+          },
+          {
+            heading: 'パスワードについて',
+            text: 'パスワードは復元できない形で保管しており、管理画面にも表示されません。',
+          },
+          {
+            heading: '実施した対応',
+            items: ['2026年11月4日に不具合を修正しました', '2026年11月6日から、個人情報を暗号化して保存しています'],
+          },
+          {
+            heading: '現在の状況',
+            text: '実際に第三者に閲覧されたかどうかは、現在調査中です。分かり次第、改めてお知らせします。',
+          },
+          {
+            heading: 'お客様へのお願い',
+            text: 'ASHIKA Network をかたる不審なメールや DM にご注意ください。パスワードや認証コードを、こちらからお尋ねすることはありません。',
+          },
+        ],
+        contact: 'ご不明な点は、support@ashikanw.com または Discord のチケットからお問い合わせください。',
+      };
+---
+
+<Base title={t.title} description={t.lead} path={localize('/notice-20261106', lang)}>
+  <section class="g-hero">
+    <div class="container">
+      <p class="g-crumb"><a href={localize('/', lang)}>{words.home}</a> <span aria-hidden="true">›</span> {t.title}</p>
+      <h1>{t.heading}</h1>
+      <p class="g-date">{t.date}</p>
+    </div>
+  </section>
+  <div class="container notice-body">
+    <p>{t.lead}</p>
+    {
+      t.sections.map((section) => (
+        <>
+          <h2>{section.heading}</h2>
+          {section.text ? <p>{section.text}</p> : null}
+          {section.items ? (
+            <ul>
+              {section.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          ) : null}
+        </>
+      ))
+    }
+    <p class="notice-contact">{t.contact}</p>
+  </div>
+</Base>
+
+<style>
+  .notice-body {
+    max-width: 760px;
+    padding-block: clamp(28px, 4.5vw, 48px) clamp(56px, 8vw, 96px);
+  }
+
+  .notice-body h2 {
+    margin-top: 2rem;
+    font-size: 1.1rem;
+  }
+
+  .notice-body p,
+  .notice-body li {
+    margin-top: 0.75rem;
+    font-size: 0.98rem;
+    line-height: 1.95;
+    color: var(--ink-2);
+  }
+
+  .notice-body ul {
+    padding-left: 1.4em;
+    list-style: disc;
+  }
+
+  .notice-contact {
+    margin-top: 2rem;
+  }
+</style>
