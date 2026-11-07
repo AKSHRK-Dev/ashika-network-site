@@ -154,6 +154,11 @@ const isCurrent = (href: string) =>
     transition: color 0.15s, border-color 0.15s;
   }
 
+  /* 外部リンクの印。項目が詰まっても潰れないように */
+  .gnav a svg {
+    flex-shrink: 0;
+  }
+
   .gnav a:hover {
     color: var(--b);
   }

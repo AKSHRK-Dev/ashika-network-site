@@ -183,6 +183,11 @@ const max = Math.max(...alternatives.rows.map((r) => r.perGb));
     border-radius: var(--r-lg);
   }
 
+  /* 角丸で切られて、見出しの上の線だけが内側に寄って見えるので、上の線は引かない */
+  .alt-table thead th {
+    border-top: 0;
+  }
+
   .matrix,
   .alt-table {
     width: 100%;

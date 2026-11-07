@@ -252,6 +252,17 @@ const DURATION = uses.duration;
     margin-top: 1.2rem;
   }
 
+  /* 横に並ぶときに、ボタンとくっつかないように */
+  .uses-main .btn + .uses-guide {
+    margin-left: 1.1rem;
+  }
+
+  @media (max-width: 640px) {
+    .uses-main .btn + .uses-guide {
+      margin-left: 0;
+    }
+  }
+
   /* 比較。上が「これまで」、下が当サービス。下だけ濃紺で受ける */
   .vs > div {
     padding: 0.8rem 0.9rem;

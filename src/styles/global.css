@@ -473,3 +473,8 @@ p {
 @media (prefers-reduced-motion: reduce) {
   .js [data-reveal][data-anim], .js [data-reveal][data-anim] > *, .js [data-reveal][data-anim] .ln > span, .js [data-stagger] > * { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
 }
+
+/* 日本語の本文を、語の途中で折り返しにくくする（対応しないブラウザでは今までどおり） */
+html[lang='ja'] p {
+  word-break: auto-phrase;
+}

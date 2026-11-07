@@ -520,6 +520,17 @@ const L = plans.labels;
     line-height: 1.7;
   }
 
+  /* 5列でも表の幅に収める（右端のボタンが切れないように） */
+  @media (min-width: 900px) {
+    .plan-table th,
+    .plan-table td {
+      padding-inline: 0.6rem;
+    }
+    .cta-row .btn {
+      padding-inline: 0.6rem;
+    }
+  }
+
   .cta-row td {
     padding-block: 0.9rem;
   }
