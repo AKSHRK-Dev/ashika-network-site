@@ -155,7 +155,7 @@ const isCurrent = (href: string) =>
   }
 
   /* 外部リンクの印。項目が詰まっても潰れないように */
-  .gnav a svg {
+  .gnav a :global(svg) {
     flex-shrink: 0;
   }
 
