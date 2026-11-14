@@ -12,7 +12,7 @@ export const site = {
   name: 'ASHIKA Network',
   tagline: 'Affordable hosting',
   url: 'https://www.ashikanw.com',
-  homeTitle: 'Connections that stay on | Servers from ¥30 a month | ASHIKA Network',
+  homeTitle: 'Affordable hosting | ASHIKA Network',
   description:
     'A place for the programs you want to keep running, from ¥30 a month in a data center in Osaka, Japan. Discord bots, web apps, scheduled scripts and more. Monthly terms, no long contracts.',
   alternateNames: ['ASHIKA', 'ASHIKAネットワーク', 'アシカネットワーク', 'あしかネットワーク'],
