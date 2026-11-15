@@ -1,0 +1,351 @@
+---
+/**
+ * 安心への取り組み。ふだん目に入らないところ（監視・自動の立ち上げ直し・請求・公開している情報）を、隠さずに並べる。
+ * 濃紺の面。文字は白、リンクは明るい青に下線。
+ * いちばん上に、数字で見せる実績と条件を、色の段差をつけた階段にして並べる（小さい数字から順に高くなる）。
+ */
+import Icon, { type IconName } from '../Icon.astro';
+import { content } from '../../data/index';
+import { langOf, localize } from '../../i18n';
+
+const lang = langOf(Astro.url);
+const { trust, sectionLabels } = content(lang).home;
+---
+
+<section id="trust" class="section trust" aria-labelledby="trust-title">
+  <div class="container">
+    <div class="sec-head">
+      <p class="sec-label">{sectionLabels.trust}</p>
+      <h2 id="trust-title">{trust.title.join('')}</h2>
+      {trust.lead && <p class="lead">{trust.lead}</p>}
+    </div>
+
+    <ul class="stairs" aria-label={trust.statsAria}>
+      {
+        trust.stats.map((s) => (
+          <li class="step">
+            <p class="fig">
+              <span class="num" data-count>{s.value}</span>
+              {s.unit && <span class="unit">{s.unit}</span>}
+            </p>
+            <p class="what">
+              {s.label}
+              {'mark' in s && s.mark && <sup><a href="#notes">{s.mark}</a></sup>}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="items">
+      {
+        trust.items.map((t) => (
+          <li class="item" data-reveal>
+            <span class="ic" aria-hidden="true">
+              <Icon name={t.icon as IconName} size={28} stroke={1.5} />
+            </span>
+            <h3>{t.title}</h3>
+            {t.desc && <p>{t.desc}</p>}
+            {'note' in t && t.note && <p class="note">{t.note}</p>}
+            {'link' in t && t.link && (
+              <a
+                class="more"
+                href={localize(t.link.href, lang)}
+                target={'external' in t.link && t.link.external ? '_blank' : undefined}
+                rel={'external' in t.link && t.link.external ? 'noopener' : undefined}
+              >
+                {t.link.label}
+                <Icon name={'external' in t.link && t.link.external ? 'external' : 'arrow'} size={16} />
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .trust {
+    background: var(--night);
+    color: #e3ebf7;
+  }
+
+  .trust .sec-label {
+    color: var(--b-bright);
+  }
+
+  .trust h2,
+  .trust h3 {
+    color: #fff;
+  }
+
+  .trust .sec-head .lead {
+    color: #e3ebf7;
+  }
+
+  /* ---------- 数字の階段 ----------
+     4つの面を、濃紺から青、最後は黄色へと1段ずつ色を変える。広い画面では高さも1段ずつ上げる。 */
+  .stairs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: clamp(28px, 4vw, 48px);
+    list-style: none;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 136px;
+    padding: 16px clamp(14px, 2.4vw, 28px) 18px;
+    color: #fff;
+  }
+
+  .step:nth-child(1) {
+    background: #0d326b;
+  }
+
+  .step:nth-child(2) {
+    background: #0f4391;
+  }
+
+  .step:nth-child(3) {
+    background: var(--b);
+  }
+
+  .step:nth-child(4) {
+    background: var(--hl);
+    color: var(--ink);
+  }
+
+  .fig {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 0.2em;
+    line-height: 1.1;
+  }
+
+  .fig .num {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .fig .unit {
+    font-size: clamp(1rem, 1.6vw, 1.25rem);
+    font-weight: 700;
+  }
+
+  .what {
+    margin-top: 0.3rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .what sup a {
+    color: inherit;
+  }
+
+  .what sup {
+    margin-left: 0.2em;
+    font-size: 0.75em;
+    font-weight: 400;
+  }
+
+  .stairs-note {
+    margin-top: 0.9rem;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  @media (min-width: 800px) {
+    .stairs {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: end;
+      height: clamp(280px, 30vw, 340px);
+    }
+
+    .step:nth-child(1) {
+      height: 52%;
+    }
+
+    .step:nth-child(2) {
+      height: 68%;
+    }
+
+    .step:nth-child(3) {
+      height: 84%;
+    }
+
+    .step:nth-child(4) {
+      height: 100%;
+    }
+  }
+
+  .items {
+    display: grid;
+    gap: 16px;
+    margin-top: clamp(28px, 4vw, 48px);
+    list-style: none;
+  }
+
+  /* 項目の数が変わっても空きが出ないように並べる。
+     中くらいの画面は2列（奇数のときは最後の1枚を横いっぱいに）、
+     広い画面は3列（5枚のときは上の段を2枚、下の段を3枚に） */
+  @media (min-width: 640px) {
+    .items {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .item:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .items {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .item,
+    .item:last-child:nth-child(odd) {
+      grid-column: span 2;
+    }
+
+    .items:has(> :nth-child(5):last-child) > :nth-child(-n + 2) {
+      grid-column: span 3;
+    }
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: var(--r-lg);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .ic {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--hl);
+    border-radius: 50%;
+    color: var(--hl);
+  }
+
+  .item h3 {
+    margin-top: 1rem;
+    font-size: 1.1875rem;
+  }
+
+  .item p {
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+  }
+
+  .item .note {
+    padding-left: 0.9em;
+    border-left: 3px solid var(--hl);
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 44px;
+    margin-top: auto;
+    padding-top: 0.6rem;
+    color: var(--b-bright);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .more:hover {
+    color: #fff;
+  }
+
+  /* スマホ：階段は2×2のまま低くし、取り組みの札はアイコンを見出しの左に置いて短くする */
+  @media (max-width: 599px) {
+    .stairs {
+      margin-top: 20px;
+    }
+
+    .step {
+      min-height: 92px;
+      padding: 10px 14px 12px;
+    }
+
+    .fig .num {
+      font-size: 2rem;
+    }
+
+    .fig .unit {
+      font-size: 0.9375rem;
+    }
+
+    .what {
+      margin-top: 0.15rem;
+      font-size: 0.875rem;
+      line-height: 1.45;
+    }
+
+    .stairs-note {
+      margin-top: 0.7rem;
+      line-height: 1.6;
+    }
+
+    .items {
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr);
+      column-gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: var(--r);
+    }
+
+    .ic {
+      width: 36px;
+      height: 36px;
+    }
+
+    .ic :global(svg) {
+      width: 20px;
+      height: 20px;
+    }
+
+    .item h3 {
+      margin-top: 0;
+      font-size: 1.0625rem;
+      line-height: 1.4;
+    }
+
+    .item p,
+    .more {
+      grid-column: 1 / -1;
+    }
+
+    .item p {
+      margin-top: 0.45rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+
+    .more {
+      justify-self: start;
+      padding-top: 0.2rem;
+      font-size: 0.9375rem;
+    }
+  }
+</style>

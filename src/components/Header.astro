@@ -1,8 +1,11 @@
 ---
 /**
  * 全ページ共通のヘッダー。
- * 常に上に貼り付き、下端の1本の罫線で本文と分ける（影は使わない）。
- * 現在地のナビには下線を引いて示す。狭い画面では右のボタンから引き出しメニューを開く。
+ * 広い画面: いちばん上に細い帯（一言・関連サイト・言語）、その下に本体の帯（ロゴ・メニュー・ログイン・お申し込み）。
+ *           画面の上に貼り付くのは本体の帯だけ（読む場所を広く残す）。
+ * 狭い画面: 本体の帯はロゴ・お申し込み・「メニュー」ボタンだけにし、ボタンで帯のすぐ下にメニューを開く。
+ *           メニューは帯の下に重ねて出すので、開いてもページは動かない。
+ * 現在地のメニューには aria-current を付け、太い下線で示す（色だけに頼らない）。
  */
 import Icon from './Icon.astro';
 import { content } from '../data/index';
@@ -16,6 +19,9 @@ const other = lang === 'en' ? 'ja' : 'en';
 /* 同じページの別の言語。ページの中の位置（#…）は持ち越さない */
 const switchHref = pathIn(pathname, other);
 const homeHref = lang === 'en' ? '/en' : '/';
+/* このサイトの中のメニューと、別サイトへのリンクを分けて置く */
+const mainNav = nav.filter((n) => !n.external);
+const subNav = nav.filter((n) => n.external);
 const isCurrent = (href: string) =>
   href === homeHref ? pathname === homeHref : !href.startsWith('http') && !href.includes('#') && pathname.replace(/\.html$/, '').startsWith(href);
 ---
@@ -27,8 +33,35 @@ const isCurrent = (href: string) =>
 -->
 <Fragment set:html="<!--ashika:site-notice-->" />
 
-<header class="header" id="header">
-  <div class="container header-in">
+<!-- 広い画面だけの細い帯。別サイトへのリンクと言語の切り替え -->
+<div class="topbar">
+  <div class="container topbar-in">
+    <p class="tagline">{ui.header.tagline}</p>
+    <nav aria-label={ui.header.subAria}>
+      <ul>
+        {
+          subNav.map((n) => (
+            <li>
+              <a href={n.href} target="_blank" rel="noopener">
+                {n.label}
+                <Icon name="external" size={13} />
+              </a>
+            </li>
+          ))
+        }
+        <li class="topbar-lang">
+          <a href={switchHref} hreflang={other} lang={other} aria-label={words.switchAria}>
+            <Icon name="globe" size={16} />
+            {words.switchTo}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<header class="header" id="top">
+  <div class="container bar">
     <a class="brand" href={homeHref} aria-label={ui.header.brandAria}>
       <img src={brand.header.src} alt={site.name} width={brand.header.width} height={brand.header.height} />
     </a>
@@ -36,16 +69,10 @@ const isCurrent = (href: string) =>
     <nav class="gnav" aria-label={ui.header.navAria}>
       <ul>
         {
-          nav.map((n) => (
+          mainNav.map((n) => (
             <li>
-              <a
-                href={n.href}
-                aria-current={isCurrent(n.href) ? 'page' : undefined}
-                target={n.external ? '_blank' : undefined}
-                rel={n.external ? 'noopener' : undefined}
-              >
+              <a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>
                 {n.label}
-                {n.external && <Icon name="external" size={11} />}
               </a>
             </li>
           ))
@@ -54,58 +81,106 @@ const isCurrent = (href: string) =>
     </nav>
 
     <div class="actions">
-      <a class="lang-switch" href={switchHref} hreflang={other} lang={other} aria-label={words.switchAria}>
-        <Icon name="globe" size={15} />
-        {words.switchTo}
-      </a>
-      <a class="login" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
-      <a class="btn btn-primary btn-sm" href={links.shop} target="_blank" rel="noopener">{ui.header.register}</a>
+      <a class="btn btn-outline btn-sm login" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
+      <a class="btn btn-primary btn-sm apply" href={links.shop} target="_blank" rel="noopener">{ui.header.register}</a>
+      <button
+        class="menu-btn"
+        id="menuBtn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu"
+        aria-label={ui.header.menuOpen}
+        data-label-open={ui.header.menuOpen}
+        data-label-close={ui.header.menuClose}
+      >
+        <span class="ic-open"><Icon name="menu" size={22} /></span>
+        <span class="ic-close"><Icon name="close" size={22} /></span>
+        <span class="menu-word" aria-hidden="true">{ui.header.menuAria}</span>
+      </button>
     </div>
-
-    <button
-      class="menu-btn"
-      id="menuBtn"
-      type="button"
-      aria-label={ui.header.menuOpen}
-      data-label-open={ui.header.menuOpen}
-      data-label-close={ui.header.menuClose}
-      aria-expanded="false"
-      aria-controls="drawer"
-    >
-      <span></span><span></span><span></span>
-    </button>
   </div>
-</header>
 
-<div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label={ui.header.menuAria} aria-hidden="true">
-  <div class="drawer-head">
-    <img src={brand.header.src} alt={site.name} width={brand.header.width} height={brand.header.height} />
-    <button class="drawer-close" id="drawerClose" type="button" aria-label={ui.header.menuClose}><Icon name="close" size={20} /></button>
-  </div>
-  <nav class="drawer-nav" aria-label={ui.header.menuAria}>
-    {
-      nav.map((n) => (
-        <a href={n.href} target={n.external ? '_blank' : undefined} rel={n.external ? 'noopener' : undefined}>
-          {n.label}
-          {n.external && <Icon name="external" size={14} />}
+  <!-- 狭い画面のメニュー。ボタンを押すと帯の下に重ねて開く -->
+  <nav class="menu" id="menu" aria-label={ui.header.menuAria} hidden>
+    <div class="container menu-in">
+      <ul class="m-main">
+        {
+          mainNav.map((n) => (
+            <li>
+              <a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>
+                <span>{n.label}</span>
+                <Icon name="chevron" size={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="m-sub">
+        {
+          subNav.map((n) => (
+            <li>
+              <a href={n.href} target="_blank" rel="noopener">
+                {n.label}
+                <Icon name="external" size={14} />
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={switchHref} hreflang={other} lang={other}>
+            <Icon name="globe" size={16} />
+            {words.switchTo}
+          </a>
+        </li>
+      </ul>
+      <div class="m-actions">
+        <a class="btn btn-outline" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
+        <a class="btn btn-primary" href={links.shop} target="_blank" rel="noopener">
+          {ui.header.register}
+          <Icon name="arrow" size={18} class="arrow" />
         </a>
-      ))
-    }
+      </div>
+    </div>
   </nav>
-  <a class="drawer-lang" href={switchHref} hreflang={other} lang={other}>
-    <Icon name="globe" size={16} />
-    {words.switchTo}
-  </a>
-  <div class="drawer-foot">
-    <a class="btn btn-outline" href={links.dash} target="_blank" rel="noopener">{ui.header.login}</a>
-    <a class="btn btn-primary" href={links.shop} target="_blank" rel="noopener">{ui.header.register}<Icon name="arrow" /></a>
-  </div>
-</div>
+</header>
+<!-- メニューを開いている間、下のページを少し暗くする。押すと閉じる -->
+<div class="menu-shade" id="menuShade" hidden></div>
+
+<script>
+  const btn = document.getElementById('menuBtn');
+  const menu = document.getElementById('menu');
+  const shade = document.getElementById('menuShade');
+  if (btn && menu) {
+    const set = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', (open ? btn.dataset.labelClose : btn.dataset.labelOpen) ?? '');
+      menu.hidden = !open;
+      if (shade) shade.hidden = !open;
+    };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+    shade?.addEventListener('click', () => set(false));
+    /* メニューの中のリンクを押したら閉じる（同じページの中の移動でも残らないように） */
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) set(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+        set(false);
+        btn.focus();
+      }
+    });
+    /* 広い画面に変わったら閉じておく */
+    matchMedia('(min-width: 1080px)').addEventListener('change', (e) => e.matches && set(false));
+  }
+</script>
 
 <style>
-  /* ---------- お知らせバー ---------- */
-  /* ---------- ヘッダー本体 ---------- */
+  /* ---------- いちばん上の細い帯（広い画面だけ） ---------- */
+  .topbar {
+    display: none;
+  }
+
+  /* ---------- 本体の帯 ---------- */
   .header {
     position: sticky;
     top: 0;
@@ -114,298 +189,355 @@ const isCurrent = (href: string) =>
     border-bottom: 1px solid var(--line);
   }
 
-  .header-in {
-    height: var(--header-h);
+  .bar {
     display: flex;
     align-items: center;
-    gap: clamp(16px, 3vw, 36px);
+    gap: 12px;
+    height: var(--header-h);
   }
 
   .brand {
-    flex-shrink: 0;
-  }
-
-  .brand img {
-    width: 128px;
-  }
-
-  /* ---------- ナビ ---------- */
-  .gnav {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    flex-shrink: 1;
+    min-width: 0;
     margin-right: auto;
   }
 
-  .gnav ul {
-    display: flex;
-    list-style: none;
-    gap: clamp(4px, 1.4vw, 14px);
+  .brand img {
+    width: auto;
+    height: clamp(24px, 6.4vw, 30px);
   }
 
-  .gnav a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3em;
-    height: calc(var(--header-h) - 1px);
-    padding-inline: 0.42rem;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    font-weight: 500;
-    color: var(--ink-2);
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s, border-color 0.15s;
+  .gnav,
+  .login {
+    display: none;
   }
 
-  /* 外部リンクの印。項目が詰まっても潰れないように */
-  .gnav a :global(svg) {
-    flex-shrink: 0;
-  }
-
-  .gnav a:hover {
-    color: var(--b);
-  }
-
-  /* 現在地は濃紺の下線で示す */
-  .gnav a[aria-current="page"] {
-    color: var(--b);
-    font-weight: 700;
-    border-bottom-color: var(--b);
-  }
-
-  .gnav svg {
-    color: var(--ink-3);
-  }
-
-  /* ---------- 右側のボタン ---------- */
   .actions {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 8px;
+    flex-shrink: 0;
   }
 
-  .login {
-    font-size: 0.85rem;
-    font-weight: 700;
-    white-space: nowrap;
-    color: var(--ink);
-    padding-bottom: 1px;
-    border-bottom: 1px solid var(--line-2);
-    transition: color 0.15s, border-color 0.15s;
-  }
-
-  .login:hover {
-    color: var(--b);
-    border-bottom-color: var(--b);
-  }
-
-  /* ---------- 言語の切り替え ---------- */
-  .lang-switch {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35em;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--ink-2);
-    padding: 4px 9px;
-    border: 1px solid var(--line-2);
-    border-radius: var(--r);
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
-  }
-
-  .lang-switch:hover {
-    color: var(--b);
-    border-color: var(--b);
-    background: var(--b-tint);
-  }
-
-  .drawer-lang {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 13px var(--gutter);
-    font-size: 0.92rem;
-    font-weight: 700;
-    color: var(--ink-2);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .drawer-lang:hover {
-    color: var(--b);
-    background: var(--b-tint);
-  }
-
-  /* ---------- 開閉ボタン（狭い画面） ---------- */
   .menu-btn {
-    display: none;
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--line-2);
-    border-radius: var(--r);
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 1px;
+    min-width: 52px;
+    height: 48px;
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    color: var(--ink);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.1;
   }
 
-  .menu-btn span {
+  .menu-btn:hover {
+    background: var(--surface);
+  }
+
+  :global(html[lang='en']) .menu-word {
+    font-size: 0.625rem;
+  }
+
+  .menu-btn .ic-close,
+  .menu-btn[aria-expanded='true'] .ic-open {
+    display: none;
+  }
+
+  .menu-btn[aria-expanded='true'] .ic-close {
     display: block;
-    width: 16px;
-    height: 1.5px;
-    background: var(--ink);
-    transition: transform 0.2s var(--ease), opacity 0.2s;
   }
 
-  /* ---------- 引き出しメニュー ---------- */
-  .drawer-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    background: rgba(16, 23, 32, 0.45);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
+  .menu-btn[aria-expanded='true'] {
+    background: var(--b-tint);
+    border-color: var(--b);
+    color: var(--b-deep);
   }
 
-  .drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 70;
-    width: min(320px, 86vw);
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
+  /* ---------- 狭い画面のメニュー ---------- */
+  .menu {
+    position: absolute;
+    inset: 100% 0 auto;
+    max-height: calc(100dvh - var(--header-h));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line-2);
     background: var(--bg);
-    border-left: 1px solid var(--line);
-    transform: translateX(100%);
-    transition: transform 0.25s var(--ease);
-    visibility: hidden;
   }
 
-  .drawer-head {
-    height: var(--header-h);
+  .menu-in {
+    padding-block: 4px 20px;
+  }
+
+  .menu ul {
+    list-style: none;
+  }
+
+  .m-main li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .m-main a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-inline: var(--gutter);
-    border-bottom: 1px solid var(--line);
+    gap: 12px;
+    min-height: 56px;
+    color: var(--ink);
+    font-size: 1.0625rem;
+    font-weight: 700;
   }
 
-  .drawer-head img {
-    width: 118px;
+  .m-main a :global(svg) {
+    flex-shrink: 0;
+    color: var(--b);
+    transform: rotate(-90deg);
   }
 
-  .drawer-close {
-    display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    margin-right: -6px;
-    color: var(--ink-2);
+  .m-main a[aria-current='page'] {
+    color: var(--b);
+    box-shadow: inset 4px 0 0 var(--b);
+    padding-left: 14px;
   }
 
-  .drawer-nav {
-    flex: 1;
-    overflow-y: auto;
-    padding-block: 4px;
-  }
-
-  .drawer-nav a {
+  .m-sub {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+    padding-block: 8px;
+  }
+
+  .m-sub a {
+    display: inline-flex;
     align-items: center;
     gap: 0.4em;
-    padding: 13px var(--gutter);
-    font-size: 0.95rem;
+    min-height: 44px;
+    color: var(--ink-2);
+    font-size: 0.9375rem;
     font-weight: 700;
-    color: var(--ink);
-    border-bottom: 1px solid var(--line);
-    border-left: 3px solid transparent;
+    text-decoration: underline;
+    text-decoration-color: var(--line-2);
+    text-underline-offset: 0.3em;
   }
 
-  .drawer-nav a:hover {
-    border-left-color: var(--b);
-    background: var(--b-tint);
-    color: var(--b);
-  }
-
-  .drawer-nav svg {
+  .m-sub a :global(svg) {
+    flex-shrink: 0;
     color: var(--ink-3);
   }
 
-  .drawer-foot {
-    padding: 16px var(--gutter);
+  .m-actions {
     display: grid;
-    gap: 8px;
-    border-top: 1px solid var(--line);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
   }
 
-  /* 開いているとき */
-  :global(body.nav-open) .drawer-overlay {
-    opacity: 1;
-    pointer-events: auto;
+  .menu-shade {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(7, 32, 74, 0.45);
   }
 
-  :global(body.nav-open) .drawer {
-    transform: none;
-    visibility: visible;
-  }
-
-  :global(body.nav-open) .menu-btn span:nth-child(1) {
-    transform: translateY(5.5px) rotate(45deg);
-  }
-
-  :global(body.nav-open) .menu-btn span:nth-child(2) {
-    opacity: 0;
-  }
-
-  :global(body.nav-open) .menu-btn span:nth-child(3) {
-    transform: translateY(-5.5px) rotate(-45deg);
-  }
-
-  /* 7項目と右のボタンが1行に収まらない幅では、メニューボタンに切り替える（1080px で収まらなくなる） */
-  @media (max-width: 1100px) {
-    .gnav,
-    .actions {
-      display: none;
+  /* スマホでは帯を低くして、読む場所を広く残す。
+     ボタンは見た目を 40px にするが、押せる範囲は上下に 2px ずつ広げて 44px のままにする */
+  @media (max-width: 599px) {
+    .bar {
+      gap: 10px;
     }
 
-    .brand {
-      margin-right: auto;
+    .brand img {
+      height: clamp(21px, 5.8vw, 24px);
+    }
+
+    .apply,
+    .menu-btn {
+      position: relative;
+    }
+
+    .apply::after,
+    .menu-btn::after {
+      content: '';
+      position: absolute;
+      inset: -2px 0;
+    }
+
+    .apply {
+      min-height: 40px;
     }
 
     .menu-btn {
+      min-width: 46px;
+      height: 40px;
+    }
+
+    .menu-btn :global(svg) {
+      width: 20px;
+      height: 20px;
+    }
+
+    .m-main a {
+      min-height: 48px;
+      font-size: 1rem;
+    }
+  }
+
+  /* とても狭い画面では、帯の「お申し込み」を小さくしてロゴの場所を残す */
+  @media (max-width: 359px) {
+    .apply {
+      padding-inline: 0.8rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  /* ---------- 広い画面 ---------- */
+  @media (min-width: 1080px) {
+    .topbar {
+      display: block;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-2);
+      font-size: 0.875rem;
+    }
+
+    .topbar-in {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 40px;
+    }
+
+    .tagline {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar ul {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .topbar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+      min-height: 40px;
+      padding-inline: 0.7rem;
+      color: var(--ink-2);
+    }
+
+    .topbar a:hover {
+      color: var(--b);
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
+
+    .topbar a :global(svg) {
+      color: var(--ink-3);
+    }
+
+    .topbar-lang {
+      margin-left: 8px;
+      padding-left: 8px;
+      border-left: 1px solid var(--line-2);
+    }
+
+    .topbar-lang a {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .topbar-lang a :global(svg) {
+      color: inherit;
+    }
+
+    .bar {
+      gap: clamp(16px, 2.4vw, 40px);
+    }
+
+    .brand {
+      margin-right: 0;
+      flex-shrink: 0;
+    }
+
+    .brand img {
+      height: 32px;
+    }
+
+    .gnav {
+      display: block;
+      align-self: stretch;
+      margin-right: auto;
+    }
+
+    .gnav ul {
+      display: flex;
+      height: 100%;
+      gap: clamp(0px, 0.6vw, 12px);
+      list-style: none;
+    }
+
+    .gnav a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding-inline: clamp(0.5rem, 0.9vw, 0.9rem);
+      color: var(--ink);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* 現在地と、マウスを載せたところは、帯の下の端に太い線を出す（色だけに頼らない） */
+    .gnav a::after {
+      content: '';
+      position: absolute;
+      inset: auto clamp(0.5rem, 0.9vw, 0.9rem) -1px;
+      height: 4px;
+      border-radius: 2px 2px 0 0;
+      background: transparent;
+    }
+
+    .gnav a:hover {
+      color: var(--b);
+    }
+
+    .gnav a:hover::after {
+      background: var(--b-line);
+    }
+
+    .gnav a[aria-current='page'] {
+      color: var(--b);
+    }
+
+    .gnav a[aria-current='page']::after {
+      background: var(--b);
+    }
+
+    .login {
+      display: inline-flex;
+    }
+
+    .actions {
+      gap: 10px;
+    }
+
+    .menu-btn,
+    .menu,
+    .menu-shade {
+      display: none !important;
     }
   }
 </style>
-
-<script>
-  const header = document.getElementById('header');
-  const btn = document.getElementById('menuBtn');
-  const drawer = document.getElementById('drawer');
-  const overlay = document.getElementById('drawerOverlay');
-  const closeBtn = document.getElementById('drawerClose');
-  // 開閉ボタンの読み上げラベルは data 属性で渡している（文言は src/data/site.ts の ui.header）
-  const labelOpen = btn?.dataset.labelOpen ?? '';
-  const labelClose = btn?.dataset.labelClose ?? '';
-
-  // スクロールしたら境界を濃くする
-  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 4);
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  const setOpen = (open: boolean) => {
-    document.body.classList.toggle('nav-open', open);
-    btn?.setAttribute('aria-expanded', String(open));
-    btn?.setAttribute('aria-label', open ? labelClose : labelOpen);
-    drawer?.setAttribute('aria-hidden', String(!open));
-    if (open) closeBtn?.focus();
-    else btn?.focus();
-  };
-
-  btn?.addEventListener('click', () => setOpen(!document.body.classList.contains('nav-open')));
-  closeBtn?.addEventListener('click', () => setOpen(false));
-  overlay?.addEventListener('click', () => setOpen(false));
-  drawer?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && document.body.classList.contains('nav-open')) setOpen(false);
-  });
-</script>

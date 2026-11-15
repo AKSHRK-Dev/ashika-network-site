@@ -1,58 +1,70 @@
 /* =========================================================
-   ASHIKA Network — 全ページ共通のスタイル
+   ASHIKA Network — 全ページ共通のスタイル（2026-11 のデザイン）
    ---------------------------------------------------------
    設計の方針:
-   ・色は必ず下のトークンを通す。色そのものを各所に書かない。
-   ・面を分けるのは「影」ではなく「1pxの罫線」。実直に見せるため影は使わない。
-   ・余白は詰めぎみ。情報量を出すことを優先し、行間と罫線で読みやすさを作る。
-   ・角はしっかり丸める（--r / --r-lg）。面の硬さを抑え、触れる部品だとわかりやすくする。
+   ・読みやすさを最優先にする。本文は16px、いちばん小さい文字でも14px。行間は1.75。
+   ・文字と背景のコントラスト比は 4.5:1 以上（JIS X 8341-3:2016 の AA。本文は 7:1 以上を目安）。
+     枠線など、部品の形を伝える線は 3:1 以上（--line-2）。飾りの線は --line。
+   ・押せるものは高さ 44px 以上。リンクは色だけに頼らず下線を引く（本文の中）。
+   ・キーボードの現在地（フォーカス）は、黒と黄の二重の枠で、明るい面でも暗い面でも見える。
+   ・動きは控えめにし、「視差効果を減らす」設定では止める。自動で切り替わるものは置かない。
+   ・色は必ず下のトークンを通す。値段の強調には黄色のマーカー（--hl）を使う。
+   書体: 和文は BIZ UDPゴシック（ユニバーサルデザイン書体）、
+         欧文と数字は Atkinson Hyperlegible Next（0 と O、1 と l を見分けやすい書体）。
    セクションごとの見た目は各 .astro の <style> に置く。
    ========================================================= */
 
 :root {
   /* 面と線 */
   --bg: #ffffff;
-  --surface: #f4f6f9;
-  --surface-2: #e8ecf2;
-  --line: #dde2e9;
-  --line-2: #bfc7d2;
+  --surface: #f4f7fb;
+  --surface-2: #e8eef6;
+  --line: #d3dae4;
+  --line-2: #7f8a9a;
 
   /* 文字 */
-  --ink: #101720;
-  --ink-2: #414b58;
-  --ink-3: #737d8a;
+  --ink: #12161d;
+  --ink-2: #333c48;
+  --ink-3: #566170;
 
-  /* ブランド（濃紺）。b は基準色、b-deep は押下・見出し、b-tint は薄い下地 */
-  --b: #14497e;
-  --b-deep: #0c2f53;
-  --b-mid: #1c66ad;
-  /* 濃紺の面の上で1か所だけ目立たせたいとき（地図の拠点など） */
-  --b-bright: #3d86c9;
-  --b-tint: #eaeff6;
-  --b-line: #b9c8dc;
+  /* ブランド（青）。b は基準色、b-deep は濃い面、b-tint は薄い下地 */
+  --b: #0b4fb3;
+  --b-deep: #0a2a5e;
+  --b-mid: #1560d0;
+  --b-bright: #8ec2ff;
+  --b-tint: #eaf1fb;
+  --b-line: #a9c3ea;
+  /* 夜の海の色。暗い面はこれ1色にそろえる */
+  --night: #07204a;
+
+  /* 値段の強調に使う黄色のマーカー。上に載せる文字は必ず --ink */
+  --hl: #ffe14a;
+  --hl-deep: #f2c200;
 
   /* 役割色 */
-  --ok: #16704a;
-  --ok-tint: #e9f4ef;
-  --warn: #8a5d0b;
-  --warn-tint: #fbf3e4;
-  --ng: #a8322c;
-  --ng-tint: #fbeeed;
-  --discord: #5865f2;
+  --ok: #0c6449;
+  --ok-tint: #e5f4ed;
+  --ok-line: #9fcfba;
+  --warn: #7d5306;
+  --warn-tint: #fbf3e0;
+  --ng: #a3271f;
+  --ng-tint: #fbeceb;
+  --discord: #4752c4;
 
-  /* 書体。数字は等幅字形をそろえて、表や価格の桁を揃える */
-  --font: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
+  /* 書体 */
+  --font: "Atkinson Hyperlegible Next", "BIZ UDPGothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Noto Sans JP", system-ui, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* 寸法 */
-  --r: 8px;
-  --r-lg: 14px;
-  --gutter: clamp(16px, 3.5vw, 32px);
+  --r: 10px;
+  --r-lg: 18px;
+  --gutter: clamp(16px, 4vw, 40px);
   --max: 1160px;
   --max-doc: 820px;
-  --header-h: 60px;
+  --header-h: 68px;
   --band: calc(100vh - var(--header-h));
   --ease: cubic-bezier(0.2, 0.6, 0.3, 1);
+  --shadow: 0 1px 2px rgba(7, 32, 74, 0.06), 0 8px 24px rgba(7, 32, 74, 0.08);
 }
 
 /* ---------- 土台 ---------- */
@@ -65,19 +77,21 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-h) + 16px);
+  scroll-padding-top: calc(var(--header-h) + 20px);
 }
 
 body {
   margin: 0;
   font-family: var(--font);
-  font-size: 14px;
-  line-height: 1.85;
+  font-size: 1rem;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
   color: var(--ink-2);
   background: var(--bg);
-  font-feature-settings: "palt";
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
+  line-break: strict;
+  overflow-wrap: anywhere;
   overflow-x: clip;
 }
 
@@ -105,6 +119,7 @@ a {
 
 button {
   font: inherit;
+  letter-spacing: inherit;
   color: inherit;
   background: none;
   border: 0;
@@ -112,9 +127,12 @@ button {
   cursor: pointer;
 }
 
+/* キーボードの現在地。内側に黄、外側に黒の二重の枠（明るい面でも暗い面でも見える） */
 :focus-visible {
-  outline: 2px solid var(--b-mid);
-  outline-offset: 2px;
+  outline: 3px solid #111;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--hl);
+  border-radius: 4px;
 }
 
 /* hidden 属性は display 指定より常に優先させる（タブ切り替えなどで使う） */
@@ -124,15 +142,22 @@ button {
 
 h1, h2, h3, h4 {
   color: var(--ink);
-  letter-spacing: 0.005em;
-  line-height: 1.45;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
   text-wrap: balance;
-  /* 見出しだけ、日本語の折り返しを文節の区切りに寄せる（対応ブラウザのみ） */
+  /* 日本語の折り返しを文節の区切りに寄せる（対応ブラウザのみ） */
   word-break: auto-phrase;
 }
 
 p {
   text-wrap: pretty;
+}
+
+html[lang='ja'] p,
+html[lang='ja'] li,
+html[lang='ja'] dd {
+  word-break: auto-phrase;
 }
 
 .sr-only {
@@ -153,8 +178,8 @@ p {
   left: 8px;
   top: 8px;
   z-index: 100;
-  padding: 8px 14px;
-  background: var(--b-deep);
+  padding: 10px 16px;
+  background: var(--night);
   color: #fff;
   border-radius: var(--r);
   font-weight: 700;
@@ -165,48 +190,136 @@ p {
   transform: none;
 }
 
+/* 本文の中のリンク。色だけに頼らず下線を引く */
+.link,
+.prose a {
+  color: var(--b);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.link:hover,
+.prose a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* 値段などに引く黄色のマーカー */
+.mk {
+  box-shadow: inset 0 -0.42em 0 var(--hl);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  color: var(--ink);
+  padding-inline: 0.08em;
+}
+
+/*
+ * ロゴのアシカを、面の右下に「透かし」として薄く置く。
+ * 置きたい要素に class="wm" を足すだけでよい。色は面より少しだけ濃い（または明るい）単色にして、
+ * 上に載る文字の読みやすさ（コントラスト比）を下げない。形は画像を型抜き（mask）に使うので、色は --wm-c で変えられる。
+ */
+.wm {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  --wm-c: #e3ebf5;
+  --wm-w: clamp(240px, 42vw, 560px);
+  --wm-x: 3%;
+  --wm-y: -14%;
+  --wm-t: auto;
+  --wm-l: auto;
+}
+
+.wm::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: var(--wm-x);
+  left: var(--wm-l);
+  top: var(--wm-t);
+  bottom: var(--wm-y);
+  width: var(--wm-w);
+  aspect-ratio: 900 / 596;
+  background: var(--wm-c);
+  -webkit-mask: url('/brand/mark.png') center / contain no-repeat;
+  mask: url('/brand/mark.png') center / contain no-repeat;
+  pointer-events: none;
+}
+
+/* 濃い面の上では、面より少し明るい色にする */
+.wm-dark {
+  --wm-c: #11305f;
+  --wm-w: clamp(220px, 34vw, 440px);
+  --wm-y: -6%;
+}
+
+.wm-blue {
+  --wm-c: #1c5cbb;
+}
+
+/* 下層ページの見出し帯は背が低いので、小さめに */
+.wm-sm {
+  --wm-w: clamp(190px, 28vw, 340px);
+  --wm-y: -16%;
+}
+
 /* ---------- 骨組み ---------- */
 .container {
   width: 100%;
-  max-width: var(--max);
+  max-width: calc(var(--max) + var(--gutter) * 2);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-/* 高密度方針。上下の余白は従来より詰め、区切りは罫線で示す */
 .section {
-  padding-block: clamp(48px, 6.5vw, 88px);
+  padding-block: clamp(56px, 8vw, 104px);
 }
 
 .band {
   background: var(--surface);
-  border-block: 1px solid var(--line);
 }
 
-.band + .band {
-  border-top: 0;
-}
-
-/* セクション見出し。左に濃紺の縦罫を立てる（このサイト共通の目印） */
+/* セクション見出し。上に短い札（.sec-label）、下に大きな見出し */
+/* 見出し（主役の文）は中央に置く。補助の説明や表は左のまま */
 .sec-head {
-  border-left: 3px solid var(--b);
-  padding-left: clamp(12px, 2vw, 18px);
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.sec-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.9rem;
+  color: var(--b);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.sec-label::before {
+  content: '';
+  width: 1.6em;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--hl-deep);
 }
 
 .sec-head h2,
 .sec-h2 {
-  font-size: clamp(1.35rem, 2.6vw, 1.95rem);
-  font-weight: 900;
-  line-height: 1.4;
+  font-size: clamp(1.6rem, 3.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .sec-head .lead {
-  margin-top: 0.7rem;
-  font-size: clamp(0.9rem, 1.2vw, 0.97rem);
+  margin-top: 1rem;
+  font-size: clamp(1rem, 1.4vw, 1.0625rem);
   color: var(--ink-2);
 }
 
-/* 数字を強調したいところ（価格・件数）。桁を揃えて読みやすくする */
+/* 数字を強調したいところ（価格・件数） */
 .num {
   font-variant-numeric: tabular-nums;
   font-weight: 800;
@@ -218,21 +331,21 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45em;
-  height: 44px;
-  padding: 0 1.25rem;
-  border: 1px solid transparent;
-  border-radius: var(--r);
+  gap: 0.5em;
+  min-height: 48px;
+  padding: 0.5rem 1.4rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
   font-weight: 700;
-  font-size: 0.9rem;
-  line-height: 1;
-  white-space: nowrap;
+  font-size: 1rem;
+  line-height: 1.3;
+  text-align: center;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .btn svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
   transition: transform 0.2s var(--ease);
 }
@@ -252,16 +365,30 @@ p {
   border-color: var(--b-deep);
 }
 
-.btn-outline {
-  border-color: var(--line-2);
-  color: var(--ink);
+.btn-outline,
+.btn-ghost {
+  border-color: var(--b);
+  color: var(--b);
   background: var(--bg);
 }
 
-.btn-outline:hover {
-  border-color: var(--b);
-  color: var(--b);
+.btn-outline:hover,
+.btn-ghost:hover {
   background: var(--b-tint);
+  border-color: var(--b-deep);
+  color: var(--b-deep);
+}
+
+/* 濃い面の上で、いちばん押してほしいボタン（黄色） */
+.btn-hl {
+  background: var(--hl);
+  border-color: var(--hl);
+  color: var(--ink);
+}
+
+.btn-hl:hover {
+  background: #fff;
+  border-color: #fff;
 }
 
 .btn-white {
@@ -276,87 +403,180 @@ p {
 }
 
 .btn-ghost-white {
-  border-color: rgba(255, 255, 255, 0.55);
+  border-color: #fff;
   color: #fff;
 }
 
 .btn-ghost-white:hover {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .btn-lg {
-  height: 50px;
-  padding: 0 1.6rem;
-  font-size: 0.95rem;
+  min-height: 56px;
+  padding: 0.6rem 1.9rem;
+  font-size: 1.0625rem;
 }
 
 .btn-sm {
-  height: 36px;
-  padding: 0 0.9rem;
-  font-size: 0.82rem;
+  min-height: 44px;
+  padding: 0.35rem 1.1rem;
+  font-size: 0.9375rem;
 }
 
-/* 小さな見出しラベル。角は丸めず、四角いまま使う */
+/* 小さな札 */
 .tag {
   display: inline-flex;
   align-items: center;
-  height: 22px;
-  padding: 0 0.6em;
+  min-height: 26px;
+  padding: 0 0.7em;
   border: 1px solid var(--b-line);
-  border-radius: var(--r);
+  border-radius: 999px;
   background: var(--b-tint);
-  color: var(--b);
-  font-size: 0.72rem;
+  color: var(--b-deep);
+  font-size: 0.875rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
-/* ---------- スクロールに合わせた表示 ----------
-   JSが有効なときだけ、隠してから出す。
-   data-reveal: 要素単体 / data-stagger: 子要素を順番に
+/* ---------- スマホ（幅 600px 未満）の縮尺 ----------
+   手に持つ画面では、PCと同じ大きさのままだと、拡大して見ているように感じる（1画面に入る量が少なく、文字で埋まる）。
+   そこで、基準の文字の大きさ（1rem）を 14px に下げて、rem で決めている文字と余白をまとめて小さくする。
+   本文は 13〜14px、補足は 12px、表の見出しなどは 11px まで使う（色の濃さは変えない）。
+   ボタンの高さも少し下げる（40〜46px）。
+   セクションごとの組み替え（表にする・横に並べる など）は、各 .astro の同じ幅の指定に置く。 */
+@media (max-width: 599px) {
+  html {
+    font-size: 87.5%;
+  }
+
+  :root {
+    --header-h: 52px;
+    --gutter: 16px;
+  }
+
+  body {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .section {
+    padding-block: 36px;
+  }
+
+  .sec-label {
+    margin-bottom: 0.4rem;
+    font-size: 0.857rem;
+  }
+
+  .sec-label::before {
+    width: 1.2em;
+    height: 2px;
+  }
+
+  .sec-head h2,
+  .sec-h2 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+
+  .sec-head .lead {
+    margin-top: 0.5rem;
+    font-size: 0.929rem;
+    line-height: 1.65;
+  }
+
+  .btn {
+    min-height: 40px;
+    padding: 0.3rem 1.2rem;
+    font-size: 1rem;
+  }
+
+  .btn-lg {
+    min-height: 46px;
+    padding: 0.4rem 1.6rem;
+    font-size: 1.07rem;
+  }
+
+  .btn-sm {
+    min-height: 36px;
+    padding: 0.25rem 1rem;
+    font-size: 0.929rem;
+  }
+
+  .tag {
+    min-height: 22px;
+    font-size: 0.857rem;
+  }
+}
+
+/* ---------- 表示の動き ----------
+   JS が動いていて、動きを減らす設定でないときだけ、下から少し持ち上げて出す。
+   中身は最初から読める濃さにしておき（透明にはしない）、位置だけを動かす。
 */
-.js [data-reveal] {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
-  transition-delay: var(--d, 0s);
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal]:not(.is-in) {
+    transform: translateY(14px);
+  }
+
+  .js [data-reveal] {
+    transition: transform 0.5s var(--ease);
+    transition-delay: calc(var(--d, 0) * 70ms);
+  }
+
+  /* スクリプトが付けた印（各セクションの中身）。透明から、下から持ち上げて出す */
+  .js [data-reveal='fade']:not(.is-in) {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  .js [data-reveal='fade'] {
+    transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+    transition-delay: calc(var(--d, 0) * 90ms);
+  }
+
+  /* 比較の棒は、出てきたときに左から伸びる */
+  .gauge span {
+    transform-origin: left center;
+    transition: transform 0.9s var(--ease) 0.25s;
+  }
+
+  .js [data-reveal='fade']:not(.is-in) .gauge span {
+    transform: scaleX(0);
+  }
+
+  /* タブを切り替えたときの中身 */
+  [role='tabpanel']:not([hidden]) {
+    animation: panel-in 0.35s var(--ease);
+  }
+
+  /* よくある質問を開いたときの答え */
+  details[open] > :not(summary) {
+    animation: panel-in 0.3s var(--ease);
+  }
+
+  /* 押せるものは、指やカーソルに少し反応する */
+  .btn {
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s var(--ease);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn:hover svg {
+    transform: translateX(4px);
+  }
 }
 
-.js [data-reveal].is-in {
-  opacity: 1;
-  transform: none;
-}
-
-.js [data-stagger] > * {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
-  transition-delay: calc(var(--i, 0) * 60ms + var(--d, 0s));
-}
-
-.js [data-stagger].is-in > * {
-  opacity: 1;
-  transform: none;
-}
-
-/* 1文字ずつ色が付く見出し */
-.words .w {
-  color: var(--line-2);
-  transition: color 0.3s var(--ease);
-}
-
-.words .w.is-on {
-  color: var(--ink);
-}
-
-.words em {
-  font-style: normal;
-}
-
-.words em .w.is-on {
-  color: var(--b);
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -364,117 +584,143 @@ p {
     scroll-behavior: auto;
   }
 
-  .js [data-reveal],
-  .js [data-stagger] > * {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  .words .w {
-    color: var(--ink);
-  }
-
-  .words em .w {
-    color: var(--b);
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
-
-/* =========================================================
-   表示の仕方（motion.ts が data-anim を付ける）
-   ========================================================= */
-.js [data-reveal][data-anim] {
-  transition: opacity 0.7s var(--ease), transform 0.95s cubic-bezier(0.2, 0.85, 0.25, 1.06), clip-path 1.05s cubic-bezier(0.7, 0, 0.2, 1);
-  transition-delay: var(--d, 0s);
-}
-.js [data-reveal][data-anim='up'] { transform: translateY(34px) scale(0.98); }
-.js [data-reveal][data-anim='left'] { transform: translateX(-70px); }
-.js [data-reveal][data-anim='zoom'] { transform: scale(0.9); }
-/* 出し終わり（上の各種より強く効かせる） */
-.js [data-reveal][data-anim].is-in { opacity: 1; transform: none; }
-/* 見出しは左から幕を開ける */
-.js [data-reveal][data-anim='wipe'] { opacity: 1; clip-path: inset(-20% 100% -20% 0); transform: translateX(-24px); }
-.js [data-reveal][data-anim='wipe'].is-in { clip-path: inset(-20% -4% -20% -4%); }
-/* 図や画面写真は右から引き幕のように開き、中身は少し引いていく */
-.js [data-reveal][data-anim='curtain'] { opacity: 1; clip-path: inset(0 0 0 100% round 10px); transform: translateX(28px); }
-.js [data-reveal][data-anim='curtain'].is-in { clip-path: inset(-4% -4% -4% -4% round 10px); }
-.js [data-reveal][data-anim='curtain'] :is(img, svg) { transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s; }
-.js [data-reveal][data-anim='curtain']:not(.is-in) :is(img, svg) { transform: scale(1.12); }
-/* 子要素を順番に起こす（料金カードや手順） */
-.js [data-reveal][data-anim='kids'] { opacity: 1; transform: none; }
-.js [data-reveal][data-anim='kids'] > * { opacity: 0; transform: perspective(900px) rotateX(16deg) translateY(40px) scale(0.95); transition: opacity 0.6s var(--ease), transform 0.9s cubic-bezier(0.2, 0.85, 0.25, 1.1); transition-delay: calc(var(--i, 0) * 110ms + var(--d, 0s)); transform-origin: 50% 100%; }
-.js [data-reveal][data-anim='kids'].is-in > * { opacity: 1; transform: none; }
-/* ヒーローの見出しは、行ごとに下からせり上がる */
-.js [data-reveal][data-anim='lines'] { opacity: 1; transform: none; }
-.js [data-reveal][data-anim='lines'] .ln { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
-.js [data-reveal][data-anim='lines'] .ln > span { display: inline-block; transform: translateY(110%) rotate(3deg); transition: transform 1s cubic-bezier(0.2, 0.9, 0.2, 1); transition-delay: calc(var(--n, 0) * 140ms + 0.1s); }
-.js [data-reveal][data-anim='lines'].is-in .ln > span { transform: none; }
-/* 一覧（よくある質問・比較表など）は横からすべり込む */
-.js [data-stagger] > * { transform: translateX(-34px); transition: opacity 0.5s var(--ease), transform 0.7s cubic-bezier(0.2, 0.85, 0.25, 1.06); }
-
-/* カードの傾きと光、ボタンの吸い寄せ */
-.tilt { position: relative; }
-.tilt.tilting { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.08s linear; }
-.tilt::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.35), transparent 45%); opacity: 0; transition: opacity 0.3s; }
-.tilt.tilting::after { opacity: 1; }
-.btn { translate: var(--tx, 0) var(--ty, 0); transition: translate 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), background 0.2s, border-color 0.2s, color 0.2s; }
-/* 濃い色のボタンは、乗せると光が横切る */
-.btn-primary, .btn-white { position: relative; overflow: hidden; }
-.btn-primary::after, .btn-white::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%); transform: translateX(-130%); pointer-events: none; }
-.btn-primary:hover::after, .btn-white:hover::after { transform: translateX(130%); transition: transform 0.75s ease; }
-
-/* ヒーローの中身は背景の飾りより前に出す */
-.hero { position: relative; overflow: hidden; }
-.hero > .container { position: relative; z-index: 1; }
 
 /*
  * いちばん上のお知らせの帯。中身は本番の server.mjs が、管理画面で作ったものを差し込む（Header.astro の目印の所）。
- * 色は種類で分ける。管理画面の見本（ashika-dash の src/lib/site-notices.ts の KIND_COLORS）と同じ色にしておく。
+ * 色は種類で分ける。
  */
-.site-notice { background: var(--b-deep); color: #fff; font-size: 0.78rem; line-height: 1.6; }
-.site-notice--maintenance { background: #7a5208; }
-.site-notice--incident { background: #a8322c; }
-.site-notice--campaign { background: var(--b-mid); }
-.site-notice + .site-notice { border-top: 1px solid rgba(255, 255, 255, 0.18); }
-.site-notice-in { position: relative; padding-block: 7px; text-align: center; }
-.site-notice-in.has-close { padding-inline: 2.4rem; }
-.site-notice-mark { display: inline-block; margin-right: 0.6em; padding: 0 0.5em; border: 1px solid rgba(255, 255, 255, 0.55); border-radius: var(--r); font-size: 0.72rem; font-weight: 700; }
-.site-notice a { margin-left: 0.4em; color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-.site-notice a:hover { opacity: 0.85; }
-.site-notice-close { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: var(--r); background: transparent; color: inherit; font-size: 1.15rem; line-height: 1; cursor: pointer; opacity: 0.8; }
-.site-notice-close:hover { opacity: 1; background: rgba(255, 255, 255, 0.12); }
+.site-notice { background: var(--night); color: #fff; font-size: 0.875rem; line-height: 1.6; }
+.site-notice--maintenance { background: #6b4705; }
+.site-notice--incident { background: #a3271f; }
+.site-notice--campaign { background: var(--b); }
+.site-notice + .site-notice { border-top: 1px solid rgba(255, 255, 255, 0.25); }
+.site-notice-in { position: relative; padding-block: 9px; text-align: center; }
+.site-notice-in.has-close { padding-inline: 3rem; }
+.site-notice-mark { display: inline-block; margin-right: 0.6em; padding: 0 0.6em; border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 999px; font-size: 0.875rem; font-weight: 700; }
+.site-notice a { margin-left: 0.4em; color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.site-notice a:hover { text-decoration-thickness: 2px; }
+.site-notice-close { position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: inherit; font-size: 1.3rem; line-height: 1; cursor: pointer; }
+.site-notice-close:hover { background: rgba(255, 255, 255, 0.16); }
 
-/* 読んだ位置のバー（ヘッダーの下） */
-.read-progress { position: fixed; left: 0; right: 0; top: 0; z-index: 60; height: 3px; background: linear-gradient(90deg, var(--b), var(--b-bright)); transform-origin: left; transform: scaleX(0); pointer-events: none; }
-
-/* 先頭へ戻る（アシカがボールを打ち上げる） */
-.to-top { position: fixed; right: 18px; bottom: 18px; z-index: 60; width: 62px; height: 62px; border: 1px solid var(--line); border-radius: 50%; background: #fff; box-shadow: 0 10px 26px rgba(12, 47, 83, 0.18); display: grid; place-items: center; cursor: pointer; opacity: 0; transform: translateY(30px) scale(0.8); pointer-events: none; transition: opacity 0.3s, transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1); }
-.to-top.show { opacity: 1; transform: none; pointer-events: auto; }
-.to-top:hover { transform: translateY(-4px); }
-.to-top img { width: 42px; margin-top: 12px; }
-.to-top .ball { position: absolute; top: 9px; right: 13px; width: 11px; height: 11px; border-radius: 50%; background: var(--b); animation: ball-bob 1.6s ease-in-out infinite; }
-@keyframes ball-bob { 50% { transform: translateY(-5px); } }
-.to-top.launch .ball { animation: ball-launch 0.7s cubic-bezier(0.3, 0, 0.3, 1); }
-@keyframes ball-launch { 50% { transform: translateY(-60px) scale(1.2); } }
-
-/* 隠し要素のアシカの雨 */
-.seal-rain { position: fixed; top: -80px; z-index: 95; pointer-events: none; animation: seal-fall linear forwards; }
-@keyframes seal-fall { to { transform: translateY(calc(100vh + 160px)) rotate(var(--r, 360deg)); } }
-
-@media (max-width: 760px) {
-  .js [data-reveal][data-anim='left'] { transform: translateY(30px); }
-  .js [data-reveal][data-anim='curtain'] { transform: none; }
-  .js [data-reveal][data-anim='wipe'] { transform: none; }
-  .js [data-stagger] > * { transform: translateY(14px); }
-  .js [data-reveal][data-anim].is-in, .js [data-stagger].is-in > * { transform: none; }
-  .to-top { width: 54px; height: 54px; right: 14px; bottom: 14px; }
-  .to-top img { width: 36px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .js [data-reveal][data-anim], .js [data-reveal][data-anim] > *, .js [data-reveal][data-anim] .ln > span, .js [data-stagger] > * { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
+/* 決済ブランドの印（特定商取引法に基づく表記のお支払い方法）。単色の形は Simple Icons（CC0）、商標は各社のもの */
+.paymarks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* 日本語の本文を、語の途中で折り返しにくくする（対応しないブラウザでは今までどおり） */
-html[lang='ja'] p {
-  word-break: auto-phrase;
+.paymarks li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 46px;
+  margin: 0;
+  padding: 0 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.paymarks svg {
+  width: 30px;
+  height: 24px;
+}
+
+.paymarks img {
+  width: auto;
+  height: 18px;
+}
+
+.paymarks img[src*="mastercard"],
+.paymarks img[src*="amex"],
+.paymarks img[src*="jcb"] {
+  height: 22px;
+}
+
+/* 各社の素材をそのまま使うロゴ（au PAY・ソフトバンクまとめて支払い・Paidy）：余白を削らず、札いっぱいに置く */
+.paymarks li {
+  height: 40px;
+}
+
+.paymarks li.is-own {
+  padding: 0 2px;
+}
+
+.paymarks li.is-own img {
+  height: 50px;
+}
+
+/* 2段組みのロゴは、下の段の文字が読める大きさにする */
+.paymarks li.is-own {
+  height: 52px;
+}
+
+.paymarks {
+  align-items: center;
+}
+
+.paymarks li {
+  gap: 5px;
+}
+
+.paymarks img[src$="/bank.webp"] {
+  height: 20px;
+}
+
+/* 札もロゴも縮めない（幅が足りないときは折り返す。ロゴの縦横比を崩さないため） */
+.paymarks li,
+.paymarks img {
+  flex: none;
+  max-width: none;
+}
+
+/* 札の高さをすべて同じにそろえる（2段組みのロゴの文字が読める高さに合わせる） */
+.paymarks {
+  align-items: stretch;
+}
+
+.paymarks li,
+.paymarks li.is-own {
+  height: 48px;
+  min-width: 60px;
+}
+
+.paymarks li img {
+  height: 22px;
+}
+
+.paymarks li img[src*="mastercard"],
+.paymarks li img[src*="amex"],
+.paymarks li img[src*="jcb"] {
+  height: 30px;
+}
+
+.paymarks li img[src$="/bank.webp"] {
+  height: 24px;
+}
+
+.paymarks li.is-own img {
+  height: 46px;
+}
+
+.paymarks li svg {
+  width: 38px;
+  height: 30px;
 }

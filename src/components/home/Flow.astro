@@ -1,26 +1,29 @@
 ---
+/** はじめかた。3つの手順を、番号つきで順に並べる（順序のあるリスト）。 */
 import { content } from '../../data/index';
-import { langOf } from '../../i18n';
+import { langOf, localize } from '../../i18n';
 
-const { flow } = content(langOf(Astro.url)).home;
+const lang = langOf(Astro.url);
+const { flow, sectionLabels } = content(lang).home;
 ---
 
-<section id="flow" class="section flow" aria-labelledby="flow-title">
+<section id="flow" class="section" aria-labelledby="flow-title">
   <div class="container">
-    <div class="sec-head" data-reveal>
+    <div class="sec-head">
+      <p class="sec-label">{sectionLabels.flow}</p>
       <h2 id="flow-title">{flow.title}</h2>
-      <p class="lead">{flow.lead}</p>
+      {flow.lead && <p class="lead">{flow.lead}</p>}
     </div>
 
-    <ol class="steps" data-reveal>
+    <ol class="steps">
       {
         flow.steps.map((s, i) => (
-          <li class="step" style={`--i:${i}`}>
-            <span class="n" aria-hidden="true">{i + 1}</span>
+          <li class="step" data-reveal>
+            <span class="n num" aria-hidden="true">{i + 1}</span>
             <h3>{s.title}</h3>
-            <p>{s.desc}</p>
+            {s.desc && <p>{s.desc}</p>}
             {'href' in s && s.href && (
-              <a class="step-link" href={s.href}>
+              <a class="link more" href={localize(s.href, lang)}>
                 {s.linkLabel}
               </a>
             )}
@@ -32,74 +35,116 @@ const { flow } = content(langOf(Astro.url)).home;
 </section>
 
 <style>
-  /* 3ステップ。番号を大きく打ち、縦罫で区切って横に並べる */
   .steps {
-    margin-top: clamp(24px, 4vw, 40px);
-    list-style: none;
     display: grid;
-    gap: 0;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    background: var(--bg);
-    overflow: hidden;
+    gap: 16px;
+    margin-top: clamp(28px, 4vw, 48px);
+    list-style: none;
   }
 
   .step {
-    padding: clamp(18px, 2.6vw, 26px);
-    border-bottom: 1px solid var(--line);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--b);
+    border-radius: var(--r-lg);
+    background: var(--bg);
   }
 
-  .step:last-child {
-    border-bottom: 0;
-  }
-
-  .step-link {
-    display: inline-block;
-    margin-top: 0.55rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--b);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .step .n {
+  .n {
     display: grid;
     place-items: center;
-    width: 30px;
-    height: 30px;
-    background: var(--b);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--night);
     color: #fff;
-    border-radius: var(--r);
-    font-size: 0.9rem;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
+    font-size: 1.25rem;
   }
 
   .step h3 {
-    margin-top: 0.8rem;
-    font-size: 1rem;
-    font-weight: 800;
+    margin-top: 0.9rem;
+    font-size: 1.25rem;
   }
 
   .step p {
-    margin-top: 0.45rem;
-    font-size: 0.85rem;
-    line-height: 1.9;
+    margin-top: 0.4rem;
+    font-size: 0.9375rem;
+  }
+
+  .more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: auto;
+    padding-top: 0.4rem;
+    font-weight: 700;
+  }
+
+  /* スマホ：札をやめて、番号を左に縦の線でつないだ道すじにする */
+  @media (max-width: 599px) {
+    .steps {
+      gap: 0;
+      margin-top: 20px;
+    }
+
+    .step {
+      padding: 0 0 18px 46px;
+      border: 0;
+      border-radius: 0;
+      background: none;
+    }
+
+    .step:last-child {
+      padding-bottom: 0;
+    }
+
+    .step:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 38px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--b-line);
+    }
+
+    .n {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      font-size: 1rem;
+    }
+
+    .step h3 {
+      display: flex;
+      align-items: center;
+      min-height: 32px;
+      margin-top: 0;
+      font-size: 1.0625rem;
+      line-height: 1.4;
+    }
+
+    .step p {
+      margin-top: 0.2rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+
+    .more {
+      margin-top: 0;
+      padding-top: 0;
+      font-size: 0.9375rem;
+    }
   }
 
   @media (min-width: 860px) {
     .steps {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .step {
-      border-bottom: 0;
-      border-right: 1px solid var(--line);
-    }
-
-    .step:last-child {
-      border-right: 0;
     }
   }
 </style>

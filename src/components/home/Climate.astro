@@ -1,0 +1,167 @@
+---
+/**
+ * 地球のために。Stripe Climate を通じて、売上の一部を二酸化炭素を取り除く取り組みに寄付していることを伝える。
+ * 緑の面。数字は大きく、説明は短く。
+ */
+import Icon from '../Icon.astro';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { climate, sectionLabels } = content(langOf(Astro.url)).home;
+---
+
+<section id="climate" class="section climate" aria-labelledby="climate-title">
+  <div class="container in">
+    <div class="copy">
+      <p class="sec-label">
+        <Icon name="leaf" size={18} />
+        {sectionLabels.climate}
+      </p>
+      <h2 id="climate-title" class="sec-h2">{climate.title.join('')}</h2>
+      <p class="lead">{climate.lead}</p>
+      {climate.note && <p class="note">{climate.note}</p>}
+      <a class="more" href={climate.link.href} target="_blank" rel="noopener">
+        {climate.link.label}
+        <Icon name="external" size={16} />
+      </a>
+    </div>
+
+    <dl class="stats">
+      {
+        climate.points.map((p) => (
+          <div>
+            <dt>{p.label}</dt>
+            <dd class="num">{p.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .climate {
+    background: var(--ok-tint);
+    border-block: 1px solid var(--ok-line);
+  }
+
+  .in {
+    display: grid;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+
+  .sec-label {
+    color: var(--ok);
+  }
+
+  .sec-label::before {
+    display: none;
+  }
+
+  .lead {
+    margin-top: 1rem;
+    max-width: 38em;
+    color: var(--ink);
+    font-size: clamp(1rem, 1.4vw, 1.0625rem);
+  }
+
+  .note {
+    margin-top: 0.75rem;
+    max-width: 38em;
+    font-size: 0.9375rem;
+  }
+
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 44px;
+    margin-top: 0.75rem;
+    color: var(--ok);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .more:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .stats > div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    padding: clamp(18px, 3vw, 28px);
+    border: 2px solid var(--ok);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+  }
+
+  .stats dd {
+    color: var(--ok);
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    line-height: 1.15;
+  }
+
+  .stats dt {
+    margin-top: 0.4rem;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  /* スマホ：余白と数字をひとまわり小さくする */
+  @media (max-width: 599px) {
+    .in {
+      gap: 18px;
+    }
+
+    .lead {
+      margin-top: 0.6rem;
+      font-size: 0.9375rem;
+    }
+
+    .note {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+
+    .more {
+      margin-top: 0.25rem;
+      font-size: 0.9375rem;
+    }
+
+    .stats {
+      gap: 10px;
+    }
+
+    .stats > div {
+      padding: 12px 14px;
+      border-radius: var(--r);
+    }
+
+    .stats dd {
+      font-size: 1.75rem;
+    }
+
+    .stats dt {
+      margin-top: 0.2rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .in {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+  }
+</style>

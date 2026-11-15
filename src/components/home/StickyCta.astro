@@ -1,0 +1,116 @@
+---
+/**
+ * スマホだけ、画面の下に貼り付く申し込みの帯。
+ * 出たり消えたりを減らすため、切り替わるのは2回だけ：
+ * 最初の画面とその下の帯（申し込みボタンがある）を過ぎたら出て、最後の申し込み・注記・フッターまで来たら引っ込む。
+ * 途中（料金表など）では出したままにする。出入りは下からすべらせ、急に現れたり消えたりしないようにする。
+ */
+import Icon from '../Icon.astro';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { heroPick } = content(langOf(Astro.url)).home;
+---
+
+<div class="sticky-cta" id="stickyCta" inert>
+  <p><span class="mk">{heroPick.sticky.text}</span></p>
+  <a class="btn btn-primary btn-sm" href="#plans">
+    {heroPick.sticky.button}
+    <Icon name="arrow" class="arrow" />
+  </a>
+</div>
+
+<script>
+  const bar = document.getElementById('stickyCta');
+  const watch = [
+    document.querySelector('.hero'),
+    document.querySelector('.quick'),
+    document.querySelector('.cta-sec'),
+    document.getElementById('notes'),
+    document.querySelector('footer'),
+  ].filter((el): el is HTMLElement => el instanceof HTMLElement);
+
+  if (bar && watch.length && 'IntersectionObserver' in window) {
+    const seen = new Set<Element>();
+    let timer = 0;
+    const apply = () => {
+      const show = seen.size === 0;
+      bar.classList.toggle('is-on', show);
+      bar.inert = !show;
+      document.documentElement.classList.toggle('has-sticky-cta', show);
+    };
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) seen.add(e.target);
+        else seen.delete(e.target);
+      }
+      // 速くスクロールしたときに、境目で出て消えてを繰り返さないよう、少し待ってから決める
+      window.clearTimeout(timer);
+      timer = window.setTimeout(apply, 180);
+    });
+    watch.forEach((el) => io.observe(el));
+  }
+</script>
+
+<style>
+  .sticky-cta {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px var(--gutter) calc(6px + env(safe-area-inset-bottom));
+    border-top: 2px solid var(--night);
+    background: var(--bg);
+    /* 引っ込んでいる間は、画面の下に隠しておく */
+    transform: translateY(105%);
+    visibility: hidden;
+    transition: transform 0.35s var(--ease), visibility 0s linear 0.35s;
+  }
+
+  .sticky-cta.is-on {
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.35s var(--ease), visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-cta,
+    .sticky-cta.is-on {
+      transition: none;
+    }
+  }
+
+  .sticky-cta p {
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .sticky-cta .btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 359px) {
+    .sticky-cta {
+      gap: 8px;
+    }
+
+    .sticky-cta p {
+      font-size: 0.875rem;
+    }
+  }
+
+  :global(html.has-sticky-cta) {
+    scroll-padding-bottom: 68px;
+  }
+
+  @media (min-width: 800px) {
+    .sticky-cta {
+      display: none !important;
+    }
+  }
+</style>

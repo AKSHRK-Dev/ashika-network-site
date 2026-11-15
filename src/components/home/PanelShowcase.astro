@@ -1,141 +1,190 @@
 ---
 /**
- * パネル紹介。
- * 画面に貼り付けて切り替える演出はやめ、3枚をそのまま縦に積む。
- * 表示は motion.ts の [data-reveal] に任せ、スクロールで入ってきたものから順に出す。
- * このセクション専用のスクリプトは持たない。
+ * お客様パネルの紹介。3つの画面をタブで切り替えて、1枚ずつ大きく見せる。
  */
-import BrowserWindow from '../BrowserWindow.astro';
 import { content } from '../../data/index';
 import { langOf } from '../../i18n';
 
-const { panel } = content(langOf(Astro.url)).home;
+const { panel, sectionLabels } = content(langOf(Astro.url)).home;
 ---
 
-<section id="panel" class="section showcase" aria-labelledby="panel-title">
-  <div class="container">
-    <div class="sec-head" data-reveal>
-      <h2 id="panel-title">
-        {
-          panel.title.map((line, i) => (
-            <>
-              {i > 0 && <br />}
-              {line}
-            </>
-          ))
-        }
-      </h2>
-      <p class="lead">{panel.lead}</p>
+<section id="panel" class="section panel-sec" aria-labelledby="panel-title">
+  <div class="container" data-tabs>
+    <div class="sec-head">
+      <p class="sec-label">{sectionLabels.panel}</p>
+      <h2 id="panel-title">{panel.title.join('')}</h2>
+      {panel.lead && <p class="lead">{panel.lead}</p>}
     </div>
 
-    <ol class="sc-list">
+    <div class="tabs" role="tablist" aria-labelledby="panel-title">
       {
         panel.shots.map((s, i) => (
-          <li class="sc-item" data-reveal style={`--d:${i * 0.05}s`}>
-            <div class="sc-text">
-              <span class="sc-no" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
-              {s.tags.length > 0 && (
-                <ul class="sc-tags">
-                  {s.tags.map((t) => (
-                    <li>{t}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div class="sc-shot">
-              <BrowserWindow
-                url={panel.url}
-                src={s.src}
-                alt={s.alt}
-                width={panel.width}
-                height={panel.height}
-                loading={i === 0 ? 'eager' : 'lazy'}
-              />
-            </div>
-          </li>
+          <button
+            type="button"
+            role="tab"
+            id={`panel-tab-${i}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-controls={`panel-shot-${i}`}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <span class="n num" aria-hidden="true">{i + 1}</span>
+            {s.title}
+          </button>
         ))
       }
-    </ol>
+    </div>
+
+    {
+      panel.shots.map((s, i) => (
+        <figure class="shot" role="tabpanel" id={`panel-shot-${i}`} aria-labelledby={`panel-tab-${i}`} hidden={i !== 0}>
+          {s.desc && <figcaption>{s.desc}</figcaption>}
+          <div class="frame">
+            <p class="url" aria-hidden="true">{panel.url}</p>
+            <img src={s.src} alt={s.alt} width={panel.width} height={panel.height} loading="lazy" decoding="async" />
+          </div>
+        </figure>
+      ))
+    }
   </div>
 </section>
 
 <style>
-  .sc-list {
-    margin-top: clamp(26px, 4vw, 44px);
-    list-style: none;
+  .tabs {
     display: grid;
-    gap: clamp(36px, 6vw, 72px);
+    gap: 8px;
+    margin-top: clamp(28px, 4vw, 48px);
   }
 
-  .sc-item {
-    display: grid;
-    gap: clamp(16px, 2.5vw, 28px);
-    align-items: center;
-  }
-
-  /* ---------- 説明 ---------- */
-  .sc-text {
-    padding-left: clamp(12px, 2vw, 18px);
-    border-left: 3px solid var(--b);
-  }
-
-  .sc-no {
-    display: block;
-    font-size: 0.76rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: var(--b-mid);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .sc-item h3 {
-    margin-top: 0.3rem;
-    font-size: clamp(1.05rem, 1.9vw, 1.4rem);
-    font-weight: 900;
-  }
-
-  .sc-item p {
-    margin-top: 0.6rem;
-    font-size: 0.88rem;
-    line-height: 1.95;
-  }
-
-  .sc-tags {
-    list-style: none;
+  .tabs button {
     display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 0.8rem;
-  }
-
-  .sc-tags li {
-    padding: 0.1rem 0.55rem;
-    border: 1px solid var(--b-line);
+    align-items: center;
+    gap: 0.75em;
+    min-height: 56px;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line-2);
     border-radius: var(--r);
-    background: var(--b-tint);
-    font-size: 0.72rem;
+    background: var(--bg);
+    color: var(--ink);
     font-weight: 700;
-    color: var(--b);
+    line-height: 1.4;
+    text-align: left;
   }
 
-  @media (min-width: 900px) {
-    .sc-item {
-      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-      gap: clamp(28px, 4vw, 56px);
+  .tabs button:hover {
+    border-color: var(--b);
+    background: var(--b-tint);
+  }
+
+  .tabs button[aria-selected='true'] {
+    border-color: var(--night);
+    background: var(--night);
+    color: #fff;
+  }
+
+  .tabs .n {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--hl);
+    color: var(--ink);
+    font-size: 0.9375rem;
+  }
+
+  .shot {
+    margin-top: 16px;
+  }
+
+  .shot figcaption {
+    max-width: 46em;
+    color: var(--ink);
+    font-size: 1.0625rem;
+  }
+
+  .frame {
+    margin-top: 16px;
+    border: 2px solid var(--night);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+    overflow: hidden;
+    box-shadow: 8px 8px 0 var(--b-tint);
+  }
+
+  .url {
+    padding: 6px 16px;
+    background: var(--night);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    letter-spacing: 0;
+  }
+
+  .frame img {
+    width: 100%;
+  }
+
+  /* スマホ：タブを横に3つ並べ、番号を文の上に置く。とても狭い画面だけ縦に戻す */
+  @media (max-width: 599px) {
+    .tabs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 20px;
     }
 
-    /* 2枚目だけ左右を入れ替えて、同じ並びが続く単調さを避ける */
-    .sc-item:nth-child(even) .sc-text {
-      order: 2;
+    .tabs button {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      min-height: 0;
+      padding: 8px 10px;
+      font-size: 0.875rem;
+      line-height: 1.4;
     }
 
-    .sc-item:nth-child(even) .sc-shot {
-      order: 1;
+    .tabs .n {
+      width: 22px;
+      height: 22px;
+      font-size: 0.875rem;
+    }
+
+    .shot {
+      margin-top: 12px;
+    }
+
+    .shot figcaption {
+      font-size: 0.9375rem;
+    }
+
+    .frame {
+      margin-top: 12px;
+      border-radius: var(--r);
+      box-shadow: 6px 6px 0 var(--b-tint);
+    }
+
+    .url {
+      padding: 3px 12px;
+    }
+  }
+
+  @media (max-width: 359px) {
+    .tabs {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tabs button {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.6em;
+      min-height: 44px;
+      padding-block: 4px;
+    }
+  }
+
+  @media (min-width: 800px) {
+    .tabs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 </style>

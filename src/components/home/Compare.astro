@@ -1,365 +1,405 @@
 ---
 /**
  * 国内のホスティング各社を、メモリ1GBあたりの月額で並べる表。
- * 行＝サービス、ASHIKA Network の行だけ濃紺の縁で囲う。1GBあたりの額は横棒でも見せる。
+ * 行＝サービス。ASHIKA Network の行だけ太い枠で囲い、金額にマーカーを引く。1GBあたりの額は横棒でも見せる。
+ * 幅 600〜859px では、1行を1つの札に組み替える（横にスクロールさせない）。
+ * スマホ（600px 未満）では、3列の小さな表にする。6行が1画面に入るので、いちばん上と下をそのまま比べられる。
+ *   「比べたプラン」は列にせず、サービス名の下に小さく入れる。
  * データと比べ方の決まりは src/data/compare.ts。
  */
-import Icon from '../Icon.astro';
 import { content } from '../../data/index';
 import { langOf } from '../../i18n';
+
 const lang = langOf(Astro.url);
 const { alternatives } = content(lang).compare;
+const { sectionLabels, notes } = content(lang).home;
 const money = (n: number) => (lang === 'en' ? `¥${n.toLocaleString('en-US')}` : `${n.toLocaleString('ja-JP')}円`);
 const max = Math.max(...alternatives.rows.map((r) => r.perGb));
 ---
+
 <section id="compare" class="section band compare" aria-labelledby="compare-title">
   <div class="container">
-    <div class="sec-head" data-reveal>
+    <div class="sec-head">
+      <p class="sec-label">{sectionLabels.compare}</p>
       <h2 id="compare-title">{alternatives.title}</h2>
       <p class="lead">{alternatives.lead}</p>
     </div>
-    <p class="scroll-hint" data-reveal>
-      <Icon name="swipe" size={16} />
-      {alternatives.scrollHint}
-    </p>
-    <div class="alt-scroll" data-reveal style="--d:.1s">
-      <table class="alt-table gb-table">
-        <thead>
-          <tr>{alternatives.columns.map((c) => <th scope="col">{c}</th>)}</tr>
-        </thead>
-        <tbody data-stagger>
-          {
-            alternatives.rows.map((r) => (
-              <tr class:list={[r.self && 'self-row']}>
-                <th scope="row">{r.name}</th>
-                <td class="plan">{r.plan}</td>
-                <td class="num">
-                  <span class="amt">{money(r.monthly)}</span>
+
+    <table class="cmp">
+      <thead>
+        <tr>
+          {alternatives.columns.map((c, i) => (
+            <th scope="col">
+              <span class="c-full">{c}</span>
+              <span class="c-short">{alternatives.columnsShort[i]}</span>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {
+          alternatives.rows.map((r) => (
+            <tr class:list={[r.self && 'self']}>
+              <th scope="row">
+                {r.name}
+                <span class="plan-s">{r.plan}</span>
+              </th>
+              <td class="plan">{r.plan}</td>
+              <td class="month">
+                <span class="m-label">{alternatives.columns[2]}</span>
+                <span class="val">
+                  <span class="num">{money(r.monthly)}</span>
                   <span class="unit">{alternatives.perMonth}</span>
-                  <span class="tax">{r.tax}</span>
-                </td>
-                <td class="per">
-                  <span class="num">
-                    <span class="amt">{money(r.perGb)}</span>
-                    <span class="unit">{alternatives.perMonth}</span>
-                  </span>
-                  <span class="gauge" aria-hidden="true"><span style={`--p:${(r.perGb / max) * 100}%`} /></span>
-                </td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
-    <ul class="notes">
-      {alternatives.notes.map((n) => <li>{n}</li>)}
-    </ul>
+                </span>
+                <span class="tax">{r.tax}</span>
+              </td>
+              <td class="per">
+                <span class="m-label">{alternatives.columns[3]}</span>
+                <span class="val">
+                  <span class:list={['num', r.self && 'mk']}>{money(r.perGb)}</span>
+                  <span class="unit">{alternatives.perMonth}</span>
+                </span>
+                <span class="gauge" aria-hidden="true">
+                  <span style={`width:${(r.perGb / max) * 100}%`} />
+                </span>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+
+    <p class="notes">
+      {alternatives.short}
+      <a href="#notes">{notes.link}</a>
+    </p>
   </div>
 </section>
+
 <style>
-  /* ---------- メモリ1GBあたりの表 ---------- */
-  .gb-table {
-    min-width: 680px;
-  }
-
-  .gb-table .plan {
+  .cmp {
+    width: 100%;
+    margin-top: clamp(28px, 4vw, 48px);
+    border-collapse: separate;
+    border-spacing: 0 8px;
     text-align: left;
-    font-size: 0.78rem;
-    color: var(--ink-2);
   }
 
-  .gb-table .num {
+  .cmp thead th {
+    padding: 0 16px 4px;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    font-weight: 700;
+  }
+
+  .cmp tbody th,
+  .cmp td {
+    padding: 14px 16px;
+    background: var(--bg);
+    border-block: 1px solid var(--line);
+    vertical-align: middle;
+  }
+
+  .cmp tbody th {
+    border-left: 1px solid var(--line);
+    border-radius: var(--r) 0 0 var(--r);
+    color: var(--ink);
     white-space: nowrap;
   }
 
-  .gb-table .amt {
-    font-size: 1.05rem;
-    font-weight: 800;
+  .cmp td:last-child {
+    border-right: 1px solid var(--line);
+    border-radius: 0 var(--r) var(--r) 0;
+    width: 34%;
+  }
+
+  .cmp .self th,
+  .cmp .self td {
+    border-block: 3px solid var(--b);
+    background: var(--b-tint);
+  }
+
+  .cmp .self th {
+    border-left: 3px solid var(--b);
+    color: var(--b-deep);
+    font-size: 1.0625rem;
+  }
+
+  .cmp .self td:last-child {
+    border-right: 3px solid var(--b);
+  }
+
+  .plan {
+    font-size: 0.9375rem;
+  }
+
+  .m-label {
+    display: none;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+
+  .val {
+    display: inline-flex;
+    align-items: baseline;
+    white-space: nowrap;
     color: var(--ink);
-    font-variant-numeric: tabular-nums;
   }
 
-  .gb-table .unit {
-    margin-left: 0.1em;
-    font-size: 0.72rem;
-    color: var(--ink-3);
+  .month .num {
+    font-size: 1.125rem;
+    font-weight: 700;
   }
 
-  .gb-table .tax {
+  .per .num {
+    font-size: 1.5rem;
+  }
+
+  .self .per .num {
+    font-size: 2rem;
+  }
+
+  .unit {
+    margin-left: 0.15em;
+    font-size: 0.875rem;
+  }
+
+  .tax {
     display: block;
-    font-size: 0.68rem;
+    font-size: 0.875rem;
     color: var(--ink-3);
-  }
-
-  .gb-table .per {
-    min-width: 13em;
+    line-height: 1.5;
   }
 
   .gauge {
     display: block;
-    margin-top: 0.35rem;
-    height: 6px;
-    border-radius: 999px;
-    background: var(--line);
+    height: 10px;
+    margin-top: 6px;
+    border-radius: 5px;
+    background: var(--surface-2);
     overflow: hidden;
   }
 
   .gauge span {
     display: block;
-    width: var(--p);
     height: 100%;
-    border-radius: inherit;
-    background: var(--ink-3);
+    border-radius: 5px;
+    background: var(--line-2);
   }
 
-  /* 自社の行 */
-  .gb-table tr.self-row th,
-  .gb-table tr.self-row td {
-    background: var(--b-tint);
-    border-top: 1px solid var(--b);
-    border-bottom: 1px solid var(--b);
-  }
-
-  .gb-table tr.self-row th {
-    border-left: 3px solid var(--b);
-    color: var(--b);
-  }
-
-  .gb-table tr.self-row td:last-child {
-    border-right: 1px solid var(--b);
-  }
-
-  .gb-table tr.self-row .amt {
-    color: var(--b);
-    font-size: 1.25rem;
-    font-weight: 900;
-  }
-
-  .gb-table tr.self-row .gauge span {
+  .self .gauge span {
     background: var(--b);
-  }
-
-  /*
-   * 他社比較。数字を並べて見せる表なので、装飾は足さず罫線と余白だけで組む。
-   * 自社の列だけ濃紺の縁で囲い、見出しを反転させる。
-   */
-  .matrix-top {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-    margin-top: clamp(22px, 3.5vw, 34px);
-  }
-
-  .scroll-hint {
-    display: flex;
-    align-items: center;
-    gap: 0.4em;
-    font-size: 0.76rem;
-    color: var(--ink-3);
-  }
-
-  .scroll-hint svg {
-    color: var(--b-mid);
-  }
-
-  .tax {
-    font-size: 0.76rem;
-    color: var(--ink-3);
-  }
-
-  @media (min-width: 900px) {
-    .scroll-hint {
-      display: none;
-    }
-  }
-
-  /* ---------- 表の共通部分 ---------- */
-  .matrix-scroll,
-  .alt-scroll {
-    margin-top: 0.7rem;
-    overflow-x: auto;
-    border-radius: var(--r-lg);
-  }
-
-  /* 角丸で切られて、見出しの上の線だけが内側に寄って見えるので、上の線は引かない */
-  .alt-table thead th {
-    border-top: 0;
-  }
-
-  .matrix,
-  .alt-table {
-    width: 100%;
-    min-width: 620px;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: var(--bg);
-    font-size: 0.85rem;
-  }
-
-  .matrix th,
-  .matrix td,
-  .alt-table th,
-  .alt-table td {
-    padding: 0.7rem 0.9rem;
-    border-bottom: 1px solid var(--line);
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  .matrix thead th,
-  .alt-table thead th {
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line-2);
-    background: var(--surface);
-  }
-
-  .matrix tbody th,
-  .alt-table tbody th,
-  .matrix .corner {
-    text-align: left;
-    white-space: nowrap;
-    font-weight: 700;
-    color: var(--ink-2);
-    background: var(--surface);
-    border-right: 1px solid var(--line);
-    width: 9em;
-  }
-
-  .matrix thead th:first-child,
-  .alt-table thead th:first-child {
-    border-left: 1px solid var(--line);
-  }
-
-  .matrix thead th:last-child,
-  .matrix tbody td:last-child,
-  .alt-table thead th:last-child,
-  .alt-table tbody td:last-child {
-    border-right: 1px solid var(--line);
-  }
-
-  /* 自社の列 */
-  .matrix th.self,
-  .matrix td.self,
-  .alt-table th.self,
-  .alt-table td.self {
-    border-left: 1px solid var(--b);
-    border-right: 1px solid var(--b);
-    background: var(--b-tint);
-  }
-
-  .matrix thead th.self,
-  .alt-table thead th.self {
-    background: var(--b);
-    color: #fff;
-    border-top: 1px solid var(--b);
-  }
-
-  .matrix tbody tr:last-child td.self,
-  .alt-table tbody tr:last-child td.self {
-    border-bottom: 1px solid var(--b);
-  }
-
-  .who-name {
-    display: block;
-    font-weight: 800;
-    font-size: 0.88rem;
-  }
-
-  .who-note {
-    display: block;
-    margin-top: 0.15rem;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--ink-3);
-    line-height: 1.6;
-  }
-
-  .matrix thead th.self .who-note {
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  /* ---------- 金額のセル ---------- */
-  .cell {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .price {
-    display: flex;
-    align-items: baseline;
-    gap: 0.1em;
-  }
-
-  .price .amt {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .self .price .amt {
-    color: var(--b);
-    font-size: 1.2rem;
-    font-weight: 900;
-  }
-
-  .price .unit {
-    font-size: 0.72rem;
-    color: var(--ink-3);
-  }
-
-  .approx {
-    font-size: 0.7rem;
-    color: var(--ink-3);
-  }
-
-  .none {
-    color: var(--line-2);
   }
 
   .notes {
-    margin-top: 0.9rem;
-    list-style: none;
-    display: grid;
-    gap: 0.25rem;
-    font-size: 0.74rem;
-    line-height: 1.8;
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
     color: var(--ink-3);
-  }
-
-  /* ---------- 他の方法との比較 ---------- */
-  .alt {
-    margin-top: clamp(40px, 6vw, 72px);
-    padding-top: clamp(28px, 4vw, 44px);
-    border-top: 1px solid var(--line);
-  }
-
-  .alt h3 {
-    padding-left: clamp(12px, 2vw, 18px);
-    border-left: 3px solid var(--b);
-    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
-    font-weight: 900;
-  }
-
-  .alt-lead {
-    margin-top: 0.7rem;
-    font-size: 0.88rem;
-  }
-
-  .alt-hint {
-    margin-top: 1rem;
-  }
-
-  .alt-table tbody td {
     line-height: 1.7;
-    font-size: 0.82rem;
   }
 
-  .alt-table td.self {
-    font-weight: 700;
-    color: var(--ink);
+  /* スマホの表でだけ、サービス名の下に出す「比べたプラン」 */
+  /* スマホ用の短い見出し */
+  .c-short {
+    display: none;
+  }
+
+  .plan-s {
+    display: none;
+  }
+
+  /* 幅 600〜859px：1行を1つの札にする */
+  @media (min-width: 600px) and (max-width: 859px) {
+    .cmp,
+    .cmp tbody {
+      display: block;
+    }
+
+    /* 列の見出しは各マスの中に小さく出す（読み上げには残す） */
+    .cmp thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    .cmp tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas: 'name name' 'plan plan' 'month per';
+      gap: 6px 16px;
+      padding: 16px;
+      margin-bottom: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      background: var(--bg);
+    }
+
+    .cmp tr.self {
+      border: 3px solid var(--b);
+      background: var(--b-tint);
+    }
+
+    .cmp tbody th,
+    .cmp td,
+    .cmp .self th,
+    .cmp .self td,
+    .cmp .self td:last-child,
+    .cmp td:last-child {
+      display: block;
+      width: auto;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: none;
+    }
+
+    .cmp tbody th {
+      grid-area: name;
+      white-space: normal;
+      font-size: 1.0625rem;
+    }
+
+    .plan {
+      grid-area: plan;
+    }
+
+    .month {
+      grid-area: month;
+    }
+
+    .per {
+      grid-area: per;
+    }
+
+    .m-label {
+      display: block;
+    }
+  }
+
+  /* スマホ：3列の表（サービス｜月額｜メモリ1GBあたり）。列の幅を決めておき、数字の右端をそろえる */
+  @media (max-width: 599px) {
+    .cmp {
+      table-layout: fixed;
+      margin-top: 16px;
+      border-spacing: 0;
+      font-size: 0.929rem;
+      line-height: 1.4;
+    }
+
+    .cmp thead th {
+      padding: 0 0 5px 8px;
+      border-bottom: 1px solid var(--line-2);
+      font-size: 0.786rem;
+      font-weight: 400;
+      line-height: 1.3;
+      text-align: right;
+      vertical-align: bottom;
+    }
+
+    .cmp thead th:first-child {
+      padding-left: 10px;
+      text-align: left;
+    }
+
+    .c-full {
+      display: none;
+    }
+
+    .c-short {
+      display: inline;
+      white-space: nowrap;
+    }
+
+    .cmp thead th:nth-child(2),
+    .cmp td.plan {
+      display: none;
+    }
+
+    .cmp thead th:nth-child(3) {
+      width: 5.8rem;
+    }
+
+    .cmp thead th:nth-child(4) {
+      width: 7rem;
+      padding-right: 10px;
+    }
+
+    .cmp tbody th,
+    .cmp td,
+    .cmp .self th,
+    .cmp .self td {
+      padding: 9px 0 9px 8px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      border-radius: 0;
+      vertical-align: top;
+    }
+
+    .cmp tbody th,
+    .cmp .self th {
+      padding-left: 10px;
+      font-size: 0.929rem;
+      white-space: normal;
+    }
+
+    .cmp td:last-child,
+    .cmp .self td:last-child {
+      width: auto;
+      padding-right: 10px;
+      border-right: 0;
+      border-radius: 0;
+    }
+
+    .cmp .self th {
+      box-shadow: inset 3px 0 0 var(--b);
+    }
+
+    .plan-s {
+      display: block;
+      margin-top: 1px;
+      color: var(--ink-3);
+      font-size: 0.786rem;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    .cmp td.month,
+    .cmp td.per {
+      text-align: right;
+    }
+
+    .month .num {
+      font-size: 0.929rem;
+    }
+
+    .tax {
+      font-size: 0.714rem;
+      line-height: 1.4;
+    }
+
+    .per .num {
+      font-size: 1.143rem;
+    }
+
+    .self .per .num {
+      font-size: 1.429rem;
+    }
+
+    .unit {
+      font-size: 0.786rem;
+    }
+
+    .gauge {
+      height: 4px;
+      margin-top: 4px;
+    }
+
+    .notes {
+      margin-top: 12px;
+      font-size: 0.857rem;
+      line-height: 1.6;
+    }
   }
 </style>

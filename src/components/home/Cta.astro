@@ -1,83 +1,199 @@
 ---
+/**
+ * 最後の申し込みへの誘い。白い面に、太い文字とボタンをひとつ。相談先（Discord）は文字のリンクで添える。
+ * 横には、最初の画面でアシカが見上げていた黄色いボールを置き、そこに金額を入れる。
+ */
 import Icon from '../Icon.astro';
 import { content } from '../../data/index';
 import { langOf } from '../../i18n';
 
-const { cta } = content(langOf(Astro.url)).home;
+const lang = langOf(Astro.url);
+const { cta } = content(lang).home;
 ---
 
-<section id="start" class="cta" aria-labelledby="cta-title">
-  <div class="container cta-in" data-reveal>
-    <h2 id="cta-title">
-      {
-        cta.title.map((line, i) => (
-          <>
-            {i > 0 && <br />}
-            {line}
-          </>
-        ))
-      }
-    </h2>
-    <p>
-      {
-        cta.lead.map((line, i) => (
-          <>
-            {i > 0 && <br />}
-            {line}
-          </>
-        ))
-      }
-    </p>
-    <div class="cta-btns">
-      <a class="btn btn-white btn-lg" href={cta.primary.href} target="_blank" rel="noopener">
-        {cta.primary.label}
-        <Icon name="arrow" />
-      </a>
-      <a class="btn btn-ghost-white btn-lg" href={cta.secondary.href} target="_blank" rel="noopener">
-        <Icon name="discord" />
-        {cta.secondary.label}
-      </a>
+<section class="cta-sec" aria-labelledby="cta-title">
+  <div class="container cta-in">
+    <div class="copy">
+      <h2 id="cta-title">
+        {
+          cta.title.map((line, i) => (
+            <span class="line">{i === cta.title.length - 1 ? <span class="mk">{line}</span> : line}</span>
+          ))
+        }
+      </h2>
+      <p class="lead">{cta.lead.join(lang === 'en' ? ' ' : '')}</p>
+      <div class="actions">
+        <a class="btn btn-primary btn-lg" href={cta.primary.href} target="_blank" rel="noopener">
+          {cta.primary.label}
+          <Icon name="arrow" class="arrow" />
+        </a>
+        <a class="ask" href={cta.secondary.href} target="_blank" rel="noopener">
+          <Icon name="discord" size={20} />
+          {cta.secondary.label}
+        </a>
+      </div>
     </div>
+
+    <p class="ball">
+      <span class="b-small">{cta.ball.top}</span>
+      <span class="b-fig">
+        <span class="num">{cta.ball.value}</span>
+        {cta.ball.unit && <span class="b-unit">{cta.ball.unit}</span>}
+      </span>
+      {cta.ball.bottom.map((line) => <span class="b-small">{line}</span>)}
+    </p>
   </div>
 </section>
 
 <style>
-  /* 最後の行動喚起。濃紺のベタ面で締め、ヒーローと呼応させる */
-  .cta {
-    background: var(--b-deep);
-    color: rgba(255, 255, 255, 0.85);
-    padding-block: clamp(44px, 6vw, 80px);
+  @media (prefers-reduced-motion: no-preference) {
+    .ball {
+      animation: cta-bob 3.4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes cta-bob {
+    50% { translate: 0 -10px; }
+  }
+
+  .cta-sec {
+    padding-block: clamp(56px, 9vw, 128px);
+    border-top: 2px solid var(--ink);
+    background: var(--bg);
+    --ball: 128px;
   }
 
   .cta-in {
-    max-width: 780px;
-    border-left: 3px solid rgba(255, 255, 255, 0.55);
-    padding-left: clamp(14px, 2.5vw, 22px);
-  }
-
-  .cta h2 {
-    color: #fff;
-    font-size: clamp(1.35rem, 3.2vw, 2.2rem);
-    font-weight: 900;
-    line-height: 1.4;
-  }
-
-  .cta p {
-    margin-top: 0.9rem;
-    font-size: clamp(0.86rem, 1.2vw, 0.95rem);
-    line-height: 1.95;
-  }
-
-  .cta-btns {
-    margin-top: clamp(20px, 3vw, 28px);
     display: grid;
-    gap: 8px;
+    gap: 20px;
   }
 
-  @media (min-width: 560px) {
-    .cta-btns {
-      grid-auto-flow: column;
-      justify-content: start;
+  h2 {
+    font-size: clamp(2rem, 6.4vw, 4.25rem);
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+
+  .line {
+    display: block;
+  }
+
+  .lead {
+    max-width: 34em;
+    margin-top: 1.25rem;
+    color: var(--ink);
+    font-size: clamp(1rem, 1.6vw, 1.1875rem);
+    font-weight: 700;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 28px;
+    margin-top: 2rem;
+  }
+
+  .actions .btn {
+    min-width: min(100%, 15rem);
+  }
+
+  .ask {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 44px;
+    color: var(--b);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .ask:hover {
+    color: var(--b-deep);
+    text-decoration-thickness: 2px;
+  }
+
+  /* 金額のボール。文字の大きさは、ボールの直径から決める */
+  .ball {
+    order: -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: var(--ball);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--hl);
+    color: var(--ink);
+    font-size: calc(var(--ball) * 0.125);
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .b-small {
+    font-size: 0.875em;
+  }
+
+  .b-fig {
+    display: inline-flex;
+    align-items: baseline;
+    line-height: 1;
+  }
+
+  .b-fig .num {
+    font-size: 2.7em;
+  }
+
+  .b-unit {
+    font-size: 1em;
+  }
+
+  @media (max-width: 520px) {
+    .actions .btn {
+      width: 100%;
+    }
+  }
+
+  /* スマホ：見出しと余白をひとまわり小さくする。ボールの大きさは変えない（中の文字を14pxより小さくしないため） */
+  @media (max-width: 599px) {
+    .cta-sec {
+      padding-block: 40px 44px;
+    }
+
+    .cta-in {
+      gap: 14px;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 7vw, 1.875rem);
+    }
+
+    .lead {
+      margin-top: 0.75rem;
+      font-size: 0.9375rem;
+    }
+
+    .actions {
+      gap: 6px 28px;
+      margin-top: 1.25rem;
+    }
+  }
+
+  @media (min-width: 800px) {
+    .cta-sec {
+      --ball: clamp(220px, 25vw, 330px);
+    }
+
+    .cta-in {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .ball {
+      order: 0;
     }
   }
 </style>

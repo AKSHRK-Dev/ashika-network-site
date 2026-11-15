@@ -1,0 +1,222 @@
+---
+/**
+ * 最初の画面のすぐ下の帯。「すぐ始めるなら、この3つ」を金額つきで並べる。押すとそのままお申し込みへ進む。
+ * 最初の画面の波（濃紺）から続く、海の中の面。
+ */
+import Icon from '../Icon.astro';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const lang = langOf(Astro.url);
+const { heroPick, plans, specLabels } = content(lang).home;
+const picks = plans.list.standard.filter((p) => p.monthly !== null).slice(0, 3);
+---
+
+<section class="quick" aria-labelledby="pick-title">
+  <div class="container quick-in">
+    <div class="head">
+      <h2 id="pick-title">{heroPick.title}</h2>
+      {heroPick.lead && <p>{heroPick.lead}</p>}
+    </div>
+    <ul class="list">
+      {
+        picks.map((p) => (
+          <li>
+            <a href={p.href} target="_blank" rel="noopener" class:list={[p.hot && 'hot']}>
+              <span class="pk-main">
+                <span class="pk-name">
+                  {p.name}
+                  {p.hot && <span class="pk-hot">{plans.labels.hot}</span>}
+                </span>
+                <span class="pk-spec">
+                  {specLabels[0]} {p.specs[0]}・{specLabels[1]} {p.specs[1]}
+                </span>
+              </span>
+              <span class="pk-price">
+                <span class="yen">¥</span>
+                <span class="num">{p.monthly}</span>
+                <span class="unit">{heroPick.unit}</span>
+              </span>
+              <Icon name="arrow" size={20} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="foot">
+      <span>{heroPick.taxIn}</span>
+      <a href={heroPick.all.href}>{heroPick.all.label}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .quick {
+    background: var(--night);
+    color: #e3ebf7;
+    padding-block: clamp(20px, 3vw, 32px) clamp(36px, 5vw, 56px);
+  }
+
+  .head h2 {
+    color: #fff;
+    font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+  }
+
+  .head p {
+    margin-top: 0.3rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .list {
+    display: grid;
+    gap: 10px;
+    margin-top: 1.1rem;
+    list-style: none;
+  }
+
+  .list a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 76px;
+    padding: 10px 14px 10px 18px;
+    border: 2px solid transparent;
+    border-radius: var(--r);
+    background: #fff;
+    color: var(--ink);
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .list a.hot {
+    border-color: var(--hl);
+  }
+
+  .list a:hover {
+    background: var(--b-tint);
+    border-color: var(--hl);
+  }
+
+  .list a > :global(svg) {
+    color: var(--b);
+    flex-shrink: 0;
+  }
+
+  .pk-main {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pk-name {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    line-height: 1.4;
+  }
+
+  .pk-hot {
+    padding: 0 0.6em;
+    border-radius: 999px;
+    background: var(--hl);
+    color: var(--ink);
+    font-size: 0.875rem;
+  }
+
+  .pk-spec {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+    line-height: 1.5;
+  }
+
+  .pk-price {
+    display: inline-flex;
+    align-items: baseline;
+    white-space: nowrap;
+  }
+
+  .pk-price .yen {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .pk-price .num {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .pk-price .unit {
+    margin-left: 0.15em;
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0 16px;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .foot a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: #fff;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .foot a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  /* スマホ：3つの札を低くして、最初の画面のすぐ下に3つとも見えるようにする */
+  @media (max-width: 599px) {
+    .quick {
+      padding-block: 14px 26px;
+    }
+
+    .head h2 {
+      font-size: 1.125rem;
+    }
+
+    .list {
+      gap: 8px;
+      margin-top: 0.8rem;
+    }
+
+    .list a {
+      gap: 10px;
+      min-height: 60px;
+      padding: 6px 12px 6px 14px;
+    }
+
+    .pk-name {
+      font-size: 1rem;
+    }
+
+    .pk-price .num {
+      font-size: 1.625rem;
+    }
+
+    .foot {
+      margin-top: 0.25rem;
+    }
+  }
+
+  @media (min-width: 860px) {
+    .list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+  }
+</style>

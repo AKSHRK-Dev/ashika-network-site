@@ -3,8 +3,11 @@
  */
 export const alternatives = {
   title: 'Compared per 1 GB of memory',
-  lead: 'For each hosting service in Japan we took the cheapest plan with 2 GB of memory and turned its monthly price into a price per 1 GB.',
+  lead: 'The cheapest 2 GB plan of each service in Japan, as a price per 1 GB.',
+  short: 'Our own survey, October 26, 2026. Other services are shown without names.',
+  notesLabel: 'Comparison',
   columns: ['Service', 'Plan compared', 'Monthly (2 GB)', 'Per 1 GB'],
+  columnsShort: ['Service', '', 'Monthly', 'Per 1 GB'],
   scrollHint: 'Scroll sideways to see the other columns',
   yen: '',
   perMonth: '/mo',

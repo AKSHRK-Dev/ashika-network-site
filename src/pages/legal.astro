@@ -10,7 +10,7 @@ const { legalDocs, legalIndex } = content(lang).legal;
 ---
 
 <Base title={legalIndex.title} description={legalIndex.description} path={localize('/legal', lang)}>
-  <section class="legal-hero">
+  <section class="legal-hero wm wm-sm">
     <div class="container">
       <h1>{legalIndex.title}</h1>
       <p>
@@ -28,7 +28,7 @@ const { legalDocs, legalIndex } = content(lang).legal;
 
   <section class="legal-main container">
     <h2>{legalIndex.listHeading}</h2>
-    <ol class="doc-list" data-stagger>
+    <ol class="doc-list">
       {
         legalDocs.map((d, i) => (
           <li>
@@ -140,7 +140,7 @@ const { legalDocs, legalIndex } = content(lang).legal;
   .doc-list .en {
     display: block;
     margin-top: 0.1rem;
-    font-size: 0.72rem;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -150,7 +150,7 @@ const { legalDocs, legalIndex } = content(lang).legal;
   .doc-list .desc {
     display: block;
     margin-top: 0.4rem;
-    font-size: 0.82rem;
+    font-size: 0.875rem;
     line-height: 1.85;
     color: var(--ink-2);
   }
@@ -187,7 +187,7 @@ const { legalDocs, legalIndex } = content(lang).legal;
 
   .guide p {
     margin-top: 0.4rem;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     line-height: 1.85;
   }
 

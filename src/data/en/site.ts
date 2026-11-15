@@ -12,7 +12,7 @@ export const site = {
   name: 'ASHIKA Network',
   tagline: 'Affordable hosting',
   url: 'https://www.ashikanw.com',
-  homeTitle: 'Connections that stay on | Servers from ¥30 a month | ASHIKA Network',
+  homeTitle: 'Affordable hosting | ASHIKA Network',
   description:
     'A place for the programs you want to keep running, from ¥30 a month in a data center in Osaka, Japan. Discord bots, web apps, scheduled scripts and more. Monthly terms, no long contracts.',
   alternateNames: ['ASHIKA', 'ASHIKAネットワーク', 'アシカネットワーク', 'あしかネットワーク'],
@@ -34,6 +34,8 @@ export const ui = {
     menuAria: 'Menu',
     menuOpen: 'Open menu',
     menuClose: 'Close menu',
+    tagline: 'Affordable hosting from ¥30 a month',
+    subAria: 'Related sites',
   },
   footer: {
     brandAria: `${site.name} home`,
@@ -52,6 +54,7 @@ export const ui = {
 export const nav: NavItem[] = [
   { label: 'What you can run', href: '/en#uses' },
   { label: 'Pricing', href: '/en#plans' },
+  { label: 'Peace of mind', href: '/en#trust' },
   { label: 'Top up', href: '/en#charge' },
   { label: 'FAQ', href: '/en/faq' },
   { label: 'Docs', href: links.docs, external: true },
@@ -163,4 +166,5 @@ export const footerText = {
   region: 'Our servers run in a data center in Osaka, Japan.',
   credit: { before: 'Developed by', name: 'ASHIKA Group', href: 'https://group.ashikanw.com/en-us/' },
   toTop: 'Back to the top',
+  climate: { label: 'We give 0.5% of our Stripe revenue to carbon removal projects', href: '/en#climate' },
 };

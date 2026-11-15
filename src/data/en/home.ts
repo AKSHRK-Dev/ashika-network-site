@@ -13,6 +13,7 @@ export const hero = {
     { value: 'Custom domains', label: 'supported' },
     { value: 'Many kinds', label: 'of hosting' },
   ],
+  sub: 'Upload your bot or website, and it keeps running.',
   lead: [
     'Discord bots, Next.js sites and web apps keep running as long as they have a place to live.',
     'We run everything in a data center in Osaka, on monthly terms.',
@@ -27,6 +28,7 @@ export const hero = {
     price: 30,
     duration: 1700,
     note: 'Tax included. Monthly terms.',
+    bestShort: '*1 Our own survey, October 2026 (see notes)',
     bestNote: '*1 Our own survey, October 2026: compared with the monthly price (tax included) of the cheapest plan of hosting services in Japan for Discord bots and always-on programs.',
     uptimeNote: '*2 Measured uptime of our server (Node1) from September 17 to October 2026, by the external monitoring service HetrixTools. This does not guarantee future uptime.',
   },
@@ -37,7 +39,7 @@ export const uses = {
   title: ['Stuck because', 'it has nowhere to run.'],
   duration: 6000,
   tabsAria: 'Use cases',
-  lead: 'The code you wrote and the server you want to open can move forward once they have somewhere to run. Pick one of the four most common uses.',
+  lead: '',
   button: { label: 'Start with this use', href: links.shop },
   items: [
     {
@@ -45,50 +47,30 @@ export const uses = {
       label: 'Discord bot',
       tag: 'Standard plans',
       title: ['Keep the bot you wrote', 'running, always'],
-      desc: ['Upload your files and start it. We take care of keeping it running.'],
+      desc: [],
       points: ['Restarts by itself if it crashes', 'Splitting into several bots costs little', 'Follow the logs right in your browser'],
-      vs: {
-        who: 'On your own PC',
-        before: 'You pay for the electricity, and if it crashes while you sleep, nobody notices.',
-        after: 'Always on. Crashes are detected and it comes back by itself.',
-      },
     },
     {
       label: 'Web app',
       tag: 'Standard / Next.js plans',
       title: ['Show people', 'what you made'],
-      desc: ['Runs on the major runtimes. For Next.js, just upload your files and we build and publish them.'],
+      desc: [],
       points: ['Dedicated Next.js plans', 'Custom domains and HTTPS', 'Fast for visitors in Japan'],
-      vs: {
-        who: 'On free hosting',
-        before: 'Projects vanish if left alone for a while, or HTTPS is not available.',
-        after: 'From ¥30 a month, with no expiry and no such limits.',
-      },
     },
     {
       guide: { label: 'How to run Python 24/7', href: '/en/python' },
       label: 'Data processing',
       tag: 'High-memory plans',
       title: ['Leave heavy jobs', 'running on their own'],
-      desc: ['Keep memory-hungry jobs running: aggregation, conversion, collection.'],
+      desc: [],
       points: ['Choose plans with plenty of memory', 'Long jobs keep going without you', 'Run things at set times'],
-      vs: {
-        who: 'On your own PC',
-        before: 'It only progresses while your PC is open, and you cannot leave until it is done.',
-        after: 'Leave it running. No need to wait for it to finish.',
-      },
     },
     {
       label: 'Development and testing',
       tag: 'Standard / High-memory',
       title: ['A server just for trying things,', 'without the fuss'],
-      desc: ['Good for checking things before production, or for tests with a set end date.'],
+      desc: [],
       points: ['Ready in minutes', 'Contracts from one month', 'Let it go as soon as you are done'],
-      vs: {
-        who: 'On pay-as-you-go clouds',
-        before: 'Forget to delete something and an unexpected bill arrives the next month.',
-        after: 'Flat rate. You are never charged more than the balance you topped up.',
-      },
     },
   ] satisfies UseCase[],
 };
@@ -119,12 +101,12 @@ const planList: Record<PlanKind, Plan[]> = {
 
 export const plans = {
   title: ['Only what you need,', 'only as long as you need it.'],
-  lead: ['The use only decides how much memory and CPU you need.', 'If unsure, start with the popular plan and move up when it is not enough.'],
+  lead: [],
   kinds: [
-    { key: 'standard', label: 'Standard', desc: 'Balanced CPU and memory. Works for bots, web apps and testing alike.' },
-    { key: 'memory', label: 'High memory', desc: 'Plenty of memory. For always-on programs that use a lot of it, such as data processing.' },
-    { key: 'nextjs', label: 'Next.js', desc: 'Made for Next.js sites and apps. Upload your files and we build and publish them, with enough memory for the build.' },
-    { key: 'enterprise', label: 'Enterprise', desc: 'Large setups and other special requests, arranged one by one. Ask us on Discord.' },
+    { key: 'standard', label: 'Standard', desc: 'Balanced CPU and memory, for bots, web apps and testing.' },
+    { key: 'memory', label: 'High memory', desc: 'For programs that use a lot of memory, such as data processing.' },
+    { key: 'nextjs', label: 'Next.js', desc: 'For Next.js. Upload your files and we build and publish them.' },
+    { key: 'enterprise', label: 'Enterprise', desc: 'For special setups, ask us on Discord.' },
   ] as const,
   terms: { monthly: 'Monthly', quarterly: '3 months' },
   badge: (n: number) => `Save up to ${n}%`,
@@ -136,6 +118,7 @@ export const plans = {
     switchAria: 'Show 3-month prices',
     scrollHint: 'Scroll sideways to see the other plans',
     itemAria: 'Item',
+    plan: 'Plan',
     hot: 'Popular',
     price: 'Price',
     ctaAria: 'Sign up',
@@ -146,15 +129,11 @@ export const plans = {
     },
     ask: { price: 'Ask us', note: 'We quote based on the setup', button: 'Ask on Discord' },
   },
-  note: [
-    'All prices include tax. Every plan runs in Japan.',
-    'You can pay by credit card (VISA, Mastercard, AMEX), bank transfer, Google Pay or Apple Pay, or through our STORES shop with PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later).',
-    'Standard, high-memory and Next.js plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.',
-  ],
+  note: ['All prices include tax. Every plan runs in Japan.'],
   list: planList,
   support: {
     title: 'For nonprofits, students and open source developers',
-    text: 'Through the ASHIKA Group support program, approved applicants can use servers for free (up to 20 for nonprofits, up to 10 for individuals).',
+    text: '',
     label: 'See the support program',
     href: 'https://group.ashikanw.com/en-us/supportprogram/',
   },
@@ -163,11 +142,10 @@ export const plans = {
 /* ---------- Location ---------- */
 export const location = {
   title: ['Our home:', 'northern Osaka.'],
-  lead: 'Every server runs in a data center in the Hokusetsu area of northern Osaka. Connections from within Japan see almost no delay from distance.',
+  lead: '',
   specs: [
-    { k: 'Where', v: 'A data center in the Hokusetsu area, Osaka Prefecture' },
-    { k: 'Network', v: 'Connected over routes tuned for Japan' },
-    { k: 'Choosing', v: 'We have one site, so there is nothing to choose when you buy' },
+    { k: 'Where', v: 'A data center in northern Osaka' },
+    { k: 'Network', v: 'Tuned for Japan' },
   ],
   nodesTitle: 'Server hardware',
   map: {
@@ -186,26 +164,26 @@ export const location = {
 /* ---------- Customer panel ---------- */
 export const panel = {
   title: ['One place', 'for everything.'],
-  lead: 'Buying, starting, stopping and managing files all happen on the same screen. (The panel itself is in Japanese.)',
+  lead: '',
   url: dashHost,
   shots: [
     {
       title: 'Balance and contracts at a glance',
-      desc: 'How much is left, and which server runs until when. You see it the moment you open it.',
+      desc: '',
       tags: [],
       src: '/uploads/panel/dashboard.webp?v=20261029',
       alt: 'Dashboard screen',
     },
     {
       title: 'The console is in your browser',
-      desc: 'Start, stop, restart and read the logs without connecting over SSH.',
+      desc: '',
       tags: [],
       src: '/uploads/panel/server.webp?v=20261029',
       alt: 'Server console screen',
     },
     {
       title: 'Add more in minutes',
-      desc: 'Pick a plan and a period. It is paid from your balance and ready to use.',
+      desc: '',
       tags: [],
       src: '/uploads/panel/shop.webp?v=20261029',
       alt: 'Server purchase screen',
@@ -221,47 +199,47 @@ export const features = {
     [{ t: 'Cheap' }, { t: ', ' }, { t: 'always on' }, { t: ', ' }, { t: 'no hassle' }, { t: ':' }],
     [{ t: 'six things', em: true }, { t: '.' }],
   ],
-  lead: ['From your very first server to running a busy community.', 'Here are the six things we offer.'],
+  lead: [],
   bigUnit: '/mo+',
   items: [
-    { title: 'From ¥30 a month', desc: 'Less than a can of soda gets you a server of your own.', big: '¥30' },
-    { title: 'Stays up', desc: 'Crashes are detected and restarted automatically. If it falls over at night, it is running again by morning.' },
-    { title: 'No SSH needed', desc: 'Start it and edit files from your browser. No need to set anything up on your computer.' },
-    { title: 'Flat-rate billing only', desc: 'No pay-as-you-go bills. You are never charged more than the balance you topped up.' },
-    { title: 'Try it for a month', desc: 'No long contracts. If it does not suit you, stop at the end of the period.' },
-    { title: 'A community to ask', desc: 'Stuck? Ask on Discord, where others run the same setup. (Mostly in Japanese.)' },
+    { icon: 'coin', title: 'From ¥30 a month', desc: '', big: '¥30' },
+    { icon: 'refresh', title: 'Restarts by itself', desc: '' },
+    { icon: 'window', title: 'Runs in your browser', desc: '' },
+    { icon: 'wallet', title: 'Flat-rate billing only', desc: '' },
+    { icon: 'calendar', title: 'Try it for a month', desc: '' },
+    { icon: 'chat', title: 'A community to ask', desc: '' },
   ],
 };
 
 /* ---------- Three steps ---------- */
 export const flow = {
   title: 'Three steps to get started.',
-  lead: 'No complicated setup. Pick a plan, pay, upload your files.',
+  lead: '',
   steps: [
-    { title: 'Pick a plan', desc: 'Choose a plan from the pricing table, then a period and software. You can create an account just before paying.', href: '/en#plans', linkLabel: 'See pricing' },
-    { title: 'Pay', desc: 'On the spot (credit card, Apple Pay, Google Pay, bank transfer) or from your topped-up balance. Your connection details are issued right away (bank transfers once the payment arrives).', href: '/en#charge', linkLabel: 'About top-ups' },
-    { title: 'Upload your files', desc: 'Upload your code and start it. It is now reachable from the outside.' },
+    { title: 'Pick a plan', desc: '', href: '/en#plans', linkLabel: 'See pricing' },
+    { title: 'Pay', desc: '', href: '/en#charge', linkLabel: 'About top-ups' },
+    { title: 'Upload your files', desc: '' },
   ],
 };
 
 /* ---------- Top up ---------- */
 export const charge = {
   title: 'Pay on the spot, or from your balance.',
-  lead: 'Pay for each order on the spot, or from a balance you added in advance. Balance is added with a top-up code (this is where PayPay, JCB, convenience store and carrier billing work).',
+  lead: 'Add balance with a top-up code.',
   facts: [
-    { label: 'Product', value: 'Top-up code', note: 'Used to pay for ASHIKA Network servers.' },
-    { label: 'Amount', value: '¥100 to ¥500,000', note: 'In steps of ¥100.' },
-    { label: 'Payment', value: 'Credit card, bank transfer, Apple Pay, Google Pay, PayPay, convenience store, carrier billing and more', note: 'Cards: VISA, Mastercard and AMEX. Through STORES: PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later).' },
-    { label: 'Delivery', value: 'Right after payment', note: 'Shown on screen and sent by email. For bank transfers, we email it once the payment is confirmed. When paying through STORES (PayPay, convenience store and so on), you receive a STORES order number instead of a code; for convenience store payment, after you have paid at the store.' },
+    { label: 'Product', value: 'Top-up code', note: '' },
+    { label: 'Amount', value: '¥100 to ¥500,000', note: '' },
+    { label: 'Payment', value: 'Card, bank transfer, Apple Pay, Google Pay, PayPay, convenience store, carrier billing and more', note: '' },
+    { label: 'Delivery', value: 'Right after payment', note: '' },
   ],
   steps: [
-    { title: 'Choose an amount', desc: 'Pick a common amount, or type one in steps of ¥100.' },
-    { title: 'Pay', desc: 'Card and bank transfer payments issue a top-up code. PayPay, JCB, convenience store and carrier billing take you to our STORES page and send an order number after payment. No account needed for either.' },
-    { title: 'Add it to your balance', desc: 'Enter the code under "Balance and history" in the customer panel. For STORES payments, enter the order number instead.' },
+    { title: 'Choose an amount', desc: '' },
+    { title: 'Pay', desc: '' },
+    { title: 'Add it to your balance', desc: '' },
   ],
   primary: { label: 'Top up your balance', href: links.charge },
   secondary: { label: 'Payment Services Act Notice', href: '/en/kessai' },
-  note: 'Unused top-up codes do not expire. For refunds, see the Payment Services Act Notice.',
+  note: '',
 };
 
 /* ---------- FAQ ---------- */
@@ -272,35 +250,35 @@ export const faq = {
   items: [
     {
       q: 'What does the service do?',
-      a: 'We rent out a place to put programs and keep them running: Discord bots, web apps, scheduled scripts, data aggregation and conversion. From ¥30 a month.',
+      a: 'A place to put programs and keep them running: Discord bots, web apps, scheduled scripts. From ¥30 a month.',
     },
     {
       q: 'How do I pay?',
-      a: 'You can pay on the spot each time (credit card, Apple Pay, Google Pay or bank transfer), or pay from a balance you topped up in advance. Renewals and add-ons work the same way. Top-ups accept credit cards (VISA, Mastercard, AMEX), bank transfer, Apple Pay and Google Pay, plus PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later) through our STORES shop, from ¥100 to ¥500,000 in steps of ¥100. You can buy a top-up without an account. For bank transfers we send the code once the payment is confirmed (1 to 3 business days). STORES payments have no top-up code: enter the order number you receive from STORES and it is added to your balance.',
+      a: 'On the spot (credit card, Apple Pay, Google Pay or bank transfer), or from a balance you topped up in advance. PayPay, convenience store payment and carrier billing work for top-ups.',
     },
     {
       q: 'It says "out of stock" and I cannot buy.',
-      a: 'Each plan has a limited number of slots, and it shows out of stock when they are full. There is no fixed date for adding more, but slots free up automatically when people cancel or change plans. Please check back every few days.',
+      a: 'Each plan has a limited number of slots. They free up when people cancel or change plans, so please check back every few days.',
     },
     {
       q: 'Where are the servers?',
-      a: 'In a data center in the Hokusetsu area of northern Osaka. We have one site, so there is nothing to choose when you buy. Even if you use it from outside Japan, the servers are in Osaka.',
+      a: 'In a data center in northern Osaka. We have one site, so there is nothing to choose.',
     },
     {
       q: 'What is the difference between Standard and High memory?',
-      a: 'At the same price, Standard plans get more CPU and High-memory plans get more memory. Choose Standard for bots and sites, and High memory for jobs that use a lot of memory.',
+      a: 'Standard plans get more CPU, High-memory plans get more memory. Choose Standard for bots and sites.',
     },
     {
       q: 'Do I pay every month?',
-      a: 'You can pay monthly, or for three months at once. Three months works out cheaper per month. See the pricing table above.',
+      a: 'Monthly, or three months at once. Three months works out cheaper per month.',
     },
     {
       q: 'Can I use it right after buying?',
-      a: 'Your connection details are issued the moment you buy, and you can upload files right away. No setup is needed.',
+      a: 'Yes. Your connection details are issued the moment you buy. No setup is needed.',
     },
     {
       q: 'Can I use it from outside Japan?',
-      a: 'Yes. There are no regional limits on signing up, paying or using your server. The website is available in English, but the customer panel and our support are in Japanese only. The servers are in Osaka, so connections from far away take longer.',
+      a: 'Yes. The customer panel and our support are in Japanese only. The servers are in Osaka.',
     },
   ],
 };
@@ -308,7 +286,112 @@ export const faq = {
 /* ---------- Final call to action ---------- */
 export const cta = {
   title: ['No more worrying', 'about where to run it.'],
-  lead: ['One server for ¥30 a month. If it does not suit you, stop after a month.', 'Start small and see.'],
+  lead: ['One server for ¥30 a month. Stop after a month if you like.'],
   primary: { label: 'Choose a plan', href: links.shop },
   secondary: { label: 'Ask on Discord', href: links.discord },
+  ball: { top: 'From', value: '¥30', unit: '', bottom: ['a month', 'tax incl.'] },
+};
+
+
+/* ---------- Added for the new design (2026-11) ---------- */
+export const sectionLabels = {
+  reasons: 'Why us',
+  uses: 'What you can run',
+  plans: 'Pricing',
+  compare: 'Price comparison',
+  trust: 'Peace of mind',
+  climate: 'For the planet',
+  panel: 'Control panel',
+  location: 'Location',
+  flow: 'Getting started',
+  charge: 'Payment',
+  faq: 'FAQ',
+};
+
+export const heroPick = {
+  eyebrow: 'A home for programs that need to keep running',
+  title: 'Three quick ways to start',
+  lead: '',
+  all: { label: 'Compare all plans', href: '#plans' },
+  unit: '/mo',
+  taxIn: 'tax incl.',
+  facts: [
+    { k: 'Term', v: 'Monthly' },
+    { k: 'Billing', v: 'Flat rate only' },
+    { k: 'Setup fee', v: '¥0' },
+    { k: 'Location', v: 'Osaka, Japan' },
+  ],
+  sticky: { text: 'From ¥30/mo, tax incl.', button: 'Choose a plan' },
+  notesAria: 'Notes',
+};
+
+export const usesLabels = { points: 'What you get', after: 'With ASHIKA Network' };
+
+/* ---------- Peace of mind ---------- */
+export const trust = {
+  title: ['Careful where', 'you cannot see.'],
+  lead: '',
+  statsAria: 'ASHIKA Network in numbers',
+  stats: [
+    { value: '¥0', unit: '', label: 'Setup fee' },
+    { value: '1', unit: 'month', label: 'Minimum term' },
+    { value: '¥30', unit: '/mo', label: 'Cheapest plan, tax incl.' },
+    { value: '99.9', unit: '%', label: 'Server uptime', mark: '*2' },
+  ],
+  items: [
+    {
+      icon: 'pulse',
+      title: 'Uptime anyone can check',
+      desc: '',
+      link: { label: 'See the status page', href: links.status, external: true },
+    },
+    {
+      icon: 'refresh',
+      title: 'Restarts on its own',
+      desc: '',
+    },
+    {
+      icon: 'wallet',
+      title: 'You pay only what you chose',
+      desc: '',
+    },
+    {
+      icon: 'chip',
+      title: 'Hardware in the open',
+      desc: '',
+      link: { label: 'See the server specs', href: '/en/specs' },
+    },
+    {
+      icon: 'doc',
+      title: 'Rules you can read',
+      desc: '',
+      link: { label: 'Terms and policies', href: '/en/legal' },
+    },
+  ],
+};
+
+/* ---------- For the planet (Stripe Climate) ---------- */
+export const climate = {
+  title: ['0.5% of our revenue goes', 'to fighting climate change.'],
+  lead: 'We give 0.5% of the revenue paid through Stripe to carbon removal technology (Stripe Climate).',
+  points: [
+    { value: '0.5%', label: 'of revenue donated' },
+    { value: '¥0', label: 'extra cost to you' },
+  ],
+  note: '',
+  link: { label: 'About Stripe Climate', href: 'https://stripe.com/climate' },
+};
+
+/* ---------- Notes and sources (gathered at the very bottom of the page) ---------- */
+export const notes = {
+  title: 'Notes and sources',
+  link: 'See notes and sources',
+  items: [
+    { k: '*1', v: 'Our own survey, October 2026: compared with the monthly price (tax included) of the cheapest plan of hosting services in Japan for Discord bots and always-on programs.' },
+    { k: '*2', v: 'Measured uptime of our server (Node1) from September 17 to October 2026, by the external monitoring service HetrixTools. This does not guarantee future uptime.' },
+    { k: 'Pricing', v: 'All prices include tax. Standard, high-memory and Next.js plans share one IP address, split by port. We do not offer dedicated IPv4 addresses.' },
+    { k: 'Payment', v: 'Credit card (VISA, Mastercard, AMEX), bank transfer, Google Pay and Apple Pay. Through our STORES shop: PayPay, JCB, d Barai, au Kantan Kessai, SoftBank Matomete Shiharai, convenience store payment, PayPal, Rakuten Pay and Paidy (pay later).' },
+    { k: 'Top-ups', v: 'Top-up codes are ¥100 to ¥500,000 in steps of ¥100, shown on screen and emailed right after payment. For bank transfers, after the payment is confirmed (1 to 3 business days); for convenience store payment, after you have paid at the store. STORES payments give you an order number instead of a code. Unused codes do not expire. For refunds, see the Payment Services Act Notice.' },
+    { k: 'Map', v: 'Source: National Land Numerical Information (Administrative Areas), Ministry of Land, Infrastructure, Transport and Tourism (as of January 1, 2025), processed by ASHIKA Network. Based on survey results of the Geospatial Information Authority of Japan.' },
+  ],
 };

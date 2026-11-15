@@ -3,6 +3,12 @@
  * 全ページ共通の骨組み（<head>・ヘッダー・フッター）。
  * 各ページは <Base title="..." description="..." path="/xxx"> 本文 </Base> の形で使う。
  */
+// 書体は自分のサーバーから配る（外部の書体サービスに読みに行かない）
+import '@fontsource/biz-udpgothic/400.css';
+import '@fontsource/biz-udpgothic/700.css';
+import '@fontsource/atkinson-hyperlegible-next/400.css';
+import '@fontsource/atkinson-hyperlegible-next/700.css';
+import '@fontsource/atkinson-hyperlegible-next/800.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -137,11 +143,15 @@ const jsonLd = {
     <link rel="icon" type="image/png" sizes="192x192" href={brand.icons.favicon192} />
     <link rel="apple-touch-icon" sizes="180x180" href={brand.icons.appleTouch} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <script is:inline>
       document.documentElement.classList.add('js');
+    </script>
+    <!-- Google のアクセス解析（タグ）。運営者から渡されたものをそのまま置く。プライバシーポリシー第7条に記載 -->
+    <script is:inline async src="https://www.googletagmanager.com/gtm.js?id=GTM-T7LDRB2R"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
     </script>
     <!-- ページごとに <head> へ足したいもの（規約ページのパンくず構造化データなど） -->
     <slot name="head" />
@@ -153,32 +163,8 @@ const jsonLd = {
       <slot />
     </main>
     <Footer />
-    <!-- 読んだ位置のバーと、先頭へ戻るボタン（動きは scripts/motion.ts） -->
-    <div class="read-progress" aria-hidden="true"></div>
-    <button class="to-top" type="button" aria-label={words.toTop} title={words.toTop}>
-      <span class="ball"></span><img src="/uploads/seal.png" alt="" width="56" height="37" />
-    </button>
     <script>
-      import '../scripts/motion';
+      import '../scripts/site';
     </script>
   </body>
 </html>
-
-<style>
-  .skip {
-    position: absolute;
-    left: 8px;
-    top: 8px;
-    z-index: 100;
-    padding: 8px 14px;
-    background: var(--ink);
-    color: #fff;
-    border-radius: var(--r);
-    font-weight: 700;
-    transform: translateY(-200%);
-  }
-
-  .skip:focus {
-    transform: none;
-  }
-</style>

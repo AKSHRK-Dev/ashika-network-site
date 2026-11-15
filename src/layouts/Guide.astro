@@ -54,7 +54,7 @@ const pageSchema = [
   updated={guide.updated}
   schema={pageSchema}
 >
-  <section class="g-hero">
+  <section class="g-hero wm wm-sm">
     <div class="container">
       <p class="g-crumb"><a href={localize('/', lang)}>{words.home}</a> <span aria-hidden="true">›</span> {guide.crumb ?? guide.title}</p>
       <h1 set:html={guide.heading ?? guide.title} />

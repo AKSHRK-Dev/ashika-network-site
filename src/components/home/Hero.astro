@@ -1,11 +1,9 @@
 ---
 /**
- * ヒーロー。濃紺のベタ面に、いちばん大きく「月額30円から！国内最安値」を置き、その下に強みを3つ並べる。
- * 見出しの金額は、表示時に大きい数字から一気に減って最小構成の月額に着地する。
- * その下にボタンを紺の面へ直接並べ、根拠の注記は小さく添える（白い箱で囲まない）。
- * PC では右にお客様パネルの画面を置く。キャッチコピーはフッターにある。
- * 背景は濃紺の単色に、ごく薄い大きな「ASHIKA」の文字を斜めに置いて見切れさせるだけ。
- * 飾りは足さない（グラデーション・枠・影を重ねると、かえって安っぽく見えるため）。
+ * 最初の画面。置くものは、強い見出し（月額30円から！）・短い一言・ボタン1つだけ。
+ * 背景は、ロゴの「ボールを見上げるアシカ」を大きく描いた絵。
+ * ボールから広がる輪と、手前の波を、色の段差だけで作る（ぼかし・グラデーションは使わない）。
+ * 最安をうたうので、根拠（いつ・だれが調べたか）は同じ画面に1行で置く（景品表示法）。全文はページ下の「注記・出典」。
  */
 import Icon from '../Icon.astro';
 import { content } from '../../data/index';
@@ -13,75 +11,42 @@ import { langOf } from '../../i18n';
 
 const lang = langOf(Astro.url);
 const { hero } = content(lang).home;
-
-const fmt = (n: number) => n.toLocaleString('ja-JP');
-
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="bg" aria-hidden="true">
-    <span class="bg-word">ASHIKA</span>
+  <!-- 飾りの絵。読み上げには出さない -->
+  <div class="art" aria-hidden="true">
+    <div class="seal-box">
+      <span class="disc d1"></span>
+      <span class="disc d2"></span>
+      <span class="disc d3"></span>
+      <span class="disc d4"></span>
+    </div>
+    <svg class="wave" viewBox="0 0 1440 160" preserveAspectRatio="none">
+      <path class="w-back" d="M0 60C180 20 360 100 540 60S900 20 1080 60s270 40 360-10v110H0Z"></path>
+      <path class="w-mid" d="M0 92c200 40 380-40 600 0s380 38 600-6 180-14 240 8v66H0Z"></path>
+    </svg>
+    <div class="seal-box">
+      <span class="seal"></span>
+      <span class="ball"></span>
+    </div>
+    <svg class="wave" viewBox="0 0 1440 160" preserveAspectRatio="none">
+      <path class="w-front" d="M0 126c240-30 420 24 720-4s460-26 720 8v30H0Z"></path>
+    </svg>
   </div>
-  <div class="container hero-in">
-    <div class="hero-text">
-    <!-- 行ごとに .ln で包むと、表示のときに下からせり上がる（global.css の data-anim='lines'） -->
-    <h1
-      id="hero-title"
-      data-reveal
-      aria-label={`${hero.headline.before}${fmt(hero.bar.price)}${hero.headline.after} ${hero.headline.second}`}>
-      <span class="ln" aria-hidden="true">
-        <span style="--n:0">
-          {hero.headline.before}<span
-            class="h-amt count"
-            data-from={hero.bar.from}
-            data-to={hero.bar.price}
-            data-duration={hero.bar.duration}
-            data-delay={hero.countDelay}
-           >{fmt(hero.bar.price)}</span>{hero.headline.after}
-        </span>
-      </span>
-      <span class="ln" aria-hidden="true">
-        <span style="--n:1" class="h-best">{hero.headline.second}<sup>{hero.headline.mark}</sup></span>
-      </span>
-    </h1>
-    <ul class="points" data-reveal style="--d:.08s">
-      {
-        hero.points.map((pt) => (
-          <li>
-            <Icon name="check" size={18} />
-            <b>{pt.value}</b>
-            <span>
-              {pt.label}
-              {pt.mark && <sup>{pt.mark}</sup>}
-            </span>
-          </li>
-        ))
-      }
-    </ul>
-    <!-- 文と文の改行はPCだけ。スマホでは自然に折り返す -->
-    <p class="lead" data-reveal style="--d:.1s">
-      {
-        hero.lead.map((line, i) => (
-          <>
-            {i > 0 && lang === 'en' && ' '}
-            {i > 0 && <br class="pc" />}
-            {line}
-          </>
-        ))
-      }
-    </p>
 
-    <div class="cta" data-reveal style="--d:.2s">
-      <a class="btn btn-white btn-lg" href={hero.primary.href} target="_blank" rel="noopener">
+  <div class="container">
+    <div class="copy">
+      <p class="best">{hero.headline.second}<sup><a href="#notes">{hero.headline.mark}</a></sup></p>
+      <h1 id="hero-title">
+        {hero.headline.before}<span class="amt mk" data-count data-count-from={hero.bar.from} data-count-ms={hero.bar.duration} data-count-delay={hero.countDelay}>{hero.bar.price}</span>{hero.headline.after}
+      </h1>
+      <p class="sub">{hero.sub}</p>
+      <a class="btn btn-primary btn-lg go" href={hero.primary.href} target="_blank" rel="noopener">
         {hero.primary.label}<Icon name="arrow" />
       </a>
-      <a class="btn btn-ghost-white btn-lg" href={hero.secondary.href}>{hero.secondary.label}</a>
-      <span class="cta-note">{hero.bar.note}</span>
-    </div>
-    <p class="hero-notes" data-reveal style="--d:.25s">{hero.bar.bestNote}<br />{hero.bar.uptimeNote}</p>
-    </div>
-    <div class="hero-visual" data-reveal style="--d:.15s">
-      <img src="/uploads/panel/server.webp?v=20261029" alt={hero.visualAlt} width="2000" height="1183" loading="eager" decoding="async" />
+      <p class="terms">{hero.bar.note}</p>
+      <p class="note"><a href="#notes">{hero.bar.bestShort}</a></p>
     </div>
   </div>
 </section>
@@ -89,220 +54,318 @@ const fmt = (n: number) => n.toLocaleString('ja-JP');
 <style>
   .hero {
     position: relative;
+    isolation: isolate;
     overflow: clip;
-    background: var(--b-deep);
-    color: #fff;
-    padding-block: clamp(48px, 7vw, 92px);
+    background: var(--bg);
+    /* 絵の大きさ。狭い画面では文の下に、広い画面では文の右に置く */
+    --art-w: min(64vw, 300px);
+    --art-r: 8%;
+    --wave-h: clamp(84px, 11vw, 150px);
+    padding-block: clamp(36px, 6vw, 84px) calc(var(--art-w) * 0.68 + var(--wave-h) * 0.5 + 24px);
   }
 
-  /* ---------- 背景：単色と、薄い「ASHIKA」の文字 ---------- */
-  .bg {
+  /* ---------- 絵 ---------- */
+  .art {
     position: absolute;
     inset: 0;
+    z-index: -1;
     pointer-events: none;
-    overflow: hidden;
   }
 
-  /* 大きく斜めにして、右上で見切れさせる（見出しの右の空いているところ） */
-  .bg-word {
+  /* 波の下端が半端なピクセルになっても、下の帯とのあいだに線が出ないようにふさぐ */
+  .art::after {
+    content: '';
     position: absolute;
-    right: -0.12em;
-    top: -0.06em;
-    font-size: clamp(8rem, 26vw, 24rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    color: rgba(255, 255, 255, 0.04);
-    transform: rotate(-10deg);
-    transform-origin: right top;
-    white-space: nowrap;
-    user-select: none;
+    inset: auto 0 0;
+    height: 2px;
+    background: var(--night);
   }
 
-  .hero-in {
-    position: relative;
-    display: grid;
-    gap: 40px;
-    align-items: center;
+  .seal-box {
+    position: absolute;
+    right: var(--art-r);
+    bottom: calc(var(--wave-h) * 0.24);
+    width: var(--art-w);
+    aspect-ratio: 900 / 596;
   }
 
-  /* ---------- ボタンと注記（紺の面に直接置く） ---------- */
-  .cta {
-    margin-top: clamp(24px, 3.4vw, 36px);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 14px;
+  /* ロゴのアシカ。画像を型抜きに使って、青1色で塗る */
+  .seal {
+    position: absolute;
+    inset: 0;
+    background: var(--b);
+    -webkit-mask: url('/brand/mark.png') center / contain no-repeat;
+    mask: url('/brand/mark.png') center / contain no-repeat;
   }
 
-  .cta-note {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7);
+  /* ボールと、そこから広がる輪。中心はロゴのボールの位置（左から94%、上から8.8%） */
+  .ball,
+  .disc {
+    position: absolute;
+    left: 94%;
+    top: 8.8%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
   }
 
-  .hero-notes {
-    margin-top: 1.1rem;
-    max-width: 70ch;
-    font-size: 0.7rem;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.5);
+  .ball {
+    width: 12.6%;
+    background: var(--hl);
   }
 
-  /* ---------- 右のパネルの画面（PC だけ） ---------- */
-  .hero-visual {
-    display: none;
+  .d1 {
+    width: 260%;
+    background: #f3f6fb;
   }
 
-  .hero-visual img {
-    display: block;
+  .d2 {
+    width: 185%;
+    background: #e7eef9;
+  }
+
+  .d3 {
+    width: 118%;
+    background: #d9e5f6;
+  }
+
+  .d4 {
+    width: 60%;
+    background: #c8daf3;
+  }
+
+  .wave {
+    position: absolute;
+    left: 0;
+    bottom: 0;
     width: 100%;
-    height: auto;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    height: var(--wave-h);
   }
 
-  @media (min-width: 1000px) {
-    /* 右にパネルの画面があるので、背景の文字は出さない */
-    .bg-word {
-      display: none;
+  .w-back {
+    fill: #b9d0f1;
+  }
+
+  .w-mid {
+    fill: #6fa3ec;
+  }
+
+  /* いちばん手前の波は、すぐ下の帯（濃紺）とつながる */
+  .w-front {
+    fill: var(--night);
+  }
+
+  /* ---------- 動き ----------
+     文は上から順に出る。ボールはゆっくり弾み、輪は外へ広がるように息をし、奥の波は左右に揺れる。
+     動きを減らす設定では、どれも止まったままにする。 */
+  @media (prefers-reduced-motion: no-preference) {
+    .copy > * {
+      animation: hero-rise 0.7s var(--ease) both;
     }
 
-    .hero-in {
-      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
-      gap: 56px;
+    .copy > :nth-child(2) { animation-delay: 0.08s; }
+    .copy > :nth-child(3) { animation-delay: 0.16s; }
+    .copy > :nth-child(4) { animation-delay: 0.24s; }
+    .copy > :nth-child(5) { animation-delay: 0.32s; }
+    .copy > :nth-child(6) { animation-delay: 0.4s; }
+
+    .seal-box {
+      animation: hero-in 0.9s var(--ease) both;
     }
 
-    .hero-visual {
-      display: block;
+    .ball {
+      animation: hero-bob 3.6s ease-in-out infinite;
+    }
+
+    .disc {
+      animation: hero-breathe 6s ease-in-out infinite;
+    }
+
+    .d2 { animation-delay: 0.5s; }
+    .d3 { animation-delay: 1s; }
+    .d4 { animation-delay: 1.5s; }
+
+    .w-back,
+    .w-mid {
+      transform-box: fill-box;
+      transform-origin: center;
+      scale: 1.08 1;
+      animation: hero-sway 9s ease-in-out infinite alternate;
+    }
+
+    .w-mid {
+      animation-duration: 7s;
+      animation-direction: alternate-reverse;
     }
   }
 
-  @media (max-width: 560px) {
-    .cta .btn {
-      width: 100%;
-    }
+  @keyframes hero-rise {
+    from { opacity: 0; translate: 0 18px; }
   }
 
-  /* ---------- いちばん大きい見出し（月額30円から！国内最安値） ---------- */
-  .hero h1 {
-    color: #fff;
-    font-size: clamp(2.1rem, 6.4vw, 4.1rem);
-    font-weight: 900;
-    line-height: 1.22;
-    letter-spacing: -0.015em;
+  @keyframes hero-in {
+    from { opacity: 0; translate: 0 28px; }
   }
 
-  .h-amt {
-    display: inline-block;
-    /* 幅は取り置かない（減っている間だけ後ろの文字が少し動くが、止まったときに「月額」との間が空かない） */
-    margin-inline: 0.06em;
-    font-size: 1.35em;
-    line-height: 1;
-    color: #8fd0ff;
-    font-variant-numeric: tabular-nums;
+  @keyframes hero-bob {
+    50% { translate: 0 -55%; }
   }
 
-  .h-best {
-    display: inline-block;
+  @keyframes hero-breathe {
+    50% { scale: 1.035; }
   }
 
-  .hero h1 sup,
-  .points sup {
-    font-size: 0.4em;
-    vertical-align: super;
-    margin-left: 0.1em;
+  @keyframes hero-sway {
+    from { translate: -2.5% 0; }
+    to { translate: 2.5% 0; }
   }
 
-  .points sup {
-    font-size: 0.7em;
-  }
-
-  /* ---------- 見出しの下の強み（チェックの印を付けて縦に並べる） ---------- */
-  .points {
-    margin-top: clamp(18px, 2.8vw, 26px);
-    display: grid;
-    gap: 0.45rem;
-    list-style: none;
-  }
-
-  .points li {
-    display: flex;
+  /* ---------- 文 ---------- */
+  .best {
+    display: inline-flex;
     align-items: baseline;
-    gap: 0.4em;
-    font-size: clamp(0.92rem, 1.5vw, 1.05rem);
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .points li :global(svg) {
-    align-self: center;
-    flex-shrink: 0;
-    color: #8fd0ff;
-  }
-
-  .points b {
-    font-size: 1.12em;
-    font-weight: 900;
+    padding: 0.3em 0.9em;
+    border-radius: 999px;
+    background: var(--night);
     color: #fff;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
   }
 
-  .hero .lead {
-    margin-top: 1.2rem;
-    max-width: 64ch;
-    font-size: clamp(0.88rem, 1.4vw, 1rem);
-    line-height: 1.95;
-    color: rgba(255, 255, 255, 0.85);
+  .best sup a,
+  .note a {
+    color: inherit;
   }
 
-  .lead .pc {
-    display: none;
+  .best sup a {
+    text-decoration: none;
   }
 
-  /* ---------- 下の白い帯 ---------- */
+  .best sup {
+    font-size: 0.7em;
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-left: 0.2em;
+  }
 
+  h1 {
+    margin-top: 0.9rem;
+    font-size: clamp(2rem, 8.4vw, 5rem);
+    line-height: 1.15;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
 
+  /* 英語は字数が多いので、ひとまわり小さくして1行に収める */
+  :global(html[lang='en']) h1 {
+    font-size: clamp(1.75rem, 6.6vw, 4rem);
+  }
 
+  .amt {
+    font-size: 1.7em;
+    font-weight: 800;
+    line-height: 1;
+    padding-inline: 0.06em;
+    margin-inline: 0.04em;
+  }
 
+  .sub {
+    margin-top: 1.25rem;
+    color: var(--ink);
+    font-size: clamp(1.0625rem, 1.9vw, 1.375rem);
+    font-weight: 700;
+    line-height: 1.6;
+  }
 
+  .go {
+    margin-top: 1.75rem;
+    min-width: min(100%, 15rem);
+  }
 
+  .terms {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+  }
 
+  .note {
+    margin-top: 1.5rem;
+    max-width: 40em;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
 
+  /* スマホ：見出しの強さは残したまま、まわりの文字と余白をひとまわり小さくする */
+  @media (max-width: 599px) {
+    .hero {
+      padding-top: 26px;
+    }
 
+    .best {
+      font-size: 0.875rem;
+    }
 
-  @media (min-width: 860px) {
-    .lead .pc {
-      display: inline;
+    h1 {
+      margin-top: 0.7rem;
+      font-size: clamp(1.75rem, 7.6vw, 2.5rem);
+    }
+
+    .sub {
+      margin-top: 0.9rem;
+      font-size: 1rem;
+    }
+
+    .go {
+      margin-top: 1.25rem;
+      min-width: min(100%, 13.5rem);
+    }
+
+    .terms {
+      margin-top: 0.6rem;
+    }
+
+    .note {
+      margin-top: 1rem;
+    }
+  }
+
+  /* タブレット：絵を右下に寄せ、注記は絵に重ならない幅にする */
+  @media (min-width: 700px) {
+    .hero {
+      --art-w: min(42vw, 400px);
+      --art-r: 6%;
+      padding-bottom: calc(var(--wave-h) + 48px);
+    }
+
+    .note {
+      max-width: 52%;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .hero {
+      --art-w: min(38vw, 560px);
+      --art-r: max(7%, calc(50% - 560px));
+      padding-block: 72px calc(var(--wave-h) + 48px);
+    }
+
+    .copy {
+      max-width: 50%;
+    }
+
+    .note {
+      max-width: 40em;
+    }
+
+    h1 {
+      font-size: min(4.6rem, 5.6vw);
+    }
+
+    :global(html[lang='en']) h1 {
+      font-size: min(3.6rem, 4.4vw);
     }
   }
 </style>
-
-<script>
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // 見出しの金額が、大きい数字から一気に減って最小構成の月額に着地する
-  const counters = document.querySelectorAll<HTMLElement>('.hero .count');
-  if (counters.length && !reduce) {
-    const fmt = (n: number) => n.toLocaleString('ja-JP');
-    counters.forEach((el) => {
-      const from = Number(el.dataset.from);
-      const to = Number(el.dataset.to);
-      const duration = Number(el.dataset.duration) || 1200;
-      // 待ち時間と長さは src/data/home.ts の hero（countDelay と bar.duration）から data 属性で渡している
-      const delay = Number(el.dataset.delay) || 0;
-      el.textContent = fmt(from);
-      el.classList.add('is-counting');
-      const start = performance.now() + delay;
-      const tick = (now: number) => {
-        const t = Math.min(1, Math.max(0, (now - start) / duration));
-        const eased = 1 - Math.pow(1 - t, 4); // 最初は速く、最後はゆっくり
-        el.textContent = fmt(Math.round(from + (to - from) * eased));
-        if (t < 1) {
-          window.requestAnimationFrame(tick);
-        } else {
-          el.textContent = fmt(to);
-          el.classList.remove('is-counting');
-        }
-      };
-      window.requestAnimationFrame(tick);
-    });
-  }
-</script>

@@ -1,16 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/home/Hero.astro';
+import Quick from '../components/home/Quick.astro';
 import UseCases from '../components/home/UseCases.astro';
 import Plans from '../components/home/Plans.astro';
 import Compare from '../components/home/Compare.astro';
 import Location from '../components/home/Location.astro';
 import PanelShowcase from '../components/home/PanelShowcase.astro';
-import Features from '../components/home/Features.astro';
+import Reasons from '../components/home/Reasons.astro';
+import Trust from '../components/home/Trust.astro';
+import Climate from '../components/home/Climate.astro';
+import StickyCta from '../components/home/StickyCta.astro';
 import Flow from '../components/home/Flow.astro';
 import Charge from '../components/home/Charge.astro';
 import Faq from '../components/home/Faq.astro';
 import Cta from '../components/home/Cta.astro';
+import Notes from '../components/home/Notes.astro';
 import { faqSchema, serviceSchema } from '../data/schema';
 import { content } from '../data/index';
 import { langOf, localize } from '../i18n';
@@ -21,20 +26,26 @@ const { site } = content(lang).site;
 
 <!--
   並び順の意図:
-  ヒーローで金額を見せた直後に「何が揃っているか（強み）」を出し、
-  次に「自分の用途で使えるか」、そのうえで料金と他社比較へ進む。
-  パネル・拠点は裏付け、流れとFAQで不安を潰して申し込みへ送る。
+  最初の画面は金額とボタン1つだけ。すぐ下の帯で「すぐ選べる3つ」を見せ、次に選ばれる理由、自分の用途で使えるか、料金、他社比較へ進む。
+  そのあとに安心への取り組みと環境への寄付で「任せて大丈夫か」に答え、
+  パネル・置き場所で裏付け、はじめかた・お支払い・FAQで不安を潰して申し込みへ送る。
 -->
 <Base path={localize('/', lang)} keywords={site.keywords} schema={[serviceSchema(lang), faqSchema(lang)]}>
   <Hero />
-  <Features />
+  <Quick />
+  <Reasons />
   <UseCases />
   <Plans />
   <Compare />
+  <Trust />
+  <Climate />
   <PanelShowcase />
   <Location />
   <Flow />
   <Charge />
   <Faq />
   <Cta />
+  <!-- 細かい条件・根拠・出典は、本文に散らさずここにまとめる -->
+  <Notes />
+  <StickyCta />
 </Base>

@@ -12,7 +12,7 @@ export const site = {
    * 「ASHIKA Network」は Google が別枠（サイト名）で出すので、ここでは繰り返さず、
    * 覚えてほしい一言と、探されている言葉を入れる。
    */
-  homeTitle: '切れないつながりを｜月30円からのサーバー｜ASHIKA Network',
+  homeTitle: '格安ホスティングならASHIKA Network｜月30円から',
   /** 検索結果の説明文（トップページと、説明を指定しないページで使う。90〜120文字が目安） */
   description:
     '動かし続けたいプログラムの置き場所を、大阪のデータセンターから月30円で提供します。Discord Bot、Webアプリ、定期実行のスクリプトなど。1ヶ月単位でご契約でき、長期の縛りはありません。',
@@ -63,6 +63,9 @@ export const ui = {
     menuAria: 'メニュー',
     menuOpen: 'メニューを開く',
     menuClose: 'メニューを閉じる',
+    /** 広い画面で、いちばん上の細い帯に出す一言と、その右のリンクの読み上げ名 */
+    tagline: '月30円からの格安ホスティング',
+    subAria: '関連サイト',
   },
   footer: {
     brandAria: `${site.name} ホーム`,
@@ -178,6 +181,7 @@ export type NavItem = { label: string; href: string; external?: boolean };
 export const nav: NavItem[] = [
   { label: 'できること', href: '/#uses' },
   { label: '料金', href: '/#plans' },
+  { label: '安心への取り組み', href: '/#trust' },
   { label: '残高チャージ', href: '/#charge' },
   { label: 'よくある質問', href: '/faq' },
   { label: 'ドキュメント', href: links.docs, external: true },
@@ -293,4 +297,6 @@ export const footerText = {
   /** 最下段に出す制作者の表記（ASHIKA Group の企業サイトへのリンク） */
   credit: { before: 'Developed by', name: 'ASHIKA Group', href: 'https://group.ashikanw.com/ja-jp/' },
   toTop: 'ページの先頭へ',
+  /** フッターに出す、寄付の取り組みへの一言（トップページの #climate へ） */
+  climate: { label: 'Stripe 決済分の売上の0.5%を、二酸化炭素を取り除くプロジェクトに寄付しています', href: '/#climate' },
 };

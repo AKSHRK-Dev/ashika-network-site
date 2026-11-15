@@ -1,0 +1,137 @@
+---
+/**
+ * 選ばれる理由（6つ）。箱で囲まず、罫線だけで区切った表のように並べる。
+ * アイコンは細い線のもの、文は1行で読み切れる長さにする。
+ */
+import Icon, { type IconName } from '../Icon.astro';
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const { features, sectionLabels } = content(langOf(Astro.url)).home;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section id="features" class="section reasons" aria-labelledby="reasons-title">
+  <div class="container">
+    <div class="sec-head">
+      <p class="sec-label">{sectionLabels.reasons}</p>
+      <h2 id="reasons-title">
+        {
+          features.title.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              {line.map((w) => ('em' in w && w.em ? <span class="mk">{w.t}</span> : w.t))}
+            </>
+          ))
+        }
+      </h2>
+      {features.lead.length > 0 && <p class="lead">{features.lead.join('')}</p>}
+    </div>
+
+    <ol class="grid">
+      {
+        features.items.map((f, i) => (
+          <li class="cell" data-reveal>
+            <p class="top" aria-hidden="true">
+              <Icon name={f.icon as IconName} size={44} stroke={1.25} />
+              <span class="no num">{pad(i + 1)}</span>
+            </p>
+            <h3>{'big' in f && f.big ? <span class="mk">{f.title}</span> : f.title}</h3>
+            {f.desc && <p class="desc">{f.desc}</p>}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* 罫線は、マスのすき間（1px）から下の色をのぞかせて引く */
+  .grid {
+    display: grid;
+    gap: 1px;
+    margin-top: clamp(28px, 4vw, 48px);
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+    background: var(--line);
+    list-style: none;
+  }
+
+  .cell {
+    padding: clamp(20px, 3vw, 32px) clamp(4px, 2.4vw, 28px);
+    background: var(--bg);
+  }
+
+  .top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    color: var(--b);
+  }
+
+  .no {
+    color: var(--ink-3);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .cell h3 {
+    margin-top: 1rem;
+    font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  }
+
+  .desc {
+    margin-top: 0.4rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  /* スマホ：2列に並べて、6つを1画面で見渡せるようにする。外側の余白はなくして、文の幅を残す */
+  @media (max-width: 599px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 20px;
+    }
+
+    .cell {
+      padding: 14px 12px 16px;
+    }
+
+    .cell:nth-child(odd) {
+      padding-left: 2px;
+    }
+
+    .cell:nth-child(even) {
+      padding-right: 2px;
+    }
+
+    .top :global(svg) {
+      width: 30px;
+      height: 30px;
+    }
+
+    .cell h3 {
+      margin-top: 0.55rem;
+      font-size: 1.0625rem;
+    }
+
+    .desc {
+      margin-top: 0.2rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+  }
+
+  @media (min-width: 600px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

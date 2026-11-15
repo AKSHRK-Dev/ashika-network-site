@@ -1,0 +1,84 @@
+---
+/**
+ * 注記・出典。本文を短く保つため、細かい条件・根拠・出典はページのいちばん下のここにまとめる。
+ * 本文の ※1・※2 や「注記・出典を見る」はここ（#notes）へ飛ぶ。
+ */
+import { content } from '../../data/index';
+import { langOf } from '../../i18n';
+
+const c = content(langOf(Astro.url));
+const { notes } = c.home;
+const { alternatives } = c.compare;
+/* 料金の比較の条件は、※1 の根拠のすぐ後ろに並べる */
+const items = [
+  ...notes.items.slice(0, 2),
+  { k: alternatives.notesLabel, v: alternatives.notes.join(' ') },
+  ...notes.items.slice(2),
+];
+---
+
+<section id="notes" class="notes" aria-labelledby="notes-title">
+  <div class="container">
+    <h2 id="notes-title">{notes.title}</h2>
+    <dl>
+      {
+        items.map((n) => (
+          <div class="row">
+            <dt>{n.k}</dt>
+            <dd>{n.v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .notes {
+    padding-block: 28px 32px;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
+    scroll-margin-top: calc(var(--header-h, 64px) + 8px);
+  }
+
+  h2 {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  dl {
+    margin-top: 0.75rem;
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.8125rem;
+    line-height: 1.65;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 5.5em 1fr;
+    gap: 0.75em;
+  }
+
+  dt {
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  :global(html[lang='en']) .notes .row {
+    grid-template-columns: 5em 1fr;
+  }
+
+  @media (max-width: 599px) {
+    .notes {
+      padding-block: 20px 24px;
+    }
+
+    .row {
+      grid-template-columns: 4.6em 1fr;
+      gap: 0.5em;
+    }
+  }
+</style>

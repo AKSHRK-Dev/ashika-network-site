@@ -60,7 +60,7 @@ const breadcrumb = {
 <Base title={title} description={description} path={path}>
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumb)} slot="head" />
 
-  <section class="doc-hero">
+  <section class="doc-hero wm wm-sm">
     <div class="container">
       <p class="doc-crumb">
         <a href={legalHref}>{breadcrumbLabels.legal}</a>
@@ -125,7 +125,7 @@ const breadcrumb = {
   }
 
   .doc-crumb {
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     color: var(--ink-3);
   }
 
@@ -175,7 +175,7 @@ const breadcrumb = {
 
   .doc-toc summary {
     padding: 0.7rem 0.9rem;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 700;
     color: var(--ink);
     cursor: pointer;
@@ -388,7 +388,7 @@ const breadcrumb = {
     }
 
     .doc dl.facts dt {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--b);
     }
   }

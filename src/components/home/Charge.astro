@@ -1,189 +1,244 @@
 ---
 /**
  * 残高チャージの案内。
- * 「申し込みから公開まで」の直後に置き、1手目の「残高を入れる」から
- * そのまま購入ページへ進めるようにする。
+ * 決済事業者の審査でもここを見てもらうので、扱っている物・金額・支払い方法をこの場で読み切れるようにしておく。
  */
 import Icon from '../Icon.astro';
 import { content } from '../../data/index';
-import { langOf } from '../../i18n';
+import { langOf, localize } from '../../i18n';
 
-const { charge } = content(langOf(Astro.url)).home;
+const lang = langOf(Astro.url);
+const { charge, sectionLabels } = content(lang).home;
 ---
 
-<section id="charge" class="section charge" aria-labelledby="charge-title">
+<section id="charge" class="section band" aria-labelledby="charge-title">
   <div class="container">
-    <div class="sec-head" data-reveal>
+    <div class="sec-head">
+      <p class="sec-label">{sectionLabels.charge}</p>
       <h2 id="charge-title">{charge.title}</h2>
       <p class="lead">{charge.lead}</p>
     </div>
 
-    <div class="charge-grid" data-reveal>
+    <div class="cols">
       <dl class="facts">
         {
           charge.facts.map((f) => (
             <div class="fact">
               <dt>{f.label}</dt>
               <dd>
-                <span class="v">{f.value}</span>
-                <span class="n">{f.note}</span>
+                <strong>{f.value}</strong>
+                {f.note && <span>{f.note}</span>}
               </dd>
             </div>
           ))
         }
       </dl>
 
-      <div class="how">
-        <ol class="chsteps">
+      <div class="side">
+        <ol class="steps">
           {
             charge.steps.map((s, i) => (
               <li>
-                <span class="n" aria-hidden="true">{i + 1}</span>
+                <span class="n num" aria-hidden="true">{i + 1}</span>
                 <div>
                   <h3>{s.title}</h3>
-                  <p>{s.desc}</p>
+                  {s.desc && <p>{s.desc}</p>}
                 </div>
               </li>
             ))
           }
         </ol>
-
-        <div class="acts">
-          <a class="btn btn-primary btn-lg" href={charge.primary.href} target="_blank" rel="noopener">
+        <div class="actions">
+          <a class="btn btn-primary" href={charge.primary.href}>
             {charge.primary.label}
-            <Icon name="arrow" />
+            <Icon name="arrow" class="arrow" />
           </a>
-          <a class="btn btn-ghost" href={charge.secondary.href}>{charge.secondary.label}</a>
+          <a class="btn btn-outline" href={localize(charge.secondary.href, lang)}>{charge.secondary.label}</a>
         </div>
-
-        <p class="note">{charge.note}</p>
+        {charge.note && <p class="note">{charge.note}</p>}
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* 左に「何を売っているか」、右に「買い方」。罫線で区切って並べる */
-  .charge-grid {
-    margin-top: clamp(24px, 4vw, 40px);
+  .cols {
     display: grid;
-    gap: 0;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    background: var(--bg);
-    overflow: hidden;
-  }
-
-  @media (min-width: 900px) {
-    .charge-grid {
-      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
-    }
-  }
-
-  .facts {
-    background: var(--b-tint);
-    padding: clamp(18px, 2.6vw, 26px);
-    display: grid;
-    gap: clamp(14px, 2vw, 18px);
-    align-content: start;
-  }
-
-  .fact dt {
-    font-size: 0.74rem;
-    font-weight: 700;
-    color: var(--b);
-    letter-spacing: 0.04em;
-  }
-
-  .fact dd {
-    margin-top: 0.25rem;
-  }
-
-  .fact .v {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--ink);
-    line-height: 1.5;
-  }
-
-  .fact .n {
-    display: block;
-    margin-top: 0.2rem;
-    font-size: 0.78rem;
-    line-height: 1.8;
-    color: var(--ink-2);
-  }
-
-  .how {
-    padding: clamp(18px, 2.6vw, 26px);
-    border-top: 1px solid var(--line);
-  }
-
-  @media (min-width: 900px) {
-    .how {
-      border-top: 0;
-      border-left: 1px solid var(--line);
-    }
-  }
-
-  .chsteps {
-    list-style: none;
-    display: grid;
-    gap: clamp(12px, 1.8vw, 16px);
-  }
-
-  .chsteps li {
-    display: grid;
-    grid-template-columns: 26px minmax(0, 1fr);
-    gap: 12px;
+    gap: 20px;
+    margin-top: clamp(28px, 4vw, 48px);
     align-items: start;
   }
 
-  .chsteps .n {
+  .facts,
+  .side {
+    padding: clamp(18px, 3vw, 28px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+  }
+
+  .fact {
+    display: grid;
+    gap: 4px 20px;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fact:first-child {
+    padding-top: 0;
+  }
+
+  .fact:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .fact dt {
+    color: var(--ink-3);
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+
+  .fact dd strong {
+    display: block;
+    color: var(--ink);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .fact dd span {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .steps {
+    display: grid;
+    gap: 18px;
+    list-style: none;
+  }
+
+  .steps li {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .n {
     display: grid;
     place-items: center;
-    width: 26px;
-    height: 26px;
-    background: var(--b);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--night);
     color: #fff;
-    border-radius: var(--r);
-    font-size: 0.8rem;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
   }
 
-  .chsteps h3 {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: var(--ink);
+  .steps h3 {
+    font-size: 1.0625rem;
+    line-height: 36px;
   }
 
-  .chsteps p {
-    margin-top: 0.25rem;
-    font-size: 0.8rem;
-    line-height: 1.85;
-    color: var(--ink-2);
+  .steps p {
+    font-size: 0.9375rem;
   }
 
-  .acts {
-    margin-top: clamp(18px, 2.6vw, 24px);
-    display: grid;
-    gap: 8px;
-  }
-
-  @media (min-width: 480px) {
-    .acts {
-      grid-auto-flow: column;
-      justify-content: start;
-      align-items: center;
-    }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 1.5rem;
   }
 
   .note {
-    margin-top: 0.9rem;
-    font-size: 0.74rem;
-    line-height: 1.8;
+    margin-top: 1rem;
+    font-size: 0.875rem;
     color: var(--ink-3);
+  }
+
+  @media (min-width: 620px) {
+    .fact {
+      grid-template-columns: 6.5em minmax(0, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .cols {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .actions .btn {
+      width: 100%;
+    }
+  }
+
+  /* スマホ：箱の中と行の間を詰める（書いてある内容は減らさない） */
+  @media (max-width: 599px) {
+    .cols {
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .facts,
+    .side {
+      padding: 16px;
+      border-radius: var(--r);
+    }
+
+    .fact {
+      gap: 2px 20px;
+      padding-block: 0.7rem;
+    }
+
+    .fact dt {
+      font-size: 0.875rem;
+    }
+
+    .fact dd strong {
+      font-size: 1rem;
+    }
+
+    .fact dd span {
+      margin-top: 0.1rem;
+      line-height: 1.6;
+    }
+
+    .steps {
+      gap: 12px;
+    }
+
+    .steps li {
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .n {
+      width: 28px;
+      height: 28px;
+      font-size: 0.875rem;
+    }
+
+    .steps h3 {
+      font-size: 1rem;
+      line-height: 28px;
+    }
+
+    .steps p {
+      font-size: 0.875rem;
+      line-height: 1.65;
+    }
+
+    .actions {
+      gap: 8px;
+      margin-top: 1rem;
+    }
+
+    .note {
+      margin-top: 0.75rem;
+      line-height: 1.6;
+    }
   }
 </style>

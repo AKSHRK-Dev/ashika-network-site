@@ -12,7 +12,7 @@ import { chrome, langOf, localize } from '../i18n';
 
 const lang = langOf(Astro.url);
 const words = chrome[lang];
-const { nodes, specsPage } = content(lang).specs;
+const { nodes, infra, specsPage } = content(lang).specs;
 const path = localize('/specs', lang);
 ---
 
@@ -23,7 +23,7 @@ const path = localize('/specs', lang);
   updated={specsPage.updated}
   schema={[breadcrumbSchema([{ name: specsPage.title, path }], lang)]}
 >
-  <section class="g-hero">
+  <section class="g-hero wm wm-sm">
     <div class="container">
       <p class="g-crumb"><a href={localize('/', lang)}>{words.home}</a> <span aria-hidden="true">›</span> {specsPage.title}</p>
       <h1>{specsPage.heading}</h1>
@@ -34,7 +34,7 @@ const path = localize('/specs', lang);
 
   <div class="container sp-main">
     <h2 class="sp-h2">{specsPage.nodesHeading}</h2>
-    <ul class="sp-nodes" data-stagger>
+    <ul class="sp-nodes">
       {
         nodes.map((node) => (
           <li class="sp-node">
@@ -44,6 +44,30 @@ const path = localize('/specs', lang);
             </p>
             <dl>
               {node.specs.map((s) => (
+                <div class="sp-row">
+                  <dt>{s.k}</dt>
+                  <dd>
+                    {s.v}
+                    {'sub' in s && s.sub && <span class="sp-sub">{s.sub}</span>}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class="sp-h2 sp-h2-gap">{specsPage.infraHeading}</h2>
+    <p class="sp-lead">{specsPage.infraLead}</p>
+    <ul class="sp-nodes sp-infra">
+      {
+        infra.map((item) => (
+          <li class="sp-node sp-node-sub">
+            <p class="sp-name">{item.name}</p>
+            <p class="sp-role">{item.role}</p>
+            <dl>
+              {item.specs.map((s) => (
                 <div class="sp-row">
                   <dt>{s.k}</dt>
                   <dd>
@@ -128,7 +152,7 @@ const path = localize('/specs', lang);
   }
 
   .sp-row dt {
-    font-size: 0.82rem;
+    font-size: 0.875rem;
     font-weight: 700;
     color: var(--ink-3);
     line-height: 1.7;
@@ -145,6 +169,37 @@ const path = localize('/specs', lang);
     margin-top: 0.15rem;
     font-size: 0.8rem;
     font-weight: 600;
+    color: var(--ink-2);
+  }
+
+  .sp-h2-gap {
+    margin-top: clamp(32px, 5vw, 48px);
+  }
+
+  .sp-lead {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--ink-2);
+  }
+
+  .sp-infra {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  }
+
+  .sp-node-sub {
+    border-top-color: var(--line);
+  }
+
+  .sp-node-sub .sp-name {
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+
+  .sp-role {
+    margin-top: 0.4rem;
+    font-size: 0.875rem;
+    line-height: 1.75;
     color: var(--ink-2);
   }
 

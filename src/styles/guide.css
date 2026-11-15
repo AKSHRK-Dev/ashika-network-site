@@ -12,7 +12,7 @@
   }
 
   .g-crumb {
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     color: var(--ink-3);
   }
 
@@ -40,7 +40,7 @@
 
   .g-date {
     margin-top: 0.8rem;
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     color: var(--ink-3);
   }
 
@@ -61,7 +61,7 @@
 
   .g-toc summary {
     padding: 0.7rem 0.9rem;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 700;
     color: var(--ink);
     cursor: pointer;
@@ -251,7 +251,7 @@
   .guide table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.86rem;
+    font-size: 0.875rem;
     white-space: nowrap;
   }
 
@@ -294,7 +294,7 @@
     background: var(--b-deep);
     color: #e8eef6;
     font-family: var(--mono);
-    font-size: 0.82rem;
+    font-size: 0.875rem;
     line-height: 1.8;
   }
 

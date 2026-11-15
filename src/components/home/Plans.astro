@@ -1,9 +1,17 @@
 ---
+/**
+ * 料金。種類はタブで切り替え、月額と3ヶ月契約は2つのボタンで切り替える（押されているほうに aria-pressed）。
+ *
+ * 幅 600px 以上：プランを札（カード）で並べる。札のいちばん下のボタンからお申し込みへ進む。
+ * スマホ（600px 未満）：札をやめて、1つの表にする。上から下まで1画面に入るので、行どうしをそのまま比べられる。
+ *   行を押すとそのプランが選ばれ、表のすぐ下に金額・向いている用途・お申し込みのボタンが出る。
+ *   種類のタブは表の上に貼りついて残る（下の行を見ているときも、戻らずに切り替えられる）。
+ */
 import Icon from '../Icon.astro';
 import { content } from '../../data/index';
 import { langOf } from '../../i18n';
 
-const { plans, specLabels } = content(langOf(Astro.url)).home;
+const { plans, specLabels, sectionLabels, notes } = content(langOf(Astro.url)).home;
 
 const perMonth = (quarterly: number) => Math.round((quarterly / 3) * 10) / 10;
 
@@ -17,604 +25,902 @@ const maxDiscount = priced.length
   : 0;
 const badge = maxDiscount > 0 ? plans.badge(maxDiscount) : plans.badgeNone;
 const L = plans.labels;
+
+/** スマホの表では、桁をそろえて比べやすいように、1024MB の倍数を GB に直す（1024MB → 1GB） */
+const short = (v: string) => {
+  const m = /^(\d+)MB$/.exec(v);
+  return m && Number(m[1]) % 1024 === 0 ? `${Number(m[1]) / 1024}GB` : v;
+};
+const yen = (n: number) => `¥${n.toLocaleString('en-US')}`;
+/** タブの名前を「標準」と「プラン」に分ける。スマホでは後ろの「プラン」を出さず、4つを1行に並べる */
+const tabParts = (label: string) => {
+  const m = /^(.*?)(\s*プラン)$/.exec(label);
+  return m ? [m[1], m[2]] : [label, ''];
+};
 ---
 
-<section id="plans" class="section plans" aria-labelledby="plans-title">
-  <div class="container">
-    <div class="sec-head" data-reveal>
-      <h2 id="plans-title">
-        {
-          plans.title.map((line, i) => (
-            <>
-              {i > 0 && <br />}
-              {line}
-            </>
-          ))
-        }
-      </h2>
-      <p class="lead">
-        {
-          plans.lead.map((line, i) => (
-            <>
-              {i > 0 && <br />}
-              {line}
-            </>
-          ))
-        }
-      </p>
+<section id="plans" class="section plans" aria-labelledby="plans-title" data-term="monthly">
+  <div class="container" data-tabs>
+    <div class="sec-head">
+      <p class="sec-label">{sectionLabels.plans}</p>
+      <h2 id="plans-title">{plans.title.join('')}</h2>
+      {plans.lead.length > 0 && <p class="lead">{plans.lead.join('')}</p>}
     </div>
 
-    <div class="plans-ctl" data-reveal style="--d:.1s">
-      <div class="seg" role="tablist" aria-label={L.kindsAria}>
+    <div class="zone" data-zone>
+    <div class="ctl">
+      <div class="kinds" role="tablist" aria-label={L.kindsAria}>
         {
           plans.kinds.map((k, i) => (
-            <button type="button" role="tab" data-kind={k.key} aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`plans-${k.key}`}>
-              {k.label}
+            <button
+              type="button"
+              role="tab"
+              id={`plans-tab-${k.key}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls={`plans-${k.key}`}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              {tabParts(k.label)[0]}
+              {tabParts(k.label)[1] && <span class="k-suf">{tabParts(k.label)[1]}</span>}
             </button>
           ))
         }
       </div>
-      <div class="term">
-        <span class="term-l is-on" data-term-label="monthly">{plans.terms.monthly}</span>
-        <button type="button" class="switch" id="termSwitch" role="switch" aria-checked="false" aria-label={L.switchAria}>
-          <span></span>
+
+      <div class="term" role="group" aria-label={`${plans.terms.monthly} / ${plans.terms.quarterly}`}>
+        <button type="button" data-term-btn="monthly" aria-pressed="true">{plans.terms.monthly}</button>
+        <button type="button" data-term-btn="quarterly" aria-pressed="false">
+          {plans.terms.quarterly}
+          <span class="save">{badge}</span>
         </button>
-        <span class="term-l" data-term-label="quarterly">{plans.terms.quarterly}</span>
-        <span class="tag">{badge}</span>
       </div>
     </div>
 
-    <p class="plans-desc" data-reveal style="--d:.15s">
-      {
-        plans.kinds.map((k, i) => (
-          <span data-kind-desc={k.key} hidden={i !== 0}>
-            {k.desc}
-          </span>
-        ))
-      }
-    </p>
-
-    <p class="scroll-hint">
-      <Icon name="swipe" size={16} />
-      {L.scrollHint}
-    </p>
-
     {
       plans.kinds.map((k, ki) => (
-        <div class="table-wrap" id={`plans-${k.key}`} role="tabpanel" data-kind-table={k.key} hidden={ki !== 0} data-reveal style="--d:.2s">
-          <div class="table-scroll">
-          <table class="plan-table">
-            <thead>
-              <tr>
-                <th scope="col" class="rh">
-                  <span class="sr-only">{L.itemAria}</span>
-                </th>
-                {plans.list[k.key].map((p) => (
-                  <th scope="col" class:list={[p.hot && 'hot']}>
-                    <span class="pname">{p.name}</span>
-                    {p.hot && <span class="hotpill">{L.hot}</span>}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="price-row">
-                <th scope="row">{L.price}</th>
-                {plans.list[k.key].map((p) =>
-                  p.monthly === null || p.quarterly === null ? (
-                    <td class:list={[p.hot && 'hot']}>
-                      <div class="ask">{L.ask.price}</div>
-                      <div class="pnote">{L.ask.note}</div>
-                      {p.note && <div class="pstart">{p.note}</div>}
-                    </td>
+        <div class="kind" id={`plans-${k.key}`} role="tabpanel" aria-labelledby={`plans-tab-${k.key}`} hidden={ki !== 0}>
+          <p class="kind-desc">{k.desc}</p>
+          <ul class="cards">
+            {plans.list[k.key].map((p) => {
+              const ask = p.monthly === null || p.quarterly === null;
+              return (
+                <li class:list={['card', p.hot && 'hot']}>
+                  {p.hot && <p class="hot-mark">{L.hot}</p>}
+                  <h3>{p.name}</h3>
+                  {ask ? (
+                    <div class="price-box">
+                      <p class="ask">{L.ask.price}</p>
+                      <p class="pnote">{L.ask.note}</p>
+                    </div>
                   ) : (
-                    <td class:list={[p.hot && 'hot']}>
-                      <div class="price" data-term="monthly">
+                    <div class="price-box">
+                      <p class="price" data-term-show="monthly">
                         <span class="yen">¥</span>
-                        <span class="amt">{p.monthly}</span>
+                        <span class="num mk">{p.monthly}</span>
                         <span class="unit">{L.unit.monthly}</span>
-                      </div>
-                      <div class="price" data-term="quarterly">
+                      </p>
+                      <p class="price" data-term-show="quarterly">
                         <span class="yen">¥</span>
-                        <span class="amt">{p.quarterly}</span>
+                        <span class="num mk">{p.quarterly}</span>
                         <span class="unit">{L.unit.quarterly}</span>
+                      </p>
+                      <p class="pnote" data-term-show="monthly">
+                        {L.note.monthly.before}<b>¥{perMonth(p.quarterly!)}</b>{L.note.monthly.after}
+                      </p>
+                      <p class="pnote" data-term-show="quarterly">
+                        {L.note.quarterly.before}<b>¥{perMonth(p.quarterly!)}</b>{L.note.quarterly.after}
+                      </p>
+                    </div>
+                  )}
+                  {p.note && <p class="pstart">{p.note}</p>}
+                  <dl class="specs">
+                    {specLabels.map((label, si) => (
+                      <div>
+                        <dt>{label}</dt>
+                        <dd>{p.specs[si]}</dd>
                       </div>
-                      <div class="pnote" data-term="monthly">
-                        {L.note.monthly.before}<b>¥{perMonth(p.quarterly)}</b>{L.note.monthly.after}
-                      </div>
-                      <div class="pnote" data-term="quarterly">
-                        {L.note.quarterly.before}<b>¥{perMonth(p.quarterly)}</b>{L.note.quarterly.after}
-                      </div>
-                    </td>
-                  ),
+                    ))}
+                  </dl>
+                  <p class="fit">
+                    <span class="fit-l">{plans.fitLabel}</span>
+                    {p.fit}
+                  </p>
+                  <a class:list={['btn', p.hot ? 'btn-primary' : 'btn-outline']} href={p.href} target="_blank" rel="noopener">
+                    <span class="sr-only">{p.name}: </span>
+                    {ask ? L.ask.button : plans.button}
+                    <Icon name={ask ? 'discord' : 'arrow'} />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          {(() => {
+            const list = plans.list[k.key];
+            const rows = list.filter((p) => p.monthly !== null && p.quarterly !== null);
+            const first = Math.max(0, list.findIndex((p) => p.hot));
+            return (
+              <div class="pt" data-pt>
+                {rows.length > 0 && (
+                  <table class="ptable">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="c-name">{L.plan}</th>
+                        <th scope="col">{specLabels[0]}</th>
+                        <th scope="col">{specLabels[1]}</th>
+                        <th scope="col">{specLabels[2]}</th>
+                        <th scope="col" class="c-bk"><span>{specLabels[3]}</span></th>
+                        <th scope="col" class="c-price">
+                          <span data-term-show="monthly">{plans.terms.monthly}</span>
+                          <span data-term-show="quarterly">{plans.terms.quarterly}</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {list.map((p, pi) =>
+                        p.monthly === null || p.quarterly === null ? null : (
+                          <tr data-pt-row={pi} data-on={pi === first ? '' : undefined}>
+                            <th scope="row" class="c-name">
+                              <button type="button" aria-pressed={pi === first ? 'true' : 'false'} aria-controls={`pt-${k.key}-${pi}`}>
+                                <span class="pt-n">
+                                  <span class="pt-name">{p.name}</span>
+                                  {p.hot && <span class="pt-hot">{L.hot}</span>}
+                                </span>
+                              </button>
+                            </th>
+                            <td>{short(p.specs[0])}</td>
+                            <td>{p.specs[1]}</td>
+                            <td>{short(p.specs[2])}</td>
+                            <td class="c-bk">{p.specs[3]}</td>
+                            <td class="c-price">
+                              <span class="num" data-term-show="monthly">{yen(p.monthly)}</span>
+                              <span class="num" data-term-show="quarterly">{yen(p.quarterly)}</span>
+                            </td>
+                          </tr>
+                        ),
+                      )}
+                    </tbody>
+                  </table>
                 )}
-              </tr>
-              {specLabels.map((label, si) => (
-                <tr>
-                  <th scope="row">{label}</th>
-                  {plans.list[k.key].map((p) => (
-                    <td class:list={[p.hot && 'hot']}>
-                      <span class="val">{p.specs[si]}</span>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-              <tr class="fit-row">
-                <th scope="row">{plans.fitLabel}</th>
-                {plans.list[k.key].map((p) => (
-                  <td class:list={[p.hot && 'hot']}>
-                    <span class="fit">{p.fit}</span>
-                  </td>
-                ))}
-              </tr>
-              <tr class="cta-row">
-                <th scope="row">
-                  <span class="sr-only">{L.ctaAria}</span>
-                </th>
-                {plans.list[k.key].map((p) => (
-                  <td class:list={[p.hot && 'hot']}>
-                    <a class:list={['btn', p.hot ? 'btn-primary' : 'btn-outline']} href={p.href} target="_blank" rel="noopener">
-                      {p.monthly === null ? L.ask.button : plans.button}
-                      <Icon name={p.monthly === null ? 'discord' : 'arrow'} />
-                    </a>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-          </div>
+
+                {list.map((p, pi) => {
+                  const ask = p.monthly === null || p.quarterly === null;
+                  return (
+                    <div class="pt-d" id={`pt-${k.key}-${pi}`} data-pt-detail={pi} hidden={rows.length > 0 && pi !== first}>
+                      <div class="pt-d-top">
+                        <p class="pt-d-name">{p.name}</p>
+                        {ask ? (
+                          <p class="pt-d-price pt-d-ask">{L.ask.price}</p>
+                        ) : (
+                          <Fragment>
+                            <p class="pt-d-price" data-term-show="monthly">
+                              <span class="num mk">{yen(p.monthly!)}</span>
+                              <span class="unit">{L.unit.monthly}</span>
+                            </p>
+                            <p class="pt-d-price" data-term-show="quarterly">
+                              <span class="num mk">{yen(p.quarterly!)}</span>
+                              <span class="unit">{L.unit.quarterly}</span>
+                            </p>
+                          </Fragment>
+                        )}
+                      </div>
+                      <p class="pt-d-fit">{p.fit}</p>
+                      {ask ? (
+                        <p class="pt-d-note">{L.ask.note}</p>
+                      ) : (
+                        <Fragment>
+                          <p class="pt-d-note" data-term-show="monthly">
+                            {L.note.monthly.before}<b>¥{perMonth(p.quarterly!)}</b>{L.note.monthly.after}
+                          </p>
+                          <p class="pt-d-note" data-term-show="quarterly">
+                            {L.note.quarterly.before}<b>¥{perMonth(p.quarterly!)}</b>{L.note.quarterly.after}
+                          </p>
+                        </Fragment>
+                      )}
+                      {!ask && <p class="pt-d-note pt-d-bk">{specLabels[3]} {p.specs[3]}</p>}
+                      {p.note && <p class="pt-d-note">{p.note}</p>}
+                      <a class:list={['btn', ask ? 'btn-outline' : 'btn-primary']} href={p.href} target="_blank" rel="noopener">
+                        <span class="sr-only">{p.name}: </span>
+                        {ask ? L.ask.button : plans.button}
+                        <Icon name={ask ? 'discord' : 'arrow'} />
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
         </div>
       ))
     }
+    </div>
 
-    <p class="plans-note" data-reveal>
-      {
-        plans.note.map((line, i) => (
-          <>
-            {i > 0 && <br />}
-            {line}
-          </>
-        ))
-      }
+    <p class="plans-note">
+      {plans.note.join('')}
+      <a href="#notes">{notes.link}</a>
     </p>
 
-    <a class="support-note" href={plans.support.href} target="_blank" rel="noopener" data-reveal>
+    <a class="support" href={plans.support.href} target="_blank" rel="noopener">
       <span class="support-text">
         <b>{plans.support.title}</b>
-        <span>{plans.support.text}</span>
+        {plans.support.text && <span>{plans.support.text}</span>}
       </span>
-      <span class="support-link">{plans.support.label} →</span>
+      <span class="support-link">
+        {plans.support.label}
+        <Icon name="external" size={16} />
+      </span>
     </a>
   </div>
 </section>
 
+<script>
+  /* 月額／3ヶ月契約の切り替え。セクションの data-term を変え、表示は CSS が切り替える */
+  const sec = document.getElementById('plans');
+  const btns = sec?.querySelectorAll<HTMLButtonElement>('[data-term-btn]') ?? [];
+  btns.forEach((b) =>
+    b.addEventListener('click', () => {
+      sec!.dataset.term = b.dataset.termBtn;
+      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    }),
+  );
+
+  /* スマホの表：行を押すとそのプランを選び、表の下の案内（金額・用途・ボタン）を入れ替える */
+  sec?.querySelectorAll<HTMLElement>('[data-pt]').forEach((pt) => {
+    const rows = Array.from(pt.querySelectorAll<HTMLElement>('[data-pt-row]'));
+    const details = Array.from(pt.querySelectorAll<HTMLElement>('[data-pt-detail]'));
+    if (!rows.length) return;
+    rows.forEach((row) =>
+      row.addEventListener('click', () => {
+        const id = row.dataset.ptRow;
+        rows.forEach((r) => {
+          const on = r === row;
+          r.toggleAttribute('data-on', on);
+          r.querySelector('button')?.setAttribute('aria-pressed', String(on));
+        });
+        details.forEach((d) => (d.hidden = d.dataset.ptDetail !== id));
+      }),
+    );
+  });
+
+  /* 種類のタブが上に貼りついているときに切り替えたら、表の先頭まで戻す（短い表に替わると、表が画面の上に消えるため） */
+  const zone = sec?.querySelector<HTMLElement>('[data-zone]');
+  zone?.querySelectorAll<HTMLElement>('[role="tab"]').forEach((tab) =>
+    tab.addEventListener('click', () => {
+      const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      if (zone.getBoundingClientRect().top < header) zone.scrollIntoView({ block: 'start' });
+    }),
+  );
+</script>
+
+<noscript>
+  <style>
+    .plans .pt-d[hidden] {
+      display: block !important;
+    }
+  </style>
+</noscript>
+
 <style>
-  /*
-   * 料金表。列＝プラン、行＝項目の素の表。
-   * 罫線だけで組み、人気プランの列にだけ濃紺の縁を回して目立たせる。
-   * 月額と3ヶ月契約は data-term で切り替える（片方だけ表示）。
-   */
-  .plans-ctl {
+  .ctl {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 0.8rem 1.6rem;
-    margin-top: clamp(22px, 3.5vw, 34px);
+    gap: 16px 24px;
+    margin-top: clamp(28px, 4vw, 48px);
   }
 
-  /* プラン種別の切り替え。四角いボタンを隙間なく並べる */
-  .seg {
-    display: inline-flex;
+  .kinds {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    flex: 1 1 100%;
+  }
+
+  .kinds button,
+  .term button {
+    min-height: 48px;
+    padding: 0.4rem 1rem;
     border: 1px solid var(--line-2);
-    border-radius: var(--r);
-    overflow: hidden;
-  }
-
-  .seg button {
-    padding: 0.55rem 1rem;
-    font-size: 0.84rem;
-    font-weight: 700;
-    color: var(--ink-2);
     background: var(--bg);
-    border-right: 1px solid var(--line-2);
-    transition: background 0.15s, color 0.15s;
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.35;
   }
 
-  .seg button:last-child {
+  .kinds button {
+    border-radius: var(--r);
+  }
+
+  .kinds button:hover,
+  .term button:hover {
+    border-color: var(--b);
+    background: var(--b-tint);
+  }
+
+  .kinds button[aria-selected='true'],
+  .term button[aria-pressed='true'] {
+    border-color: var(--night);
+    background: var(--night);
+    color: #fff;
+  }
+
+  .term {
+    display: flex;
+    flex: 1 1 100%;
+  }
+
+  .term button {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.2em 0.6em;
+  }
+
+  .term button:first-child {
+    border-radius: 999px 0 0 999px;
     border-right: 0;
   }
 
-  .seg button:hover {
-    background: var(--b-tint);
-    color: var(--b);
+  .term button:last-child {
+    border-radius: 0 999px 999px 0;
   }
 
-  .seg button[aria-selected="true"] {
-    background: var(--b);
-    color: #fff;
-  }
-
-  /* 狭い画面では、分類を2列に並べる（4つを1行に詰めると、名前が途中で折り返して読みにくい） */
-  @media (max-width: 640px) {
-    .seg {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      width: 100%;
-    }
-
-    .seg button {
-      white-space: nowrap;
-      border-bottom: 1px solid var(--line-2);
-    }
-
-    .seg button:nth-child(2n) {
-      border-right: 0;
-    }
-
-    .seg button:nth-last-child(-n + 2):nth-child(2n + 1),
-    .seg button:nth-last-child(-n + 2):nth-child(2n + 1) ~ button {
-      border-bottom: 0;
-    }
-  }
-
-  /* 契約期間の切り替え */
-  .term {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-size: 0.82rem;
-  }
-
-  .term-l {
-    color: var(--ink-3);
-    font-weight: 600;
-    transition: color 0.15s;
-  }
-
-  .term-l.is-on {
-    color: var(--ink);
-    font-weight: 800;
-  }
-
-  .switch {
-    position: relative;
-    width: 40px;
-    height: 22px;
-    border: 1px solid var(--line-2);
+  .save {
+    padding: 0 0.6em;
     border-radius: 999px;
-    background: var(--surface-2);
-    transition: background 0.15s, border-color 0.15s;
-  }
-
-  .switch span {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--bg);
-    border: 1px solid var(--line-2);
-    transition: transform 0.18s var(--ease);
-  }
-
-  .switch[aria-checked="true"] {
-    background: var(--b);
-    border-color: var(--b);
-  }
-
-  .switch[aria-checked="true"] span {
-    transform: translateX(18px);
-    border-color: var(--b);
-  }
-
-  .term .tag {
-    margin-left: 0.2rem;
-  }
-
-  .plans-desc {
-    margin-top: 0.9rem;
-    font-size: 0.85rem;
-    color: var(--ink-2);
-  }
-
-  /* ---------- 横スクロールの案内 ---------- */
-  .scroll-hint {
-    display: flex;
-    align-items: center;
-    gap: 0.4em;
-    margin-top: 1rem;
-    font-size: 0.76rem;
-    color: var(--ink-3);
-  }
-
-  .scroll-hint svg {
-    color: var(--b-mid);
-  }
-
-  @media (min-width: 900px) {
-    .scroll-hint {
-      display: none;
-    }
-  }
-
-  /* ---------- 表 ---------- */
-  .table-wrap {
-    margin-top: 0.7rem;
-  }
-
-  .table-scroll {
-    overflow-x: auto;
-    border-radius: var(--r-lg);
-  }
-
-  .plan-table {
-    width: 100%;
-    min-width: 620px;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: var(--bg);
-  }
-
-  .plan-table th,
-  .plan-table td {
-    padding: 0.7rem 0.9rem;
-    border-bottom: 1px solid var(--line);
-    text-align: center;
-    vertical-align: middle;
-    font-size: 0.85rem;
-  }
-
-  /* 左端の項目名 */
-  .plan-table .rh,
-  .plan-table tbody th {
-    text-align: left;
-    white-space: nowrap;
-    font-weight: 700;
-    color: var(--ink-2);
-    background: var(--surface);
-    border-right: 1px solid var(--line);
-    width: 8.5em;
-  }
-
-  .plan-table thead th {
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line-2);
-    background: var(--surface);
-  }
-
-  .plan-table thead th:first-child {
-    border-left: 1px solid var(--line);
-  }
-
-  .plan-table thead th:last-child,
-  .plan-table tbody td:last-child {
-    border-right: 1px solid var(--line);
-  }
-
-  .pname {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 800;
+    background: var(--hl);
     color: var(--ink);
+    font-size: 0.875rem;
   }
 
-  .hotpill {
-    display: inline-block;
-    margin-top: 0.3rem;
-    padding: 0 0.5em;
-    border-radius: var(--r);
+  .kind-desc {
+    margin-top: 1.25rem;
+    max-width: 46em;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 204px), 1fr));
+    gap: 14px;
+    margin-top: 1.5rem;
+    list-style: none;
+    align-items: stretch;
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 18px 18px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-lg);
+    background: var(--bg);
+  }
+
+  .card.hot {
+    border: 3px solid var(--b);
+    padding: 20px 16px 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .hot-mark {
+    position: absolute;
+    top: -15px;
+    left: 14px;
+    padding: 0.1em 0.9em;
+    border-radius: 999px;
     background: var(--b);
     color: #fff;
-    font-size: 0.68rem;
+    font-size: 0.875rem;
     font-weight: 700;
   }
 
-  /* 人気の列。左右の縁と見出しの地を濃紺にする */
-  .plan-table th.hot,
-  .plan-table td.hot {
-    background: var(--b-tint);
-    border-left: 1px solid var(--b);
-    border-right: 1px solid var(--b);
+  .card h3 {
+    font-size: 1.125rem;
   }
 
-  .plan-table thead th.hot {
-    border-top: 2px solid var(--b);
+  .price-box {
+    margin-top: 0.5rem;
+    min-height: 5.6rem;
   }
 
-  .plan-table tbody tr:last-child td.hot {
-    border-bottom: 1px solid var(--b);
-  }
-
-  /* ---------- 価格 ---------- */
   .price {
     display: flex;
     align-items: baseline;
-    justify-content: center;
-    gap: 0.05em;
-    line-height: 1.1;
+    flex-wrap: wrap;
+    color: var(--ink);
+    line-height: 1.2;
   }
 
   .price .yen {
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: var(--b);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-right: 0.1em;
   }
 
-  .price .amt {
-    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
-    font-weight: 900;
-    color: var(--b);
-    font-variant-numeric: tabular-nums;
+  .price .num {
+    font-size: 2.75rem;
   }
 
   .price .unit {
-    font-size: 0.72rem;
+    margin-left: 0.3em;
+    font-size: 0.9375rem;
     font-weight: 700;
-    color: var(--ink-3);
   }
 
-  /* 受付開始日など、その構成だけの但し書き */
-  .pstart {
-    margin-top: 0.35rem;
-    display: inline-block;
-    padding: 0.15rem 0.5rem;
-    border: 1px solid var(--b-line);
-    border-radius: var(--r);
-    background: var(--b-tint);
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--b-deep);
-    white-space: nowrap;
-  }
-
-  /* 金額の代わりに出す「要問い合わせ」。数字と同じ重さで並ぶよう、大きさを揃える */
   .ask {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--b);
+    color: var(--ink);
+    font-size: 1.5rem;
+    font-weight: 700;
     line-height: 1.6;
   }
 
-  .pnote {
-    margin-top: 0.2rem;
-    font-size: 0.72rem;
-    color: var(--ink-3);
+  .pnote,
+  .pstart {
+    margin-top: 0.3rem;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    line-height: 1.5;
   }
 
   .pnote b {
-    color: var(--ink-2);
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* 契約期間ごとの出し分け。既定は月額 */
-  .price[data-term="quarterly"],
-  .pnote[data-term="quarterly"] {
-    display: none;
-  }
-
-  /* 切り替えのクラスは表ごと（[data-kind-table]）に付く。script 側の実装に合わせる */
-  .table-wrap.is-quarterly .price[data-term="monthly"],
-  .table-wrap.is-quarterly .pnote[data-term="monthly"] {
-    display: none;
-  }
-
-  .table-wrap.is-quarterly .price[data-term="quarterly"] {
-    display: flex;
-  }
-
-  .table-wrap.is-quarterly .pnote[data-term="quarterly"] {
-    display: block;
-  }
-
-  .val {
-    font-weight: 700;
     color: var(--ink);
-    font-variant-numeric: tabular-nums;
   }
 
-  .fit-row td {
-    font-size: 0.78rem;
-    color: var(--ink-2);
-    line-height: 1.7;
+  /* 選ばれていない契約期間の金額は出さない */
+  .plans[data-term='monthly'] [data-term-show='quarterly'],
+  .plans[data-term='quarterly'] [data-term-show='monthly'] {
+    display: none;
   }
 
-  /* 5列でも表の幅に収める（右端のボタンが切れないように） */
-  @media (min-width: 900px) {
-    .plan-table th,
-    .plan-table td {
-      padding-inline: 0.6rem;
-    }
-    .cta-row .btn {
-      padding-inline: 0.6rem;
-    }
+  .specs {
+    margin-top: 0.9rem;
+    border-top: 1px solid var(--line);
   }
 
-  .cta-row td {
-    padding-block: 0.9rem;
+  .specs > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-block: 0.4rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.9375rem;
   }
 
-  .cta-row .btn {
-    width: 100%;
-  }
-
-  .plans-note {
-    margin-top: 1.2rem;
-    font-size: 0.76rem;
-    line-height: 1.9;
+  .specs dt {
     color: var(--ink-3);
   }
 
-  /* 支援プログラムへの案内。料金表の下で、押せることが分かる程度に目立たせる */
-  .support-note {
-    margin-top: 1.6rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem 1.5rem;
-    flex-wrap: wrap;
-    padding: 1.1rem 1.4rem;
-    border: 1px solid var(--line);
-    border-left: 4px solid #10b981;
-    border-radius: 10px;
-    background: color-mix(in srgb, #10b981 6%, transparent);
-    color: inherit;
-    text-decoration: none;
-    transition: border-color 0.2s, transform 0.2s;
+  .specs dd {
+    color: var(--ink);
+    font-weight: 700;
+    text-align: right;
   }
-  .support-note:hover {
-    border-color: #10b981;
-    transform: translateY(-1px);
+
+  .fit {
+    display: grid;
+    flex: 1;
+    align-content: start;
+    margin-block: 0.9rem 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--ink);
   }
-  .support-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    font-size: 0.86rem;
+
+  .fit-l {
+    font-size: 0.875rem;
+    color: var(--ink-3);
+  }
+
+  .card .btn {
+    width: 100%;
+    padding-inline: 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .plans-note {
+    margin-top: 1.75rem;
+    font-size: 0.875rem;
+    color: var(--ink-3);
     line-height: 1.7;
   }
+
+  .support {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-top: 1.5rem;
+    padding: 18px 20px;
+    border: 1px solid var(--ok-line);
+    border-radius: var(--r);
+    background: var(--ok-tint);
+    color: var(--ink);
+  }
+
+  .support:hover {
+    border-color: var(--ok);
+  }
+
+  .support-text {
+    display: grid;
+    flex: 1 1 24em;
+    font-size: 0.9375rem;
+  }
+
   .support-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--ok);
     font-weight: 700;
-    font-size: 0.86rem;
-    color: #0b8a63;
-    white-space: nowrap;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  /* スマホ用の表は、幅 600px 以上では出さない */
+  .pt {
+    display: none;
+  }
+
+  /* ---------- スマホ：札をやめて、1つの表にする ----------
+     文字は 11〜14px。表は1画面に入れることを優先する（行を比べるための場所なので）。 */
+  @media (max-width: 599px) {
+    .zone {
+      --kinds-h: 53px;
+      margin-top: 14px;
+    }
+
+    /* 箱としては使わない（種類のタブを、表の終わりまで上に貼りつけておくため） */
+    .ctl {
+      display: contents;
+    }
+
+    .kinds {
+      position: sticky;
+      top: var(--header-h);
+      z-index: 5;
+      display: flex;
+      gap: 4px;
+      box-sizing: border-box;
+      height: var(--kinds-h);
+      margin-inline: calc(var(--gutter) * -1);
+      padding: 8px var(--gutter);
+      border-bottom: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    .kinds button {
+      flex: 1 1 auto;
+      min-height: 36px;
+      padding: 0 4px;
+      border-color: var(--line);
+      border-radius: 8px;
+      font-size: 0.857rem;
+      white-space: nowrap;
+    }
+
+    .k-suf {
+      display: none;
+    }
+
+    .term {
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .term button {
+      flex: 0 0 auto;
+      min-height: 30px;
+      padding: 0 0.9rem;
+      border-color: var(--line);
+      font-size: 0.857rem;
+    }
+
+    /* 金額のない種類（個別見積もり）では、契約期間の切り替えは意味がないので出さない */
+    .zone:has(.kind:not([hidden]) .pt:not(:has(.ptable))) .term {
+      display: none;
+    }
+
+    .save {
+      padding: 0 0.5em;
+      font-size: 0.786rem;
+      line-height: 1.5;
+    }
+
+    .kind-desc {
+      margin-top: 8px;
+      color: var(--ink-3);
+      font-size: 0.857rem;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: none;
+    }
+
+    .pt {
+      display: block;
+      margin-top: 6px;
+    }
+
+    .ptable {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.929rem;
+      line-height: 1.35;
+    }
+
+    /* 列の見出しは、種類のタブのすぐ下に貼りつく（下の行を見ているときも、どの数字が何か分かるように） */
+    .ptable thead th {
+      position: sticky;
+      top: calc(var(--header-h) + var(--kinds-h));
+      z-index: 2;
+      padding: 6px 0 5px 6px;
+      border-bottom: 1px solid var(--line-2);
+      background: var(--bg);
+      color: var(--ink-3);
+      font-size: 0.786rem;
+      font-weight: 400;
+      line-height: 1.25;
+      text-align: right;
+      vertical-align: bottom;
+      white-space: nowrap;
+    }
+
+    .ptable thead .c-name {
+      padding-left: 28px;
+      text-align: left;
+    }
+
+    /* 「バックアップ」は長いので、3文字ずつ2行に折る（英語の Backups は折らずに1行） */
+    .ptable thead .c-bk span {
+      display: inline-block;
+      width: min-content;
+      min-width: 3em;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .ptable td.c-bk {
+      text-align: center;
+    }
+
+    .ptable tbody th,
+    .ptable td {
+      padding: 10px 0 10px 6px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    .ptable td {
+      color: var(--ink);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .ptable tbody .c-name {
+      width: 99%;
+      text-align: left;
+    }
+
+    .ptable .c-price {
+      padding-right: 8px;
+    }
+
+    .ptable .c-price .num {
+      font-size: 1.07rem;
+    }
+
+    /* 行のいちばん左：選ぶための丸と、プランの名前 */
+    .ptable tbody button {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .ptable tbody button::before {
+      content: '';
+      flex: none;
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid var(--line-2);
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    /* 名前は語の途中で折らない。幅が足りないときは「人気」の印が名前の下へ回る */
+    .pt-n {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2px 5px;
+      min-width: 0;
+    }
+
+    .pt-name {
+      word-break: keep-all;
+    }
+
+    .ptable tr[data-on] th,
+    .ptable tr[data-on] td {
+      background: var(--b-tint);
+    }
+
+    .ptable tr[data-on] button {
+      color: var(--b-deep);
+    }
+
+    .ptable tr[data-on] button::before {
+      border: 5px solid var(--b);
+    }
+
+    .pt-hot {
+      padding: 0 5px;
+      border-radius: 3px;
+      background: var(--hl);
+      color: var(--ink);
+      font-size: 0.714rem;
+      line-height: 1.6;
+      white-space: nowrap;
+    }
+
+    /* 選んだプランの案内。表のすぐ下に出す */
+    .pt-d {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: baseline;
+      column-gap: 12px;
+      margin-top: 12px;
+      padding: 12px 14px 14px;
+      border: 2px solid var(--b);
+      border-radius: var(--r);
+    }
+
+    .pt-d[hidden] {
+      display: none;
+    }
+
+    .pt-d-top {
+      display: contents;
+    }
+
+    .pt-d-name {
+      color: var(--ink);
+      font-size: 1.07rem;
+      font-weight: 700;
+    }
+
+    .pt-d-price {
+      color: var(--ink);
+      line-height: 1.2;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .pt-d-price .num {
+      font-size: 1.857rem;
+    }
+
+    .pt-d-price .unit {
+      margin-left: 0.2em;
+      font-size: 0.857rem;
+      font-weight: 700;
+    }
+
+    .pt-d-price.pt-d-ask {
+      font-size: 1.143rem;
+      font-weight: 700;
+    }
+
+    .pt-d-fit {
+      font-size: 0.929rem;
+      line-height: 1.5;
+    }
+
+    .pt-d-note {
+      color: var(--ink-3);
+      font-size: 0.857rem;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .pt-d-note b {
+      color: var(--ink);
+    }
+
+    .pt-d-note:not([data-term-show]) {
+      grid-column: 1 / -1;
+      text-align: left;
+    }
+
+    .pt-d .btn {
+      grid-column: 1 / -1;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .plans-note {
+      margin-top: 16px;
+      font-size: 0.857rem;
+      line-height: 1.6;
+    }
+
+    .support {
+      margin-top: 14px;
+      padding: 12px 14px;
+    }
+
+    .support-text {
+      font-size: 0.857rem;
+    }
+  }
+
+  /* 幅 380px 未満では、バックアップの列を外す（残りの列の数字と名前を折らないため）。数は、選んだプランの案内に出す */
+  .pt-d-bk {
+    display: none;
+  }
+
+  @media (max-width: 379px) {
+    .ptable .c-bk {
+      display: none;
+    }
+
+    .pt-d-bk {
+      display: block;
+    }
+  }
+
+  /* とても狭い画面（320px など）：数字をもう一段小さくして、名前の幅を空ける */
+  @media (max-width: 349px) {
+    .ptable {
+      font-size: 0.857rem;
+    }
+
+    .ptable tbody .c-name {
+      font-size: 0.929rem;
+    }
+
+    .ptable .c-price {
+      padding-right: 6px;
+    }
+
+    .ptable .c-price .num {
+      font-size: 1rem;
+    }
+  }
+
+  @media (min-width: 700px) {
+    .kinds {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .kinds {
+      flex: 1 1 0;
+    }
+
+    .term {
+      flex: 0 0 auto;
+    }
+
+    .term button {
+      flex: 0 0 auto;
+      padding-inline: 1.4rem;
+    }
   }
 </style>
-
-<script>
-  const root = document.getElementById('plans');
-  if (root) {
-    const kindTabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.seg [role="tab"]'));
-    const tables = Array.from(root.querySelectorAll<HTMLElement>('[data-kind-table]'));
-    const descs = Array.from(root.querySelectorAll<HTMLElement>('[data-kind-desc]'));
-    const termSwitch = root.querySelector<HTMLButtonElement>('#termSwitch');
-    const termLabels = Array.from(root.querySelectorAll<HTMLElement>('[data-term-label]'));
-
-    const selectKind = (kind: string | undefined) => {
-      kindTabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.kind === kind)));
-      tables.forEach((t) => {
-        t.hidden = t.dataset.kindTable !== kind;
-        t.classList.add('is-in'); // 表示切替時に隠れたままにならないように
-      });
-      descs.forEach((d) => (d.hidden = d.dataset.kindDesc !== kind));
-    };
-
-    kindTabs.forEach((tab) => tab.addEventListener('click', () => selectKind(tab.dataset.kind)));
-
-    termSwitch?.addEventListener('click', () => {
-      const quarterly = termSwitch.getAttribute('aria-checked') !== 'true';
-      termSwitch.setAttribute('aria-checked', String(quarterly));
-      tables.forEach((t) => {
-        t.classList.toggle('is-quarterly', quarterly);
-        // 金額のアニメーションを再生し直す
-        t.querySelectorAll<HTMLElement>('.price').forEach((p) => {
-          p.style.animation = 'none';
-          void p.offsetWidth;
-          p.style.animation = '';
-        });
-      });
-      termLabels.forEach((l) => l.classList.toggle('is-on', (l.dataset.termLabel === 'quarterly') === quarterly));
-    });
-  }
-</script>

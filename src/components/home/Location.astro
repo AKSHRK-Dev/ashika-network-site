@@ -1,19 +1,21 @@
 ---
 /**
- * ロケーション（大阪・北摂）。左に見出し・説明・項目の一覧、右に大阪府の地図。
+ * 置き場所（大阪・北摂）。左に見出し・説明・項目の一覧、右に大阪府の地図。その下にサーバー本体のスペック。
  * 地図の形は国土数値情報（行政区域、原典は国土地理院の測量成果）で、市町村と区の境界は実際のとおり。
  * データは src/data/osaka-areas.json（tools/osaka-map/build.py で作る）。印の位置・吹き出しの文字は
- * src/data/home.ts の location.map にある。
+ * src/data/home.ts の location.map にある。地図は動かさない（色の付く動きはやめた）。
  */
 import { content } from '../../data/index';
 import { langOf, localize } from '../../i18n';
 import { cityCenter, labels, map as geo, placeName, project } from '../../data/osaka-map';
 
 const lang = langOf(Astro.url);
-const { location } = content(lang).home;
+const { location, sectionLabels } = content(lang).home;
 const { nodes, specsPage } = content(lang).specs;
 /* トップでは所在の行は省く（地図で分かるので） */
 const homeRows = (specs: { k: string; v: string }[]) => specs.slice(0, 5);
+/* スマホでは、ノードを横に並べた1つの表にする（上下に離れた札どうしは見比べにくいので） */
+const compareRows = homeRows(nodes[0].specs).map((s, i) => ({ k: s.k, values: nodes.map((node) => node.specs[i]?.v ?? '') }));
 
 const M = location.map;
 const [, , vw, vh] = geo.view;
@@ -22,9 +24,6 @@ const u = vw / 100;
 const n = (v: number) => Math.round(v * 10) / 10;
 
 const [px, py] = project(M.pin);
-/* 表示されたとき、箕面市から外へ波のように色が付いていく。近い順の遅れ（秒） */
-const far = Math.max(...geo.areas.map((a) => Math.hypot(a.c[0] - px, a.c[1] - py)));
-const wave = (a: { c: [number, number] }) => n((Math.hypot(a.c[0] - px, a.c[1] - py) / far) * 0.9);
 /* 吹き出しは印の左。引き出し線でつなぐ */
 const [bx] = project(M.callout);
 
@@ -35,7 +34,7 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
     ${geo.areas
       .map(
         (a) =>
-          `<path class="city${a.city === M.city ? ' is-here' : ''}" d="${a.d}" style="--w:${wave(a)}s"><title>${placeName(a.city, a.ward, lang)}</title></path>`,
+          `<path class="city${a.city === M.city ? ' is-here' : ''}" d="${a.d}"><title>${placeName(a.city, a.ward, lang)}</title></path>`,
       )
       .join('')}
   </g>
@@ -67,18 +66,10 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
 
 <section id="location" class="section band location" aria-labelledby="location-title">
   <div class="container loc-in">
-    <div class="loc-copy" data-reveal>
-      <h2 id="location-title" class="sec-h2">
-        {
-          location.title.map((line, i) => (
-            <>
-              {i > 0 && <br />}
-              {line}
-            </>
-          ))
-        }
-      </h2>
-      <p class="lead">{location.lead}</p>
+    <div class="loc-copy">
+      <p class="sec-label">{sectionLabels.location}</p>
+      <h2 id="location-title" class="sec-h2">{location.title.join('')}</h2>
+      {location.lead && <p class="lead">{location.lead}</p>}
       <dl class="specs">
         {
           location.specs.map((s) => (
@@ -91,14 +82,40 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
       </dl>
     </div>
 
-    <figure class="map" data-reveal style="--d:.15s">
+    <figure class="map">
       <Fragment set:html={map} />
-      <figcaption>{location.map.caption}</figcaption>
     </figure>
   </div>
 
-  <div class="container nodes" data-reveal>
+  <div class="container nodes">
     <h3 class="nodes-h">{location.nodesTitle}</h3>
+    <table class="node-table">
+      <thead>
+        <tr>
+          <td></td>
+          {
+            nodes.map((node) => (
+              <th scope="col">
+                {node.name}
+                <span class="node-id">{node.id}</span>
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          compareRows.map((row) => (
+            <tr>
+              <th scope="row">{row.k}</th>
+              {row.values.map((v) => (
+                <td>{v}</td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
     <ul class="node-list">
       {
         nodes.map((node) => (
@@ -119,68 +136,49 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
         ))
       }
     </ul>
-    <p class="nodes-more"><a href={localize('/specs', lang)}>{specsPage.homeLink} →</a></p>
+    <p class="nodes-more">
+      <a class="link" href={localize('/specs', lang)}>{specsPage.homeLink}</a>
+    </p>
   </div>
 </section>
 
+<!-- 地図の中身は set:html で入れるので、スコープの付かない書き方にする -->
 <style is:global>
-  /* 生成したSVGの中身に当てるので global。色はトークンを通す */
   .location .map svg {
-    display: block;
     width: 100%;
     height: auto;
-    font-family: var(--font);
-    font-feature-settings: 'palt';
+    border-radius: var(--r-lg);
+    border: 1px solid var(--line);
   }
 
   .location .map .sea {
-    fill: var(--b-tint);
+    fill: #dfeafa;
   }
 
   .location .map .land {
-    fill: var(--line);
+    fill: #eef1f5;
   }
 
-  /* 府県の境、市町村の境、区の境（区は細く薄く） */
   .location .map .pref-line,
   .location .map .city-line,
   .location .map .ward-line {
     fill: none;
-    stroke: var(--bg);
+    stroke: #fff;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
   .location .map .ward-line {
-    opacity: 0.55;
+    opacity: 0.6;
   }
 
-  /* 市町村・区の面 */
   .location .map .city {
-    fill: var(--b);
-    transition: fill 0.2s;
-  }
-
-  .location .map .city:hover {
-    fill: var(--b-bright);
-  }
-
-  /* 表示されたら、箕面市から外へ波のように色が付く */
-  .js .location .map .city {
-    transition: fill 0.2s, opacity 0.5s var(--ease) var(--w, 0s), transform 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) var(--w, 0s);
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  .js .location .map:not(.is-in) .city {
-    opacity: 0;
-    transform: scale(0.6);
+    fill: #a9c3ea;
   }
 
   .location .map .city.is-here {
-    fill: var(--b-bright);
+    fill: var(--b);
   }
-
 
   .location .map .land-name {
     fill: var(--ink-3);
@@ -188,207 +186,102 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
   }
 
   .location .map .sea-name {
-    fill: #8ea3bd;
+    fill: #4d6a92;
     font-weight: 700;
   }
 
   .location .map .city-name {
-    fill: rgba(255, 255, 255, 0.72);
+    fill: var(--night);
     font-weight: 700;
   }
 
-  /* ---------- 拠点の印と吹き出し ---------- */
-  /* 濃紺の面の上に出るので、輪は白で広げる */
   .location .map .mark .ring {
-    fill: var(--bg);
-    opacity: 0.22;
+    fill: var(--hl);
+    opacity: 0.55;
   }
 
   .location .map .mark .dot {
-    fill: var(--bg);
-    stroke: var(--b-deep);
+    fill: var(--hl);
+    stroke: var(--night);
   }
 
   .location .map .mark .leader {
-    stroke: var(--b-deep);
+    stroke: var(--night);
   }
 
   .location .map .mark .label-box {
-    fill: var(--b-deep);
+    fill: var(--night);
   }
 
   .location .map .mark .label {
     fill: #fff;
-    font-weight: 800;
-  }
-
-  .location .map .mark .label-sub {
-    fill: rgba(255, 255, 255, 0.82);
     font-weight: 700;
   }
 
-  /* 表示されたら点が出て、輪が広がり、吹き出しが続く */
-  .js .location .map .mark > * {
-    opacity: 0;
-  }
-
-  .js .location .map.is-in .mark .dot {
-    animation: loc-pop 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  .js .location .map.is-in .mark .ring {
-    animation: loc-ring 0.9s var(--ease) forwards;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  .js .location .map.is-in .mark .leader,
-  .js .location .map.is-in .mark .label-box,
-  .js .location .map.is-in .mark .label,
-  .js .location .map.is-in .mark .label-sub {
-    animation: loc-fade 0.5s var(--ease) forwards;
-    animation-delay: 0.35s;
-  }
-
-  @keyframes loc-pop {
-    from {
-      opacity: 0;
-      transform: scale(0.3);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes loc-ring {
-    from {
-      opacity: 0;
-      transform: scale(0.3);
-    }
-    to {
-      opacity: 0.22;
-      transform: none;
-    }
-  }
-
-  @keyframes loc-fade {
-    to {
-      opacity: 1;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .js .location .map .mark > * {
-      opacity: 1;
-      animation: none;
-    }
-
-    .js .location .map .mark .ring {
-      opacity: 0.22;
-    }
+  .location .map .mark .label-sub {
+    fill: #e3ebf7;
+    font-weight: 700;
   }
 </style>
 
 <style>
-  /* 左に説明と項目、右に地図。項目は罫線だけの素の表にする */
   .loc-in {
     display: grid;
-    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
-    align-items: center;
     gap: clamp(28px, 5vw, 64px);
-  }
-
-  .loc-copy .sec-h2 {
-    padding-left: clamp(12px, 2vw, 18px);
-    border-left: 3px solid var(--b);
-    font-size: clamp(1.7rem, 3.6vw, 2.6rem);
-    font-weight: 800;
-    line-height: 1.35;
+    align-items: center;
   }
 
   .lead {
     margin-top: 1rem;
-    font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-    line-height: 1.95;
-    max-width: 34em;
+    max-width: 36em;
   }
 
   .specs {
-    margin-top: 1.6rem;
+    margin-top: 1.5rem;
     border-top: 1px solid var(--line-2);
-    max-width: 34em;
   }
 
   .row {
     display: grid;
-    grid-template-columns: 8.5em minmax(0, 1fr);
-    gap: 0.2rem 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--line-2);
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    gap: 16px;
+    padding-block: 0.8rem;
+    border-bottom: 1px solid var(--line);
   }
 
   .row dt {
-    font-size: 0.82rem;
-    font-weight: 700;
     color: var(--ink-3);
-    line-height: 1.7;
+    font-weight: 700;
+    font-size: 0.9375rem;
   }
 
   .row dd {
-    font-size: 0.95rem;
-    font-weight: 700;
     color: var(--ink);
   }
 
-  .row:first-child dd {
-    color: var(--b-deep);
-  }
-
-  /* ---------- 地図 ---------- */
-  .map {
-    justify-self: center;
-    width: min(100%, 700px);
-    border: 1px solid var(--line-2);
-    border-radius: var(--r-lg);
-    overflow: hidden;
-    background: var(--b-tint);
-  }
-
-  .map figcaption {
-    padding: 0.55rem 0.9rem;
-    border-top: 1px solid var(--line);
-    background: var(--bg);
-    font-size: 0.72rem;
-    line-height: 1.7;
-    color: var(--ink-3);
-  }
-
-  /* ---------- ノードごとのスペック（地図の下に横並び） ---------- */
   .nodes {
     margin-top: clamp(32px, 5vw, 56px);
   }
 
   .nodes-h {
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    font-weight: 800;
-    color: var(--ink);
+    font-size: 1.25rem;
+  }
+
+  .node-table {
+    display: none;
   }
 
   .node-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 16px;
     margin-top: 1rem;
-    padding: 0;
     list-style: none;
   }
 
   .node {
-    padding: 1.1rem 1.25rem 0.6rem;
-    border: 1px solid var(--line-2);
+    padding: 20px 22px;
+    border: 1px solid var(--line);
     border-radius: var(--r-lg);
     background: var(--bg);
   }
@@ -396,70 +289,142 @@ const map = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(vw)} ${n(v
   .node-name {
     display: flex;
     align-items: baseline;
-    gap: 0.6rem;
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--b-deep);
+    gap: 0.75em;
+    color: var(--ink);
+    font-size: 1.125rem;
+    font-weight: 700;
   }
 
   .node-id {
-    font-size: 0.78rem;
-    font-weight: 700;
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    font-weight: 400;
     color: var(--ink-3);
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0;
+  }
+
+  .node-row {
+    display: grid;
+    grid-template-columns: 6em minmax(0, 1fr);
+    gap: 12px;
+    padding-block: 0.45rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.9375rem;
   }
 
   .node dl {
     margin-top: 0.6rem;
   }
 
-  .node-row {
-    display: grid;
-    grid-template-columns: 6em minmax(0, 1fr);
-    gap: 1rem;
-    padding: 0.55rem 0;
-    border-top: 1px solid var(--line-2);
-  }
-
   .node-row dt {
-    font-size: 0.82rem;
-    font-weight: 700;
     color: var(--ink-3);
-    line-height: 1.7;
   }
 
   .node-row dd {
-    font-size: 0.95rem;
-    font-weight: 700;
     color: var(--ink);
+    font-weight: 700;
   }
 
   .nodes-more {
-    margin-top: 0.9rem;
-    font-size: 0.9rem;
+    margin-top: 0.75rem;
+  }
+
+  .nodes-more .link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-weight: 700;
   }
 
-  .nodes-more a {
-    color: var(--b-mid);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  @media (max-width: 860px) {
+  /* スマホ：行の間を詰める。ノードのスペックは札をやめて、横に見比べられる表にする */
+  @media (max-width: 599px) {
     .loc-in {
-      grid-template-columns: 1fr;
+      gap: 20px;
     }
 
-    .map {
-      width: min(100%, 520px);
+    .lead {
+      margin-top: 0.6rem;
+    }
+
+    .specs {
+      margin-top: 1rem;
+    }
+
+    .row {
+      gap: 12px;
+      padding-block: 0.5rem;
+    }
+
+    .row dt {
+      font-size: 0.875rem;
+      line-height: 1.85;
+    }
+
+    .nodes {
+      margin-top: 28px;
+    }
+
+    .nodes-h {
+      font-size: 1.0625rem;
+    }
+
+    .node-list {
+      display: none;
+    }
+
+    .node-table {
+      display: table;
+      width: 100%;
+      margin-top: 0.6rem;
+      border-collapse: collapse;
+      table-layout: fixed;
+      border-top: 2px solid var(--night);
+      background: var(--bg);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .node-table th,
+    .node-table td {
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .node-table thead td {
+      width: 6.6em;
+    }
+
+    .node-table thead th {
+      color: var(--ink);
+      font-size: 0.9375rem;
+    }
+
+    .node-table .node-id {
+      display: block;
+      font-size: 0.8125rem;
+    }
+
+    .node-table tbody th {
+      color: var(--ink-3);
+      font-weight: 400;
+    }
+
+    .node-table tbody td {
+      color: var(--ink);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .nodes-more {
+      margin-top: 0.4rem;
     }
   }
 
-  @media (max-width: 480px) {
-    .row {
-      grid-template-columns: 1fr;
-      gap: 0.1rem;
+  @media (min-width: 900px) {
+    .loc-in {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
     }
   }
 </style>
