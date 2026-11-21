@@ -23,15 +23,28 @@ const entries: Entry[] = [
 /** trailingSlash: 'never' に合わせる。トップページだけは末尾のスラッシュを残す */
 const toUrl = (path: string) => (path === '/' ? `${site.url}/` : `${site.url}${path}`);
 
+/** 日本語版と英語版の対応（hreflang）。どちらの URL にも、両方の言語と既定（日本語）を書く */
+const alternates = (path: string) => {
+  const ja = path.startsWith('/en') ? path.replace(/^\/en(?=\/|$)/, '') || '/' : path;
+  return [
+    ['ja', ja],
+    ['en', localize(ja, 'en')],
+    ['x-default', ja],
+  ]
+    .map(([lang, p]) => `    <xhtml:link rel="alternate" hreflang="${lang}" href="${toUrl(p)}"/>\n`)
+    .join('');
+};
+
 export const GET: APIRoute = () => {
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n` +
     entries
       .map(
         (e) =>
           `  <url>\n` +
           `    <loc>${toUrl(e.path)}</loc>\n` +
+          alternates(e.path) +
           `    <lastmod>${e.lastmod}</lastmod>\n` +
           `    <changefreq>${e.changefreq}</changefreq>\n` +
           `    <priority>${e.priority.toFixed(1)}</priority>\n` +

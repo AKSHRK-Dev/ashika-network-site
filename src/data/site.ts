@@ -143,12 +143,12 @@ export const links = {
 export const seo = {
   /** 規約ページ以外で、サイトマップに載せるページ */
   pages: [
-    { path: '/', lastmod: '2026-09-16', changefreq: 'weekly', priority: 1 },
-    { path: '/discord-bot', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.9 },
-    { path: '/python', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.9 },
-    { path: '/faq', lastmod: '2026-09-16', changefreq: 'monthly', priority: 0.8 },
-    { path: '/specs', lastmod: '2026-10-22', changefreq: 'monthly', priority: 0.6 },
-    { path: '/legal', lastmod: '2026-09-09', changefreq: 'monthly', priority: 0.4 },
+    { path: '/', lastmod: '2026-11-15', changefreq: 'weekly', priority: 1 },
+    { path: '/discord-bot', lastmod: '2026-11-15', changefreq: 'monthly', priority: 0.9 },
+    { path: '/python', lastmod: '2026-11-15', changefreq: 'monthly', priority: 0.9 },
+    { path: '/faq', lastmod: '2026-11-15', changefreq: 'monthly', priority: 0.8 },
+    { path: '/specs', lastmod: '2026-11-15', changefreq: 'monthly', priority: 0.6 },
+    { path: '/legal', lastmod: '2026-11-15', changefreq: 'monthly', priority: 0.4 },
   ],
   /** 規約ページに共通で使う値（日付だけは legalDocs の updated を使う） */
   legalDefaults: { changefreq: 'monthly', priority: 0.5 },
